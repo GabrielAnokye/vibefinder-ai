@@ -1,0 +1,57 @@
+Loaded songs: 18
+Diversity reranking: on (-1.5 per earlier pick of the same genre, -2 if the artist was already picked)
+
+User preferences:
+  favorite_genre: pop
+  favorite_mood: happy
+  target_energy: 0.8
+  likes_acoustic: False
+
+Top recommendations (diversity-reranked):
+
++----+----------------------+------------+-------------+------------------------------------------+
+| #  | Song / Artist        | Genre/Mood | Relevance   | Why (score breakdown and                 |
+|    |                      |            | (max 11)    | diversity penalty)                       |
+|    |                      |            | -> Adjusted |                                          |
++====+======================+============+=============+==========================================+
+| 1  | Sunrise City         | pop        | 10.76       | Genre match: pop (+4.00)                 |
+|    | by Neon Echo         | happy      | -> 10.76    | Mood match: happy (+3.00)                |
+|    |                      |            |             | Energy 0.82 vs target 0.80 (+2.94)       |
+|    |                      |            |             | Acousticness 0.18, you prefer less       |
+|    |                      |            |             |   acoustic (+0.82)                       |
+|    |                      |            |             | Diversity: No repetition penalty         |
+|    |                      |            |             |   (adjusted score = relevance score)     |
++----+----------------------+------------+-------------+------------------------------------------+
+| 2  | Golden Hour Lagos    | afrobeats  | 6.70        | Genre afrobeats is not pop (+0.00)       |
+|    | by Kemi Sol          | happy      | -> 6.70     | Mood match: happy (+3.00)                |
+|    |                      |            |             | Energy 0.76 vs target 0.80 (+2.88)       |
+|    |                      |            |             | Acousticness 0.18, you prefer less       |
+|    |                      |            |             |   acoustic (+0.82)                       |
+|    |                      |            |             | Diversity: No repetition penalty         |
+|    |                      |            |             |   (adjusted score = relevance score)     |
++----+----------------------+------------+-------------+------------------------------------------+
+| 3  | Rooftop Lights       | indie pop  | 6.53        | Genre indie pop is not pop (+0.00)       |
+|    | by Indigo Parade     | happy      | -> 6.53     | Mood match: happy (+3.00)                |
+|    |                      |            |             | Energy 0.76 vs target 0.80 (+2.88)       |
+|    |                      |            |             | Acousticness 0.35, you prefer less       |
+|    |                      |            |             |   acoustic (+0.65)                       |
+|    |                      |            |             | Diversity: No repetition penalty         |
+|    |                      |            |             |   (adjusted score = relevance score)     |
++----+----------------------+------------+-------------+------------------------------------------+
+| 4  | Gym Hero             | pop        | 7.56        | Genre match: pop (+4.00)                 |
+|    | by Max Pulse         | intense    | -> 6.06     | Mood intense is not happy (+0.00)        |
+|    |                      |            |             | Energy 0.93 vs target 0.80 (+2.61)       |
+|    |                      |            |             | Acousticness 0.05, you prefer less       |
+|    |                      |            |             |   acoustic (+0.95)                       |
+|    |                      |            |             | Diversity: Genre pop already picked 1x   |
+|    |                      |            |             |   (-1.50); adjusted 6.06 = relevance     |
+|    |                      |            |             |   7.56 minus penalties                   |
++----+----------------------+------------+-------------+------------------------------------------+
+| 5  | Concrete Crown       | hip-hop    | 3.91        | Genre hip-hop is not pop (+0.00)         |
+|    | by Verse Theory      | confident  | -> 3.91     | Mood confident is not happy (+0.00)      |
+|    |                      |            |             | Energy 0.80 vs target 0.80 (+3.00)       |
+|    |                      |            |             | Acousticness 0.09, you prefer less       |
+|    |                      |            |             |   acoustic (+0.91)                       |
+|    |                      |            |             | Diversity: No repetition penalty         |
+|    |                      |            |             |   (adjusted score = relevance score)     |
++----+----------------------+------------+-------------+------------------------------------------+

@@ -1,0 +1,189 @@
+Patch check (Sunrise City, High-Energy Pop):
+  baseline score     10.7600
+  experimental score 11.7000  <- Genre match: pop (+2.00); Mood match: happy (+3.00); Energy 0.82 vs target 0.80 (+5.88); Acousticness 0.18, you prefer less acoustic (+0.82)
+
+====================================================================================================
+High-Energy Pop: {'favorite_genre': 'pop', 'favorite_mood': 'happy', 'target_energy': 0.8, 'likes_acoustic': False}
+====================================================================================================
+BASELINE (4/3/3/1, max 11):
+  1. #1  Sunrise City         (pop, happy)  10.76
+       Genre match: pop (+4.00); Mood match: happy (+3.00); Energy 0.82 vs target 0.80 (+2.94); Acousticness 0.18, you prefer less acoustic (+0.82)
+  2. #5  Gym Hero             (pop, intense)  7.56
+       Genre match: pop (+4.00); Mood intense is not happy (+0.00); Energy 0.93 vs target 0.80 (+2.61); Acousticness 0.05, you prefer less acoustic (+0.95)
+  3. #11 Golden Hour Lagos    (afrobeats, happy)  6.70
+       Genre afrobeats is not pop (+0.00); Mood match: happy (+3.00); Energy 0.76 vs target 0.80 (+2.88); Acousticness 0.18, you prefer less acoustic (+0.82)
+  4. #10 Rooftop Lights       (indie pop, happy)  6.53
+       Genre indie pop is not pop (+0.00); Mood match: happy (+3.00); Energy 0.76 vs target 0.80 (+2.88); Acousticness 0.35, you prefer less acoustic (+0.65)
+  5. #12 Concrete Crown       (hip-hop, confident)  3.91
+       Genre hip-hop is not pop (+0.00); Mood confident is not happy (+0.00); Energy 0.80 vs target 0.80 (+3.00); Acousticness 0.09, you prefer less acoustic (+0.91)
+EXPERIMENT (2/3/6/1, max 12):
+  1. #1  Sunrise City         (pop, happy)  11.70
+       Genre match: pop (+2.00); Mood match: happy (+3.00); Energy 0.82 vs target 0.80 (+5.88); Acousticness 0.18, you prefer less acoustic (+0.82)
+  2. #11 Golden Hour Lagos    (afrobeats, happy)  9.58
+       Genre afrobeats is not pop (+0.00); Mood match: happy (+3.00); Energy 0.76 vs target 0.80 (+5.76); Acousticness 0.18, you prefer less acoustic (+0.82)
+  3. #10 Rooftop Lights       (indie pop, happy)  9.41
+       Genre indie pop is not pop (+0.00); Mood match: happy (+3.00); Energy 0.76 vs target 0.80 (+5.76); Acousticness 0.35, you prefer less acoustic (+0.65)
+  4. #5  Gym Hero             (pop, intense)  8.17
+       Genre match: pop (+2.00); Mood intense is not happy (+0.00); Energy 0.93 vs target 0.80 (+5.22); Acousticness 0.05, you prefer less acoustic (+0.95)
+  5. #12 Concrete Crown       (hip-hop, confident)  6.91
+       Genre hip-hop is not pop (+0.00); Mood confident is not happy (+0.00); Energy 0.80 vs target 0.80 (+6.00); Acousticness 0.09, you prefer less acoustic (+0.91)
+Top song: baseline #1 Sunrise City | experiment #1 Sunrise City | unchanged
+Songs kept in top 5: 5/5
+Entered: []
+Left:    []
+Rank changes (union of both top-5 lists):
+  #1  Sunrise City         pop        energy 0.82 (|gap| 0.02)  rank  1 ->  1 (same   )  score 10.76 -> 11.70
+  #11 Golden Hour Lagos    afrobeats  energy 0.76 (|gap| 0.04)  rank  3 ->  2 (up 1   )  score 6.70 -> 9.58
+  #10 Rooftop Lights       indie pop  energy 0.76 (|gap| 0.04)  rank  4 ->  3 (up 1   )  score 6.53 -> 9.41
+  #5  Gym Hero             pop        energy 0.93 (|gap| 0.13)  rank  2 ->  4 (down 2 )  score 7.56 -> 8.17
+  #12 Concrete Crown       hip-hop    energy 0.80 (|gap| 0.00)  rank  5 ->  5 (same   )  score 3.91 -> 6.91
+  baseline  : cross-genre songs in top 5 = 3, mean |energy - target| = 0.046
+  experiment: cross-genre songs in top 5 = 3, mean |energy - target| = 0.046
+
+====================================================================================================
+Chill Lofi: {'favorite_genre': 'lofi', 'favorite_mood': 'chill', 'target_energy': 0.4, 'likes_acoustic': True}
+====================================================================================================
+BASELINE (4/3/3/1, max 11):
+  1. #4  Library Rain         (lofi, chill)  10.71
+       Genre match: lofi (+4.00); Mood match: chill (+3.00); Energy 0.35 vs target 0.40 (+2.85); Acousticness 0.86, you like acoustic (+0.86)
+  2. #2  Midnight Coding      (lofi, chill)  10.65
+       Genre match: lofi (+4.00); Mood match: chill (+3.00); Energy 0.42 vs target 0.40 (+2.94); Acousticness 0.71, you like acoustic (+0.71)
+  3. #9  Focus Flow           (lofi, focused)  7.78
+       Genre match: lofi (+4.00); Mood focused is not chill (+0.00); Energy 0.40 vs target 0.40 (+3.00); Acousticness 0.78, you like acoustic (+0.78)
+  4. #6  Spacewalk Thoughts   (ambient, chill)  6.56
+       Genre ambient is not lofi (+0.00); Mood match: chill (+3.00); Energy 0.28 vs target 0.40 (+2.64); Acousticness 0.92, you like acoustic (+0.92)
+  5. #7  Coffee Shop Stories  (jazz, relaxed)  3.80
+       Genre jazz is not lofi (+0.00); Mood relaxed is not chill (+0.00); Energy 0.37 vs target 0.40 (+2.91); Acousticness 0.89, you like acoustic (+0.89)
+EXPERIMENT (2/3/6/1, max 12):
+  1. #2  Midnight Coding      (lofi, chill)  11.59
+       Genre match: lofi (+2.00); Mood match: chill (+3.00); Energy 0.42 vs target 0.40 (+5.88); Acousticness 0.71, you like acoustic (+0.71)
+  2. #4  Library Rain         (lofi, chill)  11.56
+       Genre match: lofi (+2.00); Mood match: chill (+3.00); Energy 0.35 vs target 0.40 (+5.70); Acousticness 0.86, you like acoustic (+0.86)
+  3. #6  Spacewalk Thoughts   (ambient, chill)  9.20
+       Genre ambient is not lofi (+0.00); Mood match: chill (+3.00); Energy 0.28 vs target 0.40 (+5.28); Acousticness 0.92, you like acoustic (+0.92)
+  4. #9  Focus Flow           (lofi, focused)  8.78
+       Genre match: lofi (+2.00); Mood focused is not chill (+0.00); Energy 0.40 vs target 0.40 (+6.00); Acousticness 0.78, you like acoustic (+0.78)
+  5. #7  Coffee Shop Stories  (jazz, relaxed)  6.71
+       Genre jazz is not lofi (+0.00); Mood relaxed is not chill (+0.00); Energy 0.37 vs target 0.40 (+5.82); Acousticness 0.89, you like acoustic (+0.89)
+Top song: baseline #4 Library Rain | experiment #2 Midnight Coding | CHANGED
+Songs kept in top 5: 5/5
+Entered: []
+Left:    []
+Rank changes (union of both top-5 lists):
+  #2  Midnight Coding      lofi       energy 0.42 (|gap| 0.02)  rank  2 ->  1 (up 1   )  score 10.65 -> 11.59
+  #4  Library Rain         lofi       energy 0.35 (|gap| 0.05)  rank  1 ->  2 (down 1 )  score 10.71 -> 11.56
+  #6  Spacewalk Thoughts   ambient    energy 0.28 (|gap| 0.12)  rank  4 ->  3 (up 1   )  score 6.56 -> 9.20
+  #9  Focus Flow           lofi       energy 0.40 (|gap| 0.00)  rank  3 ->  4 (down 1 )  score 7.78 -> 8.78
+  #7  Coffee Shop Stories  jazz       energy 0.37 (|gap| 0.03)  rank  5 ->  5 (same   )  score 3.80 -> 6.71
+  baseline  : cross-genre songs in top 5 = 2, mean |energy - target| = 0.044
+  experiment: cross-genre songs in top 5 = 2, mean |energy - target| = 0.044
+
+====================================================================================================
+Intense Rock: {'favorite_genre': 'rock', 'favorite_mood': 'intense', 'target_energy': 0.9, 'likes_acoustic': False}
+====================================================================================================
+BASELINE (4/3/3/1, max 11):
+  1. #3  Storm Runner         (rock, intense)  10.87
+       Genre match: rock (+4.00); Mood match: intense (+3.00); Energy 0.91 vs target 0.90 (+2.97); Acousticness 0.10, you prefer less acoustic (+0.90)
+  2. #16 Breakwater           (rock, intense)  10.84
+       Genre match: rock (+4.00); Mood match: intense (+3.00); Energy 0.87 vs target 0.90 (+2.91); Acousticness 0.07, you prefer less acoustic (+0.93)
+  3. #5  Gym Hero             (pop, intense)  6.86
+       Genre pop is not rock (+0.00); Mood match: intense (+3.00); Energy 0.93 vs target 0.90 (+2.91); Acousticness 0.05, you prefer less acoustic (+0.95)
+  4. #17 Static Postcards     (rock, moody)  6.86
+       Genre match: rock (+4.00); Mood moody is not intense (+0.00); Energy 0.62 vs target 0.90 (+2.16); Acousticness 0.30, you prefer less acoustic (+0.70)
+  5. #12 Concrete Crown       (hip-hop, confident)  3.61
+       Genre hip-hop is not rock (+0.00); Mood confident is not intense (+0.00); Energy 0.80 vs target 0.90 (+2.70); Acousticness 0.09, you prefer less acoustic (+0.91)
+EXPERIMENT (2/3/6/1, max 12):
+  1. #3  Storm Runner         (rock, intense)  11.84
+       Genre match: rock (+2.00); Mood match: intense (+3.00); Energy 0.91 vs target 0.90 (+5.94); Acousticness 0.10, you prefer less acoustic (+0.90)
+  2. #16 Breakwater           (rock, intense)  11.75
+       Genre match: rock (+2.00); Mood match: intense (+3.00); Energy 0.87 vs target 0.90 (+5.82); Acousticness 0.07, you prefer less acoustic (+0.93)
+  3. #5  Gym Hero             (pop, intense)  9.77
+       Genre pop is not rock (+0.00); Mood match: intense (+3.00); Energy 0.93 vs target 0.90 (+5.82); Acousticness 0.05, you prefer less acoustic (+0.95)
+  4. #17 Static Postcards     (rock, moody)  7.02
+       Genre match: rock (+2.00); Mood moody is not intense (+0.00); Energy 0.62 vs target 0.90 (+4.32); Acousticness 0.30, you prefer less acoustic (+0.70)
+  5. #1  Sunrise City         (pop, happy)  6.34
+       Genre pop is not rock (+0.00); Mood happy is not intense (+0.00); Energy 0.82 vs target 0.90 (+5.52); Acousticness 0.18, you prefer less acoustic (+0.82)
+Top song: baseline #3 Storm Runner | experiment #3 Storm Runner | unchanged
+Songs kept in top 5: 4/5
+Entered: ['#1 Sunrise City']
+Left:    ['#12 Concrete Crown']
+Rank changes (union of both top-5 lists):
+  #3  Storm Runner         rock       energy 0.91 (|gap| 0.01)  rank  1 ->  1 (same   )  score 10.87 -> 11.84
+  #16 Breakwater           rock       energy 0.87 (|gap| 0.03)  rank  2 ->  2 (same   )  score 10.84 -> 11.75
+  #5  Gym Hero             pop        energy 0.93 (|gap| 0.03)  rank  3 ->  3 (same   )  score 6.86 -> 9.77
+  #17 Static Postcards     rock       energy 0.62 (|gap| 0.28)  rank  4 ->  4 (same   )  score 6.86 -> 7.02
+  #1  Sunrise City         pop        energy 0.82 (|gap| 0.08)  rank  6 ->  5 (up 1   )  score 3.58 -> 6.34
+  #12 Concrete Crown       hip-hop    energy 0.80 (|gap| 0.10)  rank  5 ->  6 (down 1 )  score 3.61 -> 6.31
+  baseline  : cross-genre songs in top 5 = 2, mean |energy - target| = 0.090
+  experiment: cross-genre songs in top 5 = 2, mean |energy - target| = 0.086
+
+====================================================================================================
+Adversarial Listener: {'favorite_genre': 'lofi', 'favorite_mood': 'sad', 'target_energy': 0.9, 'likes_acoustic': False}
+====================================================================================================
+BASELINE (4/3/3/1, max 11):
+  1. #2  Midnight Coding      (lofi, chill)  5.85
+       Genre match: lofi (+4.00); Mood chill is not sad (+0.00); Energy 0.42 vs target 0.90 (+1.56); Acousticness 0.71, you prefer less acoustic (+0.29)
+  2. #9  Focus Flow           (lofi, focused)  5.72
+       Genre match: lofi (+4.00); Mood focused is not sad (+0.00); Energy 0.40 vs target 0.90 (+1.50); Acousticness 0.78, you prefer less acoustic (+0.22)
+  3. #4  Library Rain         (lofi, chill)  5.49
+       Genre match: lofi (+4.00); Mood chill is not sad (+0.00); Energy 0.35 vs target 0.90 (+1.35); Acousticness 0.86, you prefer less acoustic (+0.14)
+  4. #14 Paper Boats          (folk, sad)  4.17
+       Genre folk is not lofi (+0.00); Mood match: sad (+3.00); Energy 0.27 vs target 0.90 (+1.11); Acousticness 0.94, you prefer less acoustic (+0.06)
+  5. #3  Storm Runner         (rock, intense)  3.87
+       Genre rock is not lofi (+0.00); Mood intense is not sad (+0.00); Energy 0.91 vs target 0.90 (+2.97); Acousticness 0.10, you prefer less acoustic (+0.90)
+EXPERIMENT (2/3/6/1, max 12):
+  1. #3  Storm Runner         (rock, intense)  6.84
+       Genre rock is not lofi (+0.00); Mood intense is not sad (+0.00); Energy 0.91 vs target 0.90 (+5.94); Acousticness 0.10, you prefer less acoustic (+0.90)
+  2. #5  Gym Hero             (pop, intense)  6.77
+       Genre pop is not lofi (+0.00); Mood intense is not sad (+0.00); Energy 0.93 vs target 0.90 (+5.82); Acousticness 0.05, you prefer less acoustic (+0.95)
+  3. #16 Breakwater           (rock, intense)  6.75
+       Genre rock is not lofi (+0.00); Mood intense is not sad (+0.00); Energy 0.87 vs target 0.90 (+5.82); Acousticness 0.07, you prefer less acoustic (+0.93)
+  4. #1  Sunrise City         (pop, happy)  6.34
+       Genre pop is not lofi (+0.00); Mood happy is not sad (+0.00); Energy 0.82 vs target 0.90 (+5.52); Acousticness 0.18, you prefer less acoustic (+0.82)
+  5. #12 Concrete Crown       (hip-hop, confident)  6.31
+       Genre hip-hop is not lofi (+0.00); Mood confident is not sad (+0.00); Energy 0.80 vs target 0.90 (+5.40); Acousticness 0.09, you prefer less acoustic (+0.91)
+Top song: baseline #2 Midnight Coding | experiment #3 Storm Runner | CHANGED
+Songs kept in top 5: 1/5
+Entered: ['#5 Gym Hero', '#16 Breakwater', '#1 Sunrise City', '#12 Concrete Crown']
+Left:    ['#2 Midnight Coding', '#9 Focus Flow', '#4 Library Rain', '#14 Paper Boats']
+Rank changes (union of both top-5 lists):
+  #3  Storm Runner         rock       energy 0.91 (|gap| 0.01)  rank  5 ->  1 (up 4   )  score 3.87 -> 6.84
+  #5  Gym Hero             pop        energy 0.93 (|gap| 0.03)  rank  6 ->  2 (up 4   )  score 3.86 -> 6.77
+  #16 Breakwater           rock       energy 0.87 (|gap| 0.03)  rank  7 ->  3 (up 4   )  score 3.84 -> 6.75
+  #1  Sunrise City         pop        energy 0.82 (|gap| 0.08)  rank 10 ->  4 (up 6   )  score 3.58 -> 6.34
+  #12 Concrete Crown       hip-hop    energy 0.80 (|gap| 0.10)  rank  9 ->  5 (up 4   )  score 3.61 -> 6.31
+  #2  Midnight Coding      lofi       energy 0.42 (|gap| 0.48)  rank  1 ->  9 (down 8 )  score 5.85 -> 5.41
+  #14 Paper Boats          folk       energy 0.27 (|gap| 0.63)  rank  4 -> 10 (down 6 )  score 4.17 -> 5.28
+  #9  Focus Flow           lofi       energy 0.40 (|gap| 0.50)  rank  2 -> 11 (down 9 )  score 5.72 -> 5.22
+  #4  Library Rain         lofi       energy 0.35 (|gap| 0.55)  rank  3 -> 13 (down 10)  score 5.49 -> 4.84
+  baseline  : cross-genre songs in top 5 = 2, mean |energy - target| = 0.434
+  experiment: cross-genre songs in top 5 = 5, mean |energy - target| = 0.050
+
+====================================================================================================
+EXTRA EDGE-CASE PROFILES (baseline weights only)
+====================================================================================================
+Energetic Acoustic Folk: {'favorite_genre': 'folk', 'favorite_mood': 'happy', 'target_energy': 0.85, 'likes_acoustic': True}
+  1. #14 Paper Boats          (folk, sad)  6.20
+       Genre match: folk (+4.00); Mood sad is not happy (+0.00); Energy 0.27 vs target 0.85 (+1.26); Acousticness 0.94, you like acoustic (+0.94)
+  2. #1  Sunrise City         (pop, happy)  6.09
+       Genre pop is not folk (+0.00); Mood match: happy (+3.00); Energy 0.82 vs target 0.85 (+2.91); Acousticness 0.18, you like acoustic (+0.18)
+  3. #10 Rooftop Lights       (indie pop, happy)  6.08
+       Genre indie pop is not folk (+0.00); Mood match: happy (+3.00); Energy 0.76 vs target 0.85 (+2.73); Acousticness 0.35, you like acoustic (+0.35)
+  4. #11 Golden Hour Lagos    (afrobeats, happy)  5.91
+       Genre afrobeats is not folk (+0.00); Mood match: happy (+3.00); Energy 0.76 vs target 0.85 (+2.73); Acousticness 0.18, you like acoustic (+0.18)
+  5. #16 Breakwater           (rock, intense)  3.01
+       Genre rock is not folk (+0.00); Mood intense is not happy (+0.00); Energy 0.87 vs target 0.85 (+2.94); Acousticness 0.07, you like acoustic (+0.07)
+
+Genre Not In Catalog (metal): {'favorite_genre': 'metal', 'favorite_mood': 'intense', 'target_energy': 0.95, 'likes_acoustic': False}
+  1. #5  Gym Hero             (pop, intense)  6.89
+       Genre pop is not metal (+0.00); Mood match: intense (+3.00); Energy 0.93 vs target 0.95 (+2.94); Acousticness 0.05, you prefer less acoustic (+0.95)
+  2. #3  Storm Runner         (rock, intense)  6.78
+       Genre rock is not metal (+0.00); Mood match: intense (+3.00); Energy 0.91 vs target 0.95 (+2.88); Acousticness 0.10, you prefer less acoustic (+0.90)
+  3. #16 Breakwater           (rock, intense)  6.69
+       Genre rock is not metal (+0.00); Mood match: intense (+3.00); Energy 0.87 vs target 0.95 (+2.76); Acousticness 0.07, you prefer less acoustic (+0.93)
+  4. #12 Concrete Crown       (hip-hop, confident)  3.46
+       Genre hip-hop is not metal (+0.00); Mood confident is not intense (+0.00); Energy 0.80 vs target 0.95 (+2.55); Acousticness 0.09, you prefer less acoustic (+0.91)
+  5. #1  Sunrise City         (pop, happy)  3.43
+       Genre pop is not metal (+0.00); Mood happy is not intense (+0.00); Energy 0.82 vs target 0.95 (+2.61); Acousticness 0.18, you prefer less acoustic (+0.82)
+
+Weights after experiment: {'GENRE_WEIGHT': 4.0, 'MOOD_WEIGHT': 3.0, 'ENERGY_WEIGHT': 3.0, 'ACOUSTIC_WEIGHT': 1.0}, MAX_SCORE=11.0

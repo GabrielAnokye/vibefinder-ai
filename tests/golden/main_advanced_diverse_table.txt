@@ -1,0 +1,100 @@
+Loaded songs: 18
+Advanced scoring: on - adds up to 3 points: popularity closeness (up to 0.5), decade match (0.5), instrumentalness closeness (up to 0.5), vocal intensity closeness (up to 0.5), mood-tag overlap (up to 1); max 14
+Diversity reranking: on (-1.5 per earlier pick of the same genre, -2 if the artist was already picked)
+
+User preferences:
+  favorite_genre: pop
+  favorite_mood: happy
+  target_energy: 0.8
+  likes_acoustic: False
+  target_popularity: 80
+  preferred_decade: 2020
+  target_instrumentalness: 0.1
+  target_vocal_intensity: 0.7
+  preferred_tags: ['uplifting', 'euphoric']
+
+Top recommendations (diversity-reranked):
+
++----+----------------------+------------+-------------+------------------------------------------+
+| #  | Song / Artist        | Genre/Mood | Relevance   | Why (score breakdown and                 |
+|    |                      |            | (max 14)    | diversity penalty)                       |
+|    |                      |            | -> Adjusted |                                          |
++====+======================+============+=============+==========================================+
+| 1  | Sunrise City         | pop        | 13.23       | Genre match: pop (+4.00)                 |
+|    | by Neon Echo         | happy      | -> 13.23    | Mood match: happy (+3.00)                |
+|    |                      |            |             | Energy 0.82 vs target 0.80 (+2.94)       |
+|    |                      |            |             | Acousticness 0.18, you prefer less       |
+|    |                      |            |             |   acoustic (+0.82)                       |
+|    |                      |            |             | Popularity 78 vs target 80 (+0.49)       |
+|    |                      |            |             | Decade match: 2020s (+0.50)              |
+|    |                      |            |             | Instrumentalness 0.05 vs target 0.10     |
+|    |                      |            |             |   (+0.47)                                |
+|    |                      |            |             | Vocal intensity 0.70 vs target 0.70      |
+|    |                      |            |             |   (+0.50)                                |
+|    |                      |            |             | Mood tags 1/2 matched: uplifting (+0.50) |
+|    |                      |            |             | Diversity: No repetition penalty         |
+|    |                      |            |             |   (adjusted score = relevance score)     |
++----+----------------------+------------+-------------+------------------------------------------+
+| 2  | Golden Hour Lagos    | afrobeats  | 9.63        | Genre afrobeats is not pop (+0.00)       |
+|    | by Kemi Sol          | happy      | -> 9.63     | Mood match: happy (+3.00)                |
+|    |                      |            |             | Energy 0.76 vs target 0.80 (+2.88)       |
+|    |                      |            |             | Acousticness 0.18, you prefer less       |
+|    |                      |            |             |   acoustic (+0.82)                       |
+|    |                      |            |             | Popularity 74 vs target 80 (+0.47)       |
+|    |                      |            |             | Decade match: 2020s (+0.50)              |
+|    |                      |            |             | Instrumentalness 0.12 vs target 0.10     |
+|    |                      |            |             |   (+0.49)                                |
+|    |                      |            |             | Vocal intensity 0.65 vs target 0.70      |
+|    |                      |            |             |   (+0.48)                                |
+|    |                      |            |             | Mood tags 2/2 matched: uplifting,        |
+|    |                      |            |             |   euphoric (+1.00)                       |
+|    |                      |            |             | Diversity: No repetition penalty         |
+|    |                      |            |             |   (adjusted score = relevance score)     |
++----+----------------------+------------+-------------+------------------------------------------+
+| 3  | Rooftop Lights       | indie pop  | 9.41        | Genre indie pop is not pop (+0.00)       |
+|    | by Indigo Parade     | happy      | -> 9.41     | Mood match: happy (+3.00)                |
+|    |                      |            |             | Energy 0.76 vs target 0.80 (+2.88)       |
+|    |                      |            |             | Acousticness 0.35, you prefer less       |
+|    |                      |            |             |   acoustic (+0.65)                       |
+|    |                      |            |             | Popularity 67 vs target 80 (+0.43)       |
+|    |                      |            |             | Decade match: 2020s (+0.50)              |
+|    |                      |            |             | Instrumentalness 0.08 vs target 0.10     |
+|    |                      |            |             |   (+0.49)                                |
+|    |                      |            |             | Vocal intensity 0.60 vs target 0.70      |
+|    |                      |            |             |   (+0.45)                                |
+|    |                      |            |             | Mood tags 2/2 matched: uplifting,        |
+|    |                      |            |             |   euphoric (+1.00)                       |
+|    |                      |            |             | Diversity: No repetition penalty         |
+|    |                      |            |             |   (adjusted score = relevance score)     |
++----+----------------------+------------+-------------+------------------------------------------+
+| 4  | Gym Hero             | pop        | 9.46        | Genre match: pop (+4.00)                 |
+|    | by Max Pulse         | intense    | -> 7.96     | Mood intense is not happy (+0.00)        |
+|    |                      |            |             | Energy 0.93 vs target 0.80 (+2.61)       |
+|    |                      |            |             | Acousticness 0.05, you prefer less       |
+|    |                      |            |             |   acoustic (+0.95)                       |
+|    |                      |            |             | Popularity 85 vs target 80 (+0.47)       |
+|    |                      |            |             | Decade 2010s is not 2020s (+0.00)        |
+|    |                      |            |             | Instrumentalness 0.04 vs target 0.10     |
+|    |                      |            |             |   (+0.47)                                |
+|    |                      |            |             | Vocal intensity 0.80 vs target 0.70      |
+|    |                      |            |             |   (+0.45)                                |
+|    |                      |            |             | Mood tags 1/2 matched: euphoric (+0.50)  |
+|    |                      |            |             | Diversity: Genre pop already picked 1x   |
+|    |                      |            |             |   (-1.50); adjusted 7.96 = relevance     |
+|    |                      |            |             |   9.46 minus penalties                   |
++----+----------------------+------------+-------------+------------------------------------------+
+| 5  | Concrete Crown       | hip-hop    | 5.77        | Genre hip-hop is not pop (+0.00)         |
+|    | by Verse Theory      | confident  | -> 5.77     | Mood confident is not happy (+0.00)      |
+|    |                      |            |             | Energy 0.80 vs target 0.80 (+3.00)       |
+|    |                      |            |             | Acousticness 0.09, you prefer less       |
+|    |                      |            |             |   acoustic (+0.91)                       |
+|    |                      |            |             | Popularity 81 vs target 80 (+0.49)       |
+|    |                      |            |             | Decade 2010s is not 2020s (+0.00)        |
+|    |                      |            |             | Instrumentalness 0.02 vs target 0.10     |
+|    |                      |            |             |   (+0.46)                                |
+|    |                      |            |             | Vocal intensity 0.90 vs target 0.70      |
+|    |                      |            |             |   (+0.40)                                |
+|    |                      |            |             | Mood tags 1/2 matched: uplifting (+0.50) |
+|    |                      |            |             | Diversity: No repetition penalty         |
+|    |                      |            |             |   (adjusted score = relevance score)     |
++----+----------------------+------------+-------------+------------------------------------------+

@@ -1,0 +1,36 @@
+Loaded songs: 18
+Advanced scoring: on - adds up to 3 points: popularity closeness (up to 0.5), decade match (0.5), instrumentalness closeness (up to 0.5), vocal intensity closeness (up to 0.5), mood-tag overlap (up to 1); max 14
+
+User preferences:
+  favorite_genre: pop
+  favorite_mood: happy
+  target_energy: 0.8
+  likes_acoustic: False
+  target_popularity: 80
+  preferred_decade: 2020
+  target_instrumentalness: 0.1
+  target_vocal_intensity: 0.7
+  preferred_tags: ['uplifting', 'euphoric']
+
+Top recommendations:
+
+1. Sunrise City by Neon Echo
+   Genre: pop | Mood: happy | Score: 13.23
+   Because: Genre match: pop (+4.00); Mood match: happy (+3.00); Energy 0.82 vs target 0.80 (+2.94); Acousticness 0.18, you prefer less acoustic (+0.82); Popularity 78 vs target 80 (+0.49); Decade match: 2020s (+0.50); Instrumentalness 0.05 vs target 0.10 (+0.47); Vocal intensity 0.70 vs target 0.70 (+0.50); Mood tags 1/2 matched: uplifting (+0.50)
+
+2. Golden Hour Lagos by Kemi Sol
+   Genre: afrobeats | Mood: happy | Score: 9.63
+   Because: Genre afrobeats is not pop (+0.00); Mood match: happy (+3.00); Energy 0.76 vs target 0.80 (+2.88); Acousticness 0.18, you prefer less acoustic (+0.82); Popularity 74 vs target 80 (+0.47); Decade match: 2020s (+0.50); Instrumentalness 0.12 vs target 0.10 (+0.49); Vocal intensity 0.65 vs target 0.70 (+0.48); Mood tags 2/2 matched: uplifting, euphoric (+1.00)
+
+3. Gym Hero by Max Pulse
+   Genre: pop | Mood: intense | Score: 9.46
+   Because: Genre match: pop (+4.00); Mood intense is not happy (+0.00); Energy 0.93 vs target 0.80 (+2.61); Acousticness 0.05, you prefer less acoustic (+0.95); Popularity 85 vs target 80 (+0.47); Decade 2010s is not 2020s (+0.00); Instrumentalness 0.04 vs target 0.10 (+0.47); Vocal intensity 0.80 vs target 0.70 (+0.45); Mood tags 1/2 matched: euphoric (+0.50)
+
+4. Rooftop Lights by Indigo Parade
+   Genre: indie pop | Mood: happy | Score: 9.41
+   Because: Genre indie pop is not pop (+0.00); Mood match: happy (+3.00); Energy 0.76 vs target 0.80 (+2.88); Acousticness 0.35, you prefer less acoustic (+0.65); Popularity 67 vs target 80 (+0.43); Decade match: 2020s (+0.50); Instrumentalness 0.08 vs target 0.10 (+0.49); Vocal intensity 0.60 vs target 0.70 (+0.45); Mood tags 2/2 matched: uplifting, euphoric (+1.00)
+
+5. Concrete Crown by Verse Theory
+   Genre: hip-hop | Mood: confident | Score: 5.77
+   Because: Genre hip-hop is not pop (+0.00); Mood confident is not happy (+0.00); Energy 0.80 vs target 0.80 (+3.00); Acousticness 0.09, you prefer less acoustic (+0.91); Popularity 81 vs target 80 (+0.49); Decade 2010s is not 2020s (+0.00); Instrumentalness 0.02 vs target 0.10 (+0.46); Vocal intensity 0.90 vs target 0.70 (+0.40); Mood tags 1/2 matched: uplifting (+0.50)
+

@@ -1,0 +1,31 @@
+Loaded songs: 18
+Ranking mode: mood-first (Mood matters most; genre counts less) - genre 2, mood 4, energy up to 3, acoustic up to 1; max 10
+
+User preferences:
+  favorite_genre: pop
+  favorite_mood: happy
+  target_energy: 0.8
+  likes_acoustic: False
+
+Top recommendations:
+
+1. Sunrise City by Neon Echo
+   Genre: pop | Mood: happy | Score: 9.76
+   Because: Genre match: pop (+2.00); Mood match: happy (+4.00); Energy 0.82 vs target 0.80 (+2.94); Acousticness 0.18, you prefer less acoustic (+0.82)
+
+2. Golden Hour Lagos by Kemi Sol
+   Genre: afrobeats | Mood: happy | Score: 7.70
+   Because: Genre afrobeats is not pop (+0.00); Mood match: happy (+4.00); Energy 0.76 vs target 0.80 (+2.88); Acousticness 0.18, you prefer less acoustic (+0.82)
+
+3. Rooftop Lights by Indigo Parade
+   Genre: indie pop | Mood: happy | Score: 7.53
+   Because: Genre indie pop is not pop (+0.00); Mood match: happy (+4.00); Energy 0.76 vs target 0.80 (+2.88); Acousticness 0.35, you prefer less acoustic (+0.65)
+
+4. Gym Hero by Max Pulse
+   Genre: pop | Mood: intense | Score: 5.56
+   Because: Genre match: pop (+2.00); Mood intense is not happy (+0.00); Energy 0.93 vs target 0.80 (+2.61); Acousticness 0.05, you prefer less acoustic (+0.95)
+
+5. Concrete Crown by Verse Theory
+   Genre: hip-hop | Mood: confident | Score: 3.91
+   Because: Genre hip-hop is not pop (+0.00); Mood confident is not happy (+0.00); Energy 0.80 vs target 0.80 (+3.00); Acousticness 0.09, you prefer less acoustic (+0.91)
+
