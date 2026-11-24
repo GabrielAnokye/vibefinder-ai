@@ -1,8 +1,9 @@
 """
 Deterministic guardrails: request text, final recommendations, and generated explanations.
 
-These checks prove consistency with the catalog, the engine, and the retrieved sources.
-They do not prove that every sentence of generated prose is true.
+These checks prove consistency with the catalog, the engine, the plan, and the list of
+retrieved source ids. They do NOT prove that every sentence of generated prose is true, or
+that a cited passage actually supports the sentence that cites it; that needs human review.
 """
 
 import json
@@ -11,12 +12,20 @@ import re
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 from src.assistant.models import MAX_REQUEST_CHARS, Explanation, Plan, Recommendation
+from src.assistant.providers import EXAMPLE_NAMES, FEATURES
 from src.recommender import normalize_label, score_song
 
+MAX_RAW_CHARS = 8000
 MAX_SUMMARY_CHARS = 600
 MAX_ITEM_CHARS = 600
 MAX_LIMITATIONS = 10
 SCORE_TOLERANCE = 1e-9
+NUMBER_TOLERANCE = 0.006       # a stated decimal must match an authoritative value to 2 decimals
+
+TOP_LEVEL_KEYS = {"summary", "items", "limitations"}
+ITEM_KEYS = {"song_id", "explanation", "citations", "features_referenced", "unmet_preferences"}
+OVERCLAIMS = ("perfect match", "guaranteed", "you will love", "you'll love", "100% match")
+DECIMAL = re.compile(r"(?<![\w.])\d+\.\d+(?![\w.])")
 
 
 def check_request_text(text: object) -> Optional[str]:
@@ -78,73 +87,119 @@ def _mentions(text: str, name: str) -> bool:
     return re.search(r"(?<![a-z0-9])" + re.escape(name.casefold()) + r"(?![a-z0-9])", text.casefold()) is not None
 
 
+def _numbers(value: Any) -> List[float]:
+    return [float(n) for n in DECIMAL.findall(json.dumps(value))]
+
+
+def _unsupported_numbers(text: str, allowed: Sequence[float]) -> List[str]:
+    return [n for n in DECIMAL.findall(text) if not any(abs(float(n) - a) <= NUMBER_TOLERANCE for a in allowed)]
+
+
+def _string_list(value: Any) -> bool:
+    return isinstance(value, list) and all(isinstance(x, str) for x in value)
+
+
 def parse_explanation(
-    raw: str, recs: Sequence[Recommendation], allowed_sources: Sequence[str], catalog: Sequence[Dict]
+    raw: str, payload: Dict[str, Any], catalog: Sequence[Dict]
 ) -> Tuple[Optional[Explanation], List[str]]:
-    """Parse and validate provider JSON; return (Explanation, []) or (None, errors)."""
+    """Parse and validate provider JSON against the grounding payload; return (Explanation, []) or (None, errors)."""
+    if not isinstance(raw, str):
+        return None, ["response is not text"]
+    if len(raw) > MAX_RAW_CHARS:
+        return None, [f"response is longer than {MAX_RAW_CHARS} characters"]
     try:
         data = json.loads(_strip_fences(raw))
-    except (TypeError, ValueError):
+    except ValueError:
         return None, ["response is not valid JSON"]
     if not isinstance(data, dict):
         return None, ["response is not a JSON object"]
     errors: List[str] = []
+    extra = sorted(set(data) - TOP_LEVEL_KEYS)
+    if extra:
+        errors.append(f"unexpected top-level field(s) {extra}; recommendations and scores cannot be overridden")
     summary = data.get("summary")
     if not isinstance(summary, str) or not summary.strip() or len(summary) > MAX_SUMMARY_CHARS:
         errors.append("summary must be a non-empty string under the length limit")
+        summary = ""
     items = data.get("items")
     if not isinstance(items, list):
         return None, errors + ["items must be a list"]
 
-    expected_ids = [rec.song["id"] for rec in recs]
-    allowed = set(allowed_sources)
+    results = {r["song_id"]: r for r in payload["results"]}
+    expected_ids = list(results)
+    allowed_sources = {s["id"] for s in payload["sources"]}
     texts: Dict[int, str] = {}
     citations: Dict[int, List[str]] = {}
+    features: Dict[int, List[str]] = {}
     for item in items:
         if not isinstance(item, dict):
             errors.append("each item must be an object")
             continue
         song_id = item.get("song_id")
-        if not isinstance(song_id, int) or isinstance(song_id, bool) or song_id not in expected_ids:
+        if not isinstance(song_id, int) or isinstance(song_id, bool) or song_id not in results:
             errors.append(f"song_id {song_id!r} is not one of the recommended songs")
             continue
         if song_id in texts:
             errors.append(f"song_id {song_id} is explained twice")
             continue
+        extra = sorted(set(item) - ITEM_KEYS)
+        if extra:
+            errors.append(f"song_id {song_id} has unexpected field(s) {extra}; titles, scores and ranks come "
+                          "from the recommender")
         text = item.get("explanation")
         if not isinstance(text, str) or not text.strip() or len(text) > MAX_ITEM_CHARS:
             errors.append(f"song_id {song_id} needs a non-empty explanation under the length limit")
             continue
         cited = item.get("citations", [])
-        if not isinstance(cited, list) or not all(isinstance(c, str) for c in cited):
-            errors.append(f"song_id {song_id} citations must be a list of strings")
+        referenced = item.get("features_referenced", [])
+        unmet = item.get("unmet_preferences", [])
+        if not (_string_list(cited) and _string_list(referenced) and _string_list(unmet)):
+            errors.append(f"song_id {song_id} citations, features_referenced and unmet_preferences must be lists of strings")
             continue
-        unsupported = [c for c in cited if c not in allowed]
+        unsupported = [c for c in cited if c not in allowed_sources]
         if unsupported:
             errors.append(f"song_id {song_id} cites unsupported source(s): {', '.join(unsupported)}")
+        unknown_features = [f for f in referenced if f not in FEATURES]
+        if unknown_features:
+            errors.append(f"song_id {song_id} references unknown feature(s): {', '.join(unknown_features)}")
+        if sorted(unmet) != sorted(results[song_id]["unmet"]):
+            errors.append(f"song_id {song_id} unmet_preferences {unmet} do not match the recommender's "
+                          f"{results[song_id]['unmet']}")
+        allowed_numbers = _numbers(results[song_id]) + _numbers(payload["limitations"])
+        bad_numbers = _unsupported_numbers(text, allowed_numbers)
+        if bad_numbers:
+            errors.append(f"song_id {song_id} states number(s) {bad_numbers} that are not in its authoritative data")
         texts[song_id] = text.strip()
         citations[song_id] = list(dict.fromkeys(cited))
+        features[song_id] = list(dict.fromkeys(referenced))
     missing = [i for i in expected_ids if i not in texts]
     if missing:
         errors.append(f"no explanation for song id(s) {missing}")
 
     limitations = data.get("limitations", [])
-    if (not isinstance(limitations, list) or len(limitations) > MAX_LIMITATIONS
-            or not all(isinstance(x, str) and len(x) <= MAX_ITEM_CHARS for x in limitations)):
+    if (not _string_list(limitations) or len(limitations) > MAX_LIMITATIONS
+            or any(len(x) > MAX_ITEM_CHARS for x in limitations)):
         errors.append("limitations must be a short list of strings")
         limitations = []
 
-    # Prose must not mention catalog songs or artists that are not in the results.
-    prose = " ".join([summary if isinstance(summary, str) else ""] + list(texts.values()) + list(limitations))
-    result_ids = set(expected_ids)
-    result_artists = {normalize_label(rec.song["artist"]) for rec in recs}
+    prose = " ".join([summary] + list(texts.values()) + list(limitations))
+    bad_summary_numbers = _unsupported_numbers(summary, _numbers(payload))
+    if bad_summary_numbers:
+        errors.append(f"summary states number(s) {bad_summary_numbers} that are not in the authoritative data")
+    result_artists = {normalize_label(r["artist"]) for r in payload["results"]}
     for song in catalog:
-        if song["id"] not in result_ids and _mentions(prose, song["title"]):
+        if song["id"] not in results and _mentions(prose, song["title"]):
             errors.append(f"mentions song not in the results: {song['title']}")
         if normalize_label(song["artist"]) not in result_artists and _mentions(prose, song["artist"]):
             errors.append(f"mentions artist not in the results: {song['artist']}")
+    for name in EXAMPLE_NAMES:
+        if _mentions(prose, name):
+            errors.append(f"mentions few-shot example name {name!r}, which is not a catalog song")
+    for phrase in OVERCLAIMS:
+        if phrase in prose.casefold():
+            errors.append(f"overclaims with {phrase!r}")
 
     if errors:
         return None, list(dict.fromkeys(errors))
     return Explanation(summary=summary.strip(), items=texts, citations=citations,
-                       limitations=[x.strip() for x in limitations if x.strip()]), []
+                       limitations=[x.strip() for x in limitations if x.strip()], features=features), []

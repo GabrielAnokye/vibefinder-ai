@@ -1,0 +1,246 @@
+{
+  "events": [
+    {
+      "action": "check length and content",
+      "decision": null,
+      "event_id": "01-validate_request",
+      "input": {
+        "characters": 47
+      },
+      "result": {},
+      "sources": [],
+      "stage": "validate_request",
+      "step": 1,
+      "validation": "accepted"
+    },
+    {
+      "action": "rule-based interpretation",
+      "decision": null,
+      "event_id": "02-interpret",
+      "input": {},
+      "result": {
+        "ambiguities": [],
+        "contexts": [],
+        "count": 5,
+        "excluded_artists": [],
+        "excluded_genres": [],
+        "explicit": {
+          "acoustic": "yes",
+          "energy": "0.95"
+        },
+        "genre_requirement": "none",
+        "unavailable_genres": [],
+        "unique_artists": false
+      },
+      "sources": [],
+      "stage": "interpret",
+      "step": 2,
+      "validation": null
+    },
+    {
+      "action": "TF-IDF search over guides and catalog facts",
+      "decision": null,
+      "event_id": "03-retrieve",
+      "input": {
+        "enabled": true,
+        "index_size": 62
+      },
+      "result": {
+        "scores": {
+          "catalog#energy-vs-acousticness": 0.3475,
+          "listening_contexts#workout": 0.2037,
+          "music_features#acousticness": 0.3755,
+          "music_features#instrumentalness": 0.287
+        }
+      },
+      "sources": [
+        "music_features#acousticness",
+        "catalog#energy-vs-acousticness",
+        "music_features#instrumentalness",
+        "listening_contexts#workout"
+      ],
+      "stage": "retrieve",
+      "step": 3,
+      "validation": null
+    },
+    {
+      "action": "build recommendation plan",
+      "decision": null,
+      "event_id": "04-plan",
+      "input": {},
+      "result": {
+        "advanced": false,
+        "diverse": false,
+        "engine_prefs": {
+          "favorite_genre": "NO_PREFERENCE",
+          "favorite_mood": "NO_PREFERENCE",
+          "likes_acoustic": true,
+          "target_energy": 0.95
+        },
+        "hints_not_used": {},
+        "hints_used": {},
+        "k": 5,
+        "mode": "energy-focused",
+        "mode_reason": "energy is the only genre, mood, or feature preference you stated",
+        "status": "ok",
+        "unknown": [
+          "genre",
+          "mood",
+          "popularity",
+          "release decade",
+          "instrumentalness",
+          "vocal intensity",
+          "mood tags"
+        ]
+      },
+      "sources": [],
+      "stage": "plan",
+      "step": 4,
+      "validation": null
+    },
+    {
+      "action": "apply hard genres and exclusions",
+      "decision": null,
+      "event_id": "05-filter_catalog",
+      "input": {
+        "excluded_artists": [],
+        "excluded_genres": [],
+        "hard_genres": []
+      },
+      "result": {
+        "candidates": 18
+      },
+      "sources": [],
+      "stage": "filter_catalog",
+      "step": 5,
+      "validation": null
+    },
+    {
+      "action": "call recommend_songs",
+      "decision": null,
+      "event_id": "06-rank",
+      "input": {
+        "advanced": false,
+        "candidates": 18,
+        "k": 5,
+        "mode": "energy-focused"
+      },
+      "result": {
+        "active_max": 7.0,
+        "scores": [
+          5.93,
+          5.86,
+          5.59,
+          5.4,
+          5.21
+        ],
+        "selected": [
+          5,
+          3,
+          16,
+          1,
+          10
+        ]
+      },
+      "sources": [],
+      "stage": "rank",
+      "step": 6,
+      "validation": null
+    },
+    {
+      "action": "compare stated preferences with the catalog and the selected results",
+      "decision": null,
+      "event_id": "07-check_coverage",
+      "input": {},
+      "result": {
+        "limitations": [
+          "No catalog song meets all of your stated preferences at once (energy 0.95, acoustic sound yes) [catalog#energy-vs-acousticness]; the results are the closest available compromises.",
+          "None of the results meets your stated acoustic sound; the catalog has no closer match among the candidates."
+        ],
+        "unmet_by_song": {
+          "1": [
+            "acoustic sound"
+          ],
+          "3": [
+            "acoustic sound"
+          ],
+          "5": [
+            "acoustic sound"
+          ],
+          "10": [
+            "acoustic sound"
+          ],
+          "16": [
+            "acoustic sound"
+          ]
+        }
+      },
+      "sources": [
+        "catalog#energy-vs-acousticness"
+      ],
+      "stage": "check_coverage",
+      "step": 7,
+      "validation": "limitations disclosed"
+    },
+    {
+      "action": "re-score every result and check constraints",
+      "decision": null,
+      "event_id": "08-validate_results",
+      "input": {},
+      "result": {},
+      "sources": [],
+      "stage": "validate_results",
+      "step": 8,
+      "validation": "accepted"
+    },
+    {
+      "action": "template explanation (deterministic, not an LLM)",
+      "decision": null,
+      "event_id": "09-generate_explanation",
+      "input": {},
+      "result": {},
+      "sources": [
+        "music_features#acousticness",
+        "catalog#energy-vs-acousticness",
+        "music_features#instrumentalness",
+        "listening_contexts#workout"
+      ],
+      "stage": "generate_explanation",
+      "step": 9,
+      "validation": "accepted"
+    },
+    {
+      "action": "return response",
+      "decision": null,
+      "event_id": "10-return",
+      "input": {},
+      "result": {
+        "generator": "template (deterministic, not an LLM)",
+        "http_attempts": 0,
+        "message": null,
+        "song_ids": [
+          5,
+          3,
+          16,
+          1,
+          10
+        ],
+        "status": "ok"
+      },
+      "sources": [],
+      "stage": "return",
+      "step": 10,
+      "validation": null
+    }
+  ],
+  "metadata": {
+    "format": "vibefinder-trace/1",
+    "max_http_attempts": 3,
+    "prompt_style": null,
+    "provider": "template (deterministic, not an LLM)",
+    "provider_kind": "template",
+    "quality_floor": 0.4,
+    "request": "Recommend acoustic music with very high energy.",
+    "retrieval": true
+  }
+}

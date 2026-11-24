@@ -1,0 +1,235 @@
+{
+  "events": [
+    {
+      "action": "check length and content",
+      "decision": null,
+      "event_id": "01-validate_request",
+      "input": {
+        "characters": 38
+      },
+      "result": {},
+      "sources": [],
+      "stage": "validate_request",
+      "step": 1,
+      "validation": "accepted"
+    },
+    {
+      "action": "rule-based interpretation",
+      "decision": null,
+      "event_id": "02-interpret",
+      "input": {},
+      "result": {
+        "ambiguities": [],
+        "contexts": [],
+        "count": 5,
+        "excluded_artists": [],
+        "excluded_genres": [],
+        "explicit": {
+          "genres": "lofi",
+          "moods": "chill"
+        },
+        "genre_requirement": "soft",
+        "unavailable_genres": [],
+        "unique_artists": true
+      },
+      "sources": [],
+      "stage": "interpret",
+      "step": 2,
+      "validation": null
+    },
+    {
+      "action": "TF-IDF search over guides and catalog facts",
+      "decision": null,
+      "event_id": "03-retrieve",
+      "input": {
+        "enabled": true,
+        "index_size": 62
+      },
+      "result": {
+        "scores": {
+          "catalog#genre-lofi": 0.3219,
+          "catalog#mood-chill": 0.2933,
+          "catalog#song-2": 0.186,
+          "listening_contexts#relaxing": 0.134,
+          "music_features#diversity": 0.2114,
+          "music_features#instrumentalness": 0.1867
+        }
+      },
+      "sources": [
+        "catalog#genre-lofi",
+        "catalog#mood-chill",
+        "music_features#diversity",
+        "music_features#instrumentalness",
+        "catalog#song-2",
+        "listening_contexts#relaxing"
+      ],
+      "stage": "retrieve",
+      "step": 3,
+      "validation": null
+    },
+    {
+      "action": "build recommendation plan",
+      "decision": null,
+      "event_id": "04-plan",
+      "input": {},
+      "result": {
+        "advanced": false,
+        "diverse": false,
+        "engine_prefs": {
+          "favorite_genre": "lofi",
+          "favorite_mood": "chill",
+          "likes_acoustic": "NO_PREFERENCE",
+          "target_energy": "NO_PREFERENCE"
+        },
+        "hints_not_used": {},
+        "hints_used": {},
+        "k": 5,
+        "mode": "baseline",
+        "mode_reason": "default genre-first ranking",
+        "status": "ok",
+        "unknown": [
+          "energy",
+          "acoustic sound",
+          "popularity",
+          "release decade",
+          "instrumentalness",
+          "vocal intensity",
+          "mood tags"
+        ]
+      },
+      "sources": [],
+      "stage": "plan",
+      "step": 4,
+      "validation": null
+    },
+    {
+      "action": "apply hard genres and exclusions",
+      "decision": null,
+      "event_id": "05-filter_catalog",
+      "input": {
+        "excluded_artists": [],
+        "excluded_genres": [],
+        "hard_genres": []
+      },
+      "result": {
+        "candidates": 18
+      },
+      "sources": [],
+      "stage": "filter_catalog",
+      "step": 5,
+      "validation": null
+    },
+    {
+      "action": "call recommend_songs",
+      "decision": null,
+      "event_id": "06-rank",
+      "input": {
+        "advanced": false,
+        "candidates": 18,
+        "k": 5,
+        "mode": "baseline"
+      },
+      "result": {
+        "active_max": 7.0,
+        "scores": [
+          7.0,
+          7.0,
+          3.0
+        ],
+        "selected": [
+          2,
+          4,
+          6
+        ]
+      },
+      "sources": [],
+      "stage": "rank",
+      "step": 6,
+      "validation": null
+    },
+    {
+      "action": "compare stated preferences with the catalog and the selected results",
+      "decision": null,
+      "event_id": "07-check_coverage",
+      "input": {},
+      "result": {
+        "limitations": [
+          "Returned 3 of the 5 songs requested: repeated artists were left out as you asked; weaker matches (below 40% of the available points) were left out."
+        ],
+        "unmet_by_song": {
+          "6": [
+            "genre"
+          ]
+        }
+      },
+      "sources": [
+        "catalog#genre-lofi",
+        "catalog#mood-chill",
+        "catalog#song-2"
+      ],
+      "stage": "check_coverage",
+      "step": 7,
+      "validation": "limitations disclosed"
+    },
+    {
+      "action": "re-score every result and check constraints",
+      "decision": null,
+      "event_id": "08-validate_results",
+      "input": {},
+      "result": {},
+      "sources": [],
+      "stage": "validate_results",
+      "step": 8,
+      "validation": "accepted"
+    },
+    {
+      "action": "template explanation (deterministic, not an LLM)",
+      "decision": null,
+      "event_id": "09-generate_explanation",
+      "input": {},
+      "result": {},
+      "sources": [
+        "catalog#genre-lofi",
+        "catalog#mood-chill",
+        "music_features#diversity",
+        "music_features#instrumentalness",
+        "catalog#song-2",
+        "listening_contexts#relaxing"
+      ],
+      "stage": "generate_explanation",
+      "step": 9,
+      "validation": "accepted"
+    },
+    {
+      "action": "return response",
+      "decision": null,
+      "event_id": "10-return",
+      "input": {},
+      "result": {
+        "generator": "template (deterministic, not an LLM)",
+        "http_attempts": 0,
+        "message": null,
+        "song_ids": [
+          2,
+          4,
+          6
+        ],
+        "status": "ok"
+      },
+      "sources": [],
+      "stage": "return",
+      "step": 10,
+      "validation": null
+    }
+  ],
+  "metadata": {
+    "format": "vibefinder-trace/1",
+    "max_http_attempts": 3,
+    "prompt_style": null,
+    "provider": "template (deterministic, not an LLM)",
+    "provider_kind": "template",
+    "quality_floor": 0.4,
+    "request": "Chill lofi music, no repeated artists.",
+    "retrieval": true
+  }
+}

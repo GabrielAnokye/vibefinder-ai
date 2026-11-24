@@ -31,8 +31,8 @@ HINT_LINE = re.compile(r"^Hints:\s*`(?P<body>[^`]*)`\s*$")
 WHEN_LINE = re.compile(r"^Applies when:\s*`(?P<body>[^`]*)`\s*$")
 
 STOPWORDS = frozenset("""
-a an and any are as at be but by can do does for from get give have i if in into is it its
-just me my need of on or our please recommend recommendation recommendations should so some
+a an and any are as at be but by can do does exactly for from get give have i if in into is it its
+just me my need of on only or our please recommend recommendation recommendations should so some
 something song songs than that the their them then there these this to too track tracks up
 us want was we what when which while who will with would you your
 """.split())

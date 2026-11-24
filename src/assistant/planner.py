@@ -14,7 +14,7 @@ Decision rules (all deterministic, recorded in the plan):
   single existing match contribution once.
 """
 
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 from src.assistant.catalog import ACOUSTIC_THRESHOLD, slugify
 from src.assistant.models import (
@@ -28,6 +28,7 @@ from src.recommender import DEFAULT_MODE, NO_PREFERENCE, active_preference_field
 ENERGY_TOLERANCE = 0.20
 UNIT_TOLERANCE = 0.25
 POPULARITY_TOLERANCE = 20
+EPSILON = 1e-9   # tolerances are inclusive: 0.55 - 0.35 is 0.20000000000000007 in floating point
 
 HINT_FIELDS = {
     "energy": "energy", "acoustic": "acoustic", "instrumentalness": "instrumentalness",
@@ -53,15 +54,15 @@ def satisfies(song: Dict, field: str, value: Any) -> bool:
     if field == "moods":
         return normalize_label(song["mood"]) in {normalize_label(v) for v in value}
     if field == "energy":
-        return abs(song["energy"] - value) <= ENERGY_TOLERANCE
+        return abs(song["energy"] - value) <= ENERGY_TOLERANCE + EPSILON
     if field == "acoustic":
         return (song["acousticness"] >= ACOUSTIC_THRESHOLD) == value
     if field == "popularity":
-        return abs(song["popularity"] - value) <= POPULARITY_TOLERANCE
+        return abs(song["popularity"] - value) <= POPULARITY_TOLERANCE + EPSILON
     if field == "decade":
         return song["release_decade"] == value
     if field in ("instrumentalness", "vocal_intensity"):
-        return abs(song[field] - value) <= UNIT_TOLERANCE
+        return abs(song[field] - value) <= UNIT_TOLERANCE + EPSILON
     if field == "mood_tags":
         return bool({normalize_label(t) for t in song["mood_tags"]} & set(value))
     raise ValueError(f"unknown preference field {field!r}")
@@ -110,9 +111,15 @@ def build_plan(
     songs: Sequence[Dict],
     mode_override: Optional[str] = None,
     diverse_override: bool = False,
-    cite_catalog: bool = True,
+    citable_ids: Optional[Set[str]] = None,
 ) -> Tuple[Plan, Dict[str, Pref]]:
-    """Return the plan and the final preferences (explicit + inferred + unknown)."""
+    """
+    Return the plan and the final preferences (explicit + inferred + unknown).
+
+    citable_ids: source ids that exist in the active knowledge index. Limitations are always
+    computed from the catalog, but they cite a catalog passage only when it is in this set.
+    """
+    citable_ids = citable_ids or set()
     prefs: Dict[str, Pref] = {name: Pref(p.value, p.provenance, p.source) for name, p in interp.prefs.items()}
     hints: List[AppliedHint] = []
     limitations: List[str] = []
@@ -121,9 +128,11 @@ def build_plan(
     mode_hint: Optional[Tuple[str, str]] = None
 
     def cite(source_id: str) -> str:
-        if cite_catalog and source_id not in citations:
+        if source_id not in citable_ids:
+            return ""
+        if source_id not in citations:
             citations.append(source_id)
-        return f" [{source_id}]" if cite_catalog else ""
+        return f" [{source_id}]"
 
     # 1. Retrieved hints fill unknown fields only.
     for item in retrieved:

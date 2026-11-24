@@ -1,0 +1,30 @@
+Offline evaluation (template provider; mock cases are simulated)
+================================================================
+PASS  study-calm                         13/13 checks
+PASS  workout-energetic                  11/11 checks
+PASS  nostalgic-acoustic                 11/11 checks
+PASS  multiple-genres                    10/10 checks
+PASS  only-rock                          11/11 checks
+PASS  exclude-pop                        10/10 checks
+PASS  unique-artists                     9/9 checks
+PASS  exactly-three                      9/9 checks
+PASS  only-metal                         6/6 checks
+PASS  some-metal                         10/10 checks
+PASS  conflicting-hard                   5/5 checks
+PASS  conflicting-energy                 5/5 checks
+PASS  acoustic-high-energy               10/10 checks
+PASS  empty                              5/5 checks
+PASS  vague                              5/5 checks
+PASS  too-many                           10/10 checks
+PASS  exclude-artist                     9/9 checks
+PASS  injection                          11/11 checks
+PASS  study-no-retrieval                 5/5 checks
+PASS  simulated-invalid-then-corrected   11/11 checks [simulated provider]
+PASS  simulated-invalid-then-fallback    11/11 checks [simulated provider]
+PASS  simulated-auth-error               10/10 checks [simulated provider]
+
+Cases: 22/22 passed (100.0%)
+Checks: 197/197 passed (100.0%)
+This measures agreement with the expectations in evaluation/cases.json, not real-world recommendation quality.
+
+Results written to evaluation/results/offline_evaluation.json

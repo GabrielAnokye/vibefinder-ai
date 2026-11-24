@@ -1,0 +1,666 @@
+{
+  "energy_boundary": [
+    {
+      "energy": 0.4,
+      "gap": 0.1,
+      "genre": "lofi",
+      "meets": true,
+      "mood": "focused",
+      "song": "Focus Flow",
+      "target": "calm / quiet (0.30)"
+    },
+    {
+      "energy": 0.42,
+      "gap": 0.12,
+      "genre": "lofi",
+      "meets": true,
+      "mood": "chill",
+      "song": "Midnight Coding",
+      "target": "calm / quiet (0.30)"
+    },
+    {
+      "energy": 0.14,
+      "gap": 0.16,
+      "genre": "classical",
+      "meets": true,
+      "mood": "sad",
+      "song": "Nocturne in Grey",
+      "target": "calm / quiet (0.30)"
+    },
+    {
+      "energy": 0.46,
+      "gap": 0.16,
+      "genre": "r&b",
+      "meets": true,
+      "mood": "romantic",
+      "song": "Velvet Hours",
+      "target": "calm / quiet (0.30)"
+    },
+    {
+      "energy": 0.55,
+      "gap": 0.25,
+      "genre": "reggae",
+      "meets": false,
+      "mood": "relaxed",
+      "song": "Island Time Radio",
+      "target": "calm / quiet (0.30)"
+    },
+    {
+      "energy": 0.46,
+      "gap": 0.11,
+      "genre": "r&b",
+      "meets": true,
+      "mood": "romantic",
+      "song": "Velvet Hours",
+      "target": "relaxing or studying guide (0.35)"
+    },
+    {
+      "energy": 0.55,
+      "gap": 0.2,
+      "genre": "reggae",
+      "meets": true,
+      "mood": "relaxed",
+      "song": "Island Time Radio",
+      "target": "relaxing or studying guide (0.35)"
+    },
+    {
+      "energy": 0.14,
+      "gap": 0.21,
+      "genre": "classical",
+      "meets": false,
+      "mood": "sad",
+      "song": "Nocturne in Grey",
+      "target": "relaxing or studying guide (0.35)"
+    },
+    {
+      "energy": 0.62,
+      "gap": 0.27,
+      "genre": "rock",
+      "meets": false,
+      "mood": "moody",
+      "song": "Static Postcards",
+      "target": "relaxing or studying guide (0.35)"
+    },
+    {
+      "energy": 0.62,
+      "gap": 0.23,
+      "genre": "rock",
+      "meets": false,
+      "mood": "moody",
+      "song": "Static Postcards",
+      "target": "energetic (0.85)"
+    },
+    {
+      "energy": 0.55,
+      "gap": 0.3,
+      "genre": "reggae",
+      "meets": false,
+      "mood": "relaxed",
+      "song": "Island Time Radio",
+      "target": "energetic (0.85)"
+    }
+  ],
+  "energy_tolerance": 0.2,
+  "floors": [
+    0.0,
+    0.4,
+    0.6
+  ],
+  "rows": [
+    {
+      "floor": 0.0,
+      "k": 5,
+      "labels": [
+        "strong",
+        "strong",
+        "strong",
+        "strong",
+        "partial"
+      ],
+      "request": "Music for studying.",
+      "returned": 5,
+      "shares": [
+        0.948,
+        0.943,
+        0.781,
+        0.76,
+        0.732
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.0,
+      "k": 5,
+      "labels": [
+        "strong",
+        "strong",
+        "strong",
+        "strong",
+        "strong"
+      ],
+      "request": "Music for a workout.",
+      "returned": 5,
+      "shares": [
+        0.98,
+        0.971,
+        0.969,
+        0.917,
+        0.914
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.0,
+      "k": 5,
+      "labels": [
+        "strong",
+        "strong",
+        "strong",
+        "strong",
+        "strong"
+      ],
+      "request": "Something for a quiet evening.",
+      "returned": 5,
+      "shares": [
+        1.0,
+        0.97,
+        0.92,
+        0.843,
+        0.827
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.0,
+      "k": 5,
+      "labels": [
+        "strong",
+        "strong",
+        "partial",
+        "weak",
+        "weak"
+      ],
+      "request": "Chill lofi music",
+      "returned": 5,
+      "shares": [
+        1.0,
+        1.0,
+        0.571,
+        0.429,
+        0.0
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 2
+    },
+    {
+      "floor": 0.0,
+      "k": 10,
+      "labels": [
+        "strong",
+        "strong",
+        "strong",
+        "weak",
+        "weak",
+        "weak",
+        "weak",
+        "weak",
+        "weak",
+        "weak"
+      ],
+      "request": "Give me 10 happy songs",
+      "returned": 10,
+      "shares": [
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 7
+    },
+    {
+      "floor": 0.0,
+      "k": 5,
+      "labels": [
+        "partial",
+        "partial",
+        "weak",
+        "weak",
+        "weak"
+      ],
+      "request": "sad music with very high energy",
+      "returned": 5,
+      "shares": [
+        0.709,
+        0.653,
+        0.42,
+        0.411,
+        0.394
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 3
+    },
+    {
+      "floor": 0.0,
+      "k": 5,
+      "labels": [
+        "partial",
+        "partial",
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "request": "Recommend acoustic music with very high energy.",
+      "returned": 5,
+      "shares": [
+        0.847,
+        0.837,
+        0.799,
+        0.771,
+        0.744
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.0,
+      "k": 5,
+      "labels": [
+        "partial",
+        "partial",
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "request": "Recommend some metal songs",
+      "returned": 5,
+      "shares": [
+        0.974,
+        0.968,
+        0.872,
+        0.822,
+        0.816
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.4,
+      "k": 5,
+      "labels": [
+        "strong",
+        "strong",
+        "strong",
+        "strong",
+        "partial"
+      ],
+      "request": "Music for studying.",
+      "returned": 5,
+      "shares": [
+        0.948,
+        0.943,
+        0.781,
+        0.76,
+        0.732
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.4,
+      "k": 5,
+      "labels": [
+        "strong",
+        "strong",
+        "strong",
+        "strong",
+        "strong"
+      ],
+      "request": "Music for a workout.",
+      "returned": 5,
+      "shares": [
+        0.98,
+        0.971,
+        0.969,
+        0.917,
+        0.914
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.4,
+      "k": 5,
+      "labels": [
+        "strong",
+        "strong",
+        "strong",
+        "strong",
+        "strong"
+      ],
+      "request": "Something for a quiet evening.",
+      "returned": 5,
+      "shares": [
+        1.0,
+        0.97,
+        0.92,
+        0.843,
+        0.827
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.4,
+      "k": 5,
+      "labels": [
+        "strong",
+        "strong",
+        "partial",
+        "weak"
+      ],
+      "request": "Chill lofi music",
+      "returned": 4,
+      "shares": [
+        1.0,
+        1.0,
+        0.571,
+        0.429
+      ],
+      "short_list_disclosed": true,
+      "status": "ok",
+      "weak": 1
+    },
+    {
+      "floor": 0.4,
+      "k": 10,
+      "labels": [
+        "strong",
+        "strong",
+        "strong"
+      ],
+      "request": "Give me 10 happy songs",
+      "returned": 3,
+      "shares": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "short_list_disclosed": true,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.4,
+      "k": 5,
+      "labels": [
+        "partial",
+        "partial",
+        "weak",
+        "weak"
+      ],
+      "request": "sad music with very high energy",
+      "returned": 4,
+      "shares": [
+        0.709,
+        0.653,
+        0.42,
+        0.411
+      ],
+      "short_list_disclosed": true,
+      "status": "ok",
+      "weak": 2
+    },
+    {
+      "floor": 0.4,
+      "k": 5,
+      "labels": [
+        "partial",
+        "partial",
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "request": "Recommend acoustic music with very high energy.",
+      "returned": 5,
+      "shares": [
+        0.847,
+        0.837,
+        0.799,
+        0.771,
+        0.744
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.4,
+      "k": 5,
+      "labels": [
+        "partial",
+        "partial",
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "request": "Recommend some metal songs",
+      "returned": 5,
+      "shares": [
+        0.974,
+        0.968,
+        0.872,
+        0.822,
+        0.816
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.6,
+      "k": 5,
+      "labels": [
+        "strong",
+        "strong",
+        "strong",
+        "strong",
+        "partial"
+      ],
+      "request": "Music for studying.",
+      "returned": 5,
+      "shares": [
+        0.948,
+        0.943,
+        0.781,
+        0.76,
+        0.732
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.6,
+      "k": 5,
+      "labels": [
+        "strong",
+        "strong",
+        "strong",
+        "strong",
+        "strong"
+      ],
+      "request": "Music for a workout.",
+      "returned": 5,
+      "shares": [
+        0.98,
+        0.971,
+        0.969,
+        0.917,
+        0.914
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.6,
+      "k": 5,
+      "labels": [
+        "strong",
+        "strong",
+        "strong",
+        "strong",
+        "strong"
+      ],
+      "request": "Something for a quiet evening.",
+      "returned": 5,
+      "shares": [
+        1.0,
+        0.97,
+        0.92,
+        0.843,
+        0.827
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.6,
+      "k": 5,
+      "labels": [
+        "strong",
+        "strong"
+      ],
+      "request": "Chill lofi music",
+      "returned": 2,
+      "shares": [
+        1.0,
+        1.0
+      ],
+      "short_list_disclosed": true,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.6,
+      "k": 10,
+      "labels": [
+        "strong",
+        "strong",
+        "strong"
+      ],
+      "request": "Give me 10 happy songs",
+      "returned": 3,
+      "shares": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "short_list_disclosed": true,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.6,
+      "k": 5,
+      "labels": [
+        "partial",
+        "partial"
+      ],
+      "request": "sad music with very high energy",
+      "returned": 2,
+      "shares": [
+        0.709,
+        0.653
+      ],
+      "short_list_disclosed": true,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.6,
+      "k": 5,
+      "labels": [
+        "partial",
+        "partial",
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "request": "Recommend acoustic music with very high energy.",
+      "returned": 5,
+      "shares": [
+        0.847,
+        0.837,
+        0.799,
+        0.771,
+        0.744
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    },
+    {
+      "floor": 0.6,
+      "k": 5,
+      "labels": [
+        "partial",
+        "partial",
+        "partial",
+        "partial",
+        "partial"
+      ],
+      "request": "Recommend some metal songs",
+      "returned": 5,
+      "shares": [
+        0.974,
+        0.968,
+        0.872,
+        0.822,
+        0.816
+      ],
+      "short_list_disclosed": false,
+      "status": "ok",
+      "weak": 0
+    }
+  ],
+  "totals": {
+    "0.0": {
+      "empty": 0,
+      "returned": 45,
+      "weak": 12
+    },
+    "0.4": {
+      "empty": 0,
+      "returned": 36,
+      "weak": 3
+    },
+    "0.6": {
+      "empty": 0,
+      "returned": 32,
+      "weak": 0
+    }
+  }
+}

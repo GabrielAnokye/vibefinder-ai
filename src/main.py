@@ -186,11 +186,19 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         help="who writes the explanation prose (default: template, offline)",
     )
     assistant.add_argument("--no-retrieval", action="store_true", help="do not use the knowledge guides")
-    assistant.add_argument("--show-plan", action="store_true", help="show the structured plan and steps")
+    assistant.add_argument("--show-plan", action="store_true",
+                           help="show the structured plan, all engine reasons, and the trace summary")
+    assistant.add_argument(
+        "--prompt-style", choices=["general", "specialized"], default=None,
+        help="prompt for --provider openrouter (default: specialized); ignored by the template provider",
+    )
+    assistant.add_argument("--trace", action="store_true", help="print the execution trace after the answer")
+    assistant.add_argument("--trace-file", metavar="PATH", help="write the execution trace as JSON to PATH")
     args = parser.parse_args(argv)
     if args.ask is None:
         used = [flag for flag, value in (("--provider", args.provider), ("--no-retrieval", args.no_retrieval),
-                                         ("--show-plan", args.show_plan)) if value]
+                                         ("--show-plan", args.show_plan), ("--prompt-style", args.prompt_style),
+                                         ("--trace", args.trace), ("--trace-file", args.trace_file)) if value]
         if used:
             parser.error(f"{', '.join(used)} can only be used with --ask")
         args.mode = args.mode or DEFAULT_MODE
@@ -205,14 +213,27 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
 
 def run_assistant_cli(args: argparse.Namespace) -> int:
     """--ask: run the natural-language assistant. --mode and --diverse override its choices."""
-    from src.assistant import Assistant, make_provider, render
+    from src.assistant import Assistant, TemplateProvider, make_provider, render
+    from src.assistant.providers import DEFAULT_PROMPT_STYLE
 
     provider, note = make_provider(args.provider or "template")
+    if args.prompt_style and isinstance(provider, TemplateProvider):
+        print(f"Note: --prompt-style {args.prompt_style} has no effect: the template provider is not an LLM "
+              "and does not use prompts.")
     response = Assistant().ask(
         args.ask, provider=provider, retrieval=not args.no_retrieval,
         mode=args.mode, diverse=args.diverse, provider_note=note,
+        prompt_style=args.prompt_style or DEFAULT_PROMPT_STYLE,
     )
     print(render(response, show_plan=args.show_plan, table=args.table))
+    if args.trace:
+        print("\nExecution trace:")
+        print("\n".join(f"  {line}" for line in response.trace.summary_lines()))
+    if args.trace_file:
+        path = Path(args.trace_file)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(response.trace.to_json(), encoding="utf-8")
+        print(f"\nTrace written to {path}")
     return 1 if response.status == "error" else 0
 
 

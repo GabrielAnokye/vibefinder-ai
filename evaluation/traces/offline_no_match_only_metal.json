@@ -1,0 +1,137 @@
+{
+  "events": [
+    {
+      "action": "check length and content",
+      "decision": null,
+      "event_id": "01-validate_request",
+      "input": {
+        "characters": 27
+      },
+      "result": {},
+      "sources": [],
+      "stage": "validate_request",
+      "step": 1,
+      "validation": "accepted"
+    },
+    {
+      "action": "rule-based interpretation",
+      "decision": null,
+      "event_id": "02-interpret",
+      "input": {},
+      "result": {
+        "ambiguities": [],
+        "contexts": [],
+        "count": 5,
+        "excluded_artists": [],
+        "excluded_genres": [],
+        "explicit": {},
+        "genre_requirement": "hard",
+        "unavailable_genres": [
+          "metal"
+        ],
+        "unique_artists": false
+      },
+      "sources": [],
+      "stage": "interpret",
+      "step": 2,
+      "validation": null
+    },
+    {
+      "action": "TF-IDF search over guides and catalog facts",
+      "decision": null,
+      "event_id": "03-retrieve",
+      "input": {
+        "enabled": true,
+        "index_size": 62
+      },
+      "result": {
+        "scores": {
+          "catalog#genre-coverage": 0.1694,
+          "music_features#genres-not-in-catalog": 0.181
+        }
+      },
+      "sources": [
+        "music_features#genres-not-in-catalog",
+        "catalog#genre-coverage"
+      ],
+      "stage": "retrieve",
+      "step": 3,
+      "validation": null
+    },
+    {
+      "action": "build recommendation plan",
+      "decision": null,
+      "event_id": "04-plan",
+      "input": {},
+      "result": {
+        "advanced": false,
+        "diverse": false,
+        "engine_prefs": {},
+        "hints_not_used": {},
+        "hints_used": {},
+        "k": 0,
+        "mode": "baseline",
+        "mode_reason": "",
+        "status": "no_match",
+        "unknown": [
+          "genre",
+          "mood",
+          "energy",
+          "acoustic sound",
+          "popularity",
+          "release decade",
+          "instrumentalness",
+          "vocal intensity",
+          "mood tags"
+        ]
+      },
+      "sources": [],
+      "stage": "plan",
+      "step": 4,
+      "validation": null
+    },
+    {
+      "action": "check hard constraints against the catalog",
+      "decision": "stop: no-match response, no substitution",
+      "event_id": "05-check_coverage",
+      "input": {},
+      "result": {
+        "limitations": []
+      },
+      "sources": [
+        "music_features#genres-not-in-catalog",
+        "catalog#genre-coverage"
+      ],
+      "stage": "check_coverage",
+      "step": 5,
+      "validation": "hard constraint cannot be satisfied"
+    },
+    {
+      "action": "return response",
+      "decision": null,
+      "event_id": "06-return",
+      "input": {},
+      "result": {
+        "generator": null,
+        "http_attempts": 0,
+        "message": "The catalog has no metal songs [catalog#genre-coverage]. You asked for only metal, so I did not substitute other genres.",
+        "song_ids": [],
+        "status": "no_match"
+      },
+      "sources": [],
+      "stage": "return",
+      "step": 6,
+      "validation": null
+    }
+  ],
+  "metadata": {
+    "format": "vibefinder-trace/1",
+    "max_http_attempts": 3,
+    "prompt_style": null,
+    "provider": "template (deterministic, not an LLM)",
+    "provider_kind": "template",
+    "quality_floor": 0.4,
+    "request": "Only recommend metal songs.",
+    "retrieval": true
+  }
+}

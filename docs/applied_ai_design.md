@@ -1,9 +1,84 @@
 # VibeFinder AI — Applied AI System Design
 
-> **Status (Phase 2, 2026-11-23): core assistant implemented.** §0 records what was built and
-> how it differs from the Phase 1 proposal. §1–§14 below are the original Phase 1 design and are
-> kept for history; where they conflict with §0, §0 is current. The architecture diagram at the
+> **Status (Phase 3, 2026-11-23): agentic workflow, traces, prompt styles, and evaluation
+> implemented.** §P3 covers Phase 3 and §0 covers Phase 2. §1–§14 are the original Phase 1 design,
+> kept for history; where they conflict, §P3 and §0 are current. The architecture diagram at the
 > end is still the *proposed* one; the final `diagrams/architecture.mmd` comes in a later phase.
+
+---
+
+## P3. Phase 3 implementation notes (current)
+
+### Workflow and decision branches
+
+`Assistant.ask()` (src/assistant/workflow.py) runs the stages below. Each one appends a `TraceEvent`
+(src/assistant/trace.py).
+
+| stage | possible decision |
+|---|---|
+| validate_request | invalid → error response |
+| interpret | conflicting requirements → clarification |
+| retrieve | (none; records the source ids and scores) |
+| plan | nothing usable → clarification; hard constraint unsatisfiable → check_coverage → no-match |
+| filter_catalog | no candidates → no-match |
+| rank | calls `recommend_songs` / `recommend_diverse_songs`; applies unique artists and the quality floor |
+| check_coverage | records limitations and the stated preferences each song misses |
+| validate_results | any mismatch with catalog or engine → refuse (error) |
+| generate_explanation | provider failure → template fallback |
+| validate_explanation | invalid → one correction (if budget allows) → validate again → accept, or discard and use the template |
+| return | — |
+
+**Two kinds of retry:**
+- **Transport retry**, inside `OpenRouterProvider.generate`: one retry for rate limits, server errors and network errors. Authentication and configuration errors are never retried.
+- **Content correction**, in the workflow: one new request that lists the validation errors and repeats the authoritative payload.
+
+Both draw on one `AttemptBudget` of **3 HTTP attempts per execution**, so the worst case is: first call, transport retry, correction.
+
+### Grounded generation
+
+- **Payload contents:** request, stated and inferred preferences (with sources), unknown fields, plan, results (ids, titles, artists, features, scores, active and theoretical maximum, engine reasons, unmet preferences, inferred targets met, diversity notes), retrieved passages, and limitations.
+- **Schema:** `summary`, `items[{song_id, explanation, citations, features_referenced, unmet_preferences}]`, `limitations`.
+- **Validation checks:**
+  - JSON and schema; no extra keys (for example `score` or `title`).
+  - Every result explained exactly once; no unknown ids.
+  - Citations only from the payload's sources.
+  - `features_referenced` from a fixed vocabulary.
+  - `unmet_preferences` equal to the recommender's.
+  - Decimals in the prose must appear in that song's data.
+  - No catalog songs or artists outside the results, no few-shot example names, no overclaims ("perfect match").
+  - Length limits.
+- **Not checked:** whether a cited passage supports the sentence, whether prose about music is true, and integer claims. These need human review.
+- **Prompt injection:**
+  - Request text and passages are labeled untrusted data in both prompts.
+  - Guide hints are whitelisted.
+  - Generated text cannot change songs, scores or order, because those are rendered from the engine.
+  - This limits the damage; it does not make injection impossible.
+
+### Prompt styles
+
+`general` = the safety rules, a one-line instruction, and the schema. `specialized` = the same rules
+and schema, plus music guidance (intent, explicit vs inferred, attributes, unmet preferences,
+limitations, diversity notes, citations, no promise of enjoyment) and two few-shot examples with
+fictional songs (`Example Track A/B`, ids 901/902), which validation rejects if they appear in an
+answer. `specialized` is the default. The template provider ignores prompt styles, and the CLI
+says so.
+
+### Experiments and evidence
+
+All of these are in `evaluation/`; [evaluation/README.md](../evaluation/README.md) has the index and results.
+
+- **Evaluation harness:** 22 cases (3 simulated), 197 checks, all passing offline.
+- **Retrieval on vs off, and single vs multi-source:** see the evaluation README for findings.
+- **Quality floor:** 0% / 40% / 60% compared; 40% kept. With no floor, zero-point songs are returned; at 60%, songs matching one of two stated labels are dropped.
+- **Energy tolerance:** boundary review found an inclusive-boundary floating-point bug, now fixed.
+- **Live experiments:** smoke test, sources supplied vs withheld, and general vs specialized prompts. Plan and songs are held fixed, and only the first answer is measured. All are pending credentials.
+
+### Other Phase 3 changes
+
+- **Display:** zero-point lines for preferences the user never gave are hidden; `[inferred]` marks reasons whose target came from a guide; `--show-plan` shows every engine reason.
+- **Citations:** limitation citations are added only when the cited passage is in the active index, which matters for single-source runs.
+- **Stopwords:** "only" and "exactly" were added to the retrieval stopwords. "only" had made `listening_contexts#nostalgia` look relevant to "Only recommend metal songs".
+- **New CLI flags:** `--prompt-style`, `--trace`, `--trace-file`.
 
 ---
 
@@ -37,11 +112,11 @@ tests/                    + test_no_preference, test_interpreter, test_retrieval
 | Four knowledge guides | **Two guides** + catalog-derived facts | Phase 2 scope decision |
 | One engine run per genre, merged | **Multi-label `favorite_genre` / `favorite_mood`**: a list of labels earns the single match contribution once | Smaller and keeps one ranking call; no double counting; a single string behaves exactly as before |
 | `NO_PREFERENCE` for unknown fields | As proposed, plus: the engine **refuses to rank** when every active field is `NO_PREFERENCE` (the assistant asks for clarification instead) | Prevents ranking by song id |
-| Quality floor of 50 % | **40 %** of the score available from the active preferences | A looser default chosen while implementing; 50 % was not tested and 40 % was not tuned. It is a design choice to revisit in Phase 3 |
+| Quality floor of 50 % | **40 %** of the score available from the active preferences | A looser default chosen while implementing; 50 % was not tested and 40 % was not tuned. Revisited in Phase 3 (§P3): compared with 0 % and 60 %, and kept |
 | Match label from score share | **Strong** needs ≥ 75 % *and* no missed stated preference; otherwise partial (≥ 50 %) or weak | Score share alone called non-acoustic songs "strong" for an acoustic request |
 | Hints apply when a section is retrieved | Hints apply only when the section is retrieved **and** its `Applies when:` condition matches the interpretation (context or unavailable genre) | Retrieval of a loosely related section must not inject preferences |
-| Validation retry for LLM output | **No retry yet**: invalid output goes straight to the template; transport errors get at most one retry | Conditional correction is Phase 3 |
-| Traces written to `logs/traces/` | In-memory step log shown with `--show-plan`; no files yet | Trace files are Phase 3 |
+| Validation retry for LLM output | Phase 2: no retry. **Phase 3: one content correction** within a 3-attempt HTTP budget (§P3) | — |
+| Traces written to `logs/traces/` | Phase 3: `Trace` objects; `--trace` / `--trace-file`; committed demos in **`evaluation/traces/`** | Kept with the rest of the evaluation evidence |
 
 ### Key decisions
 

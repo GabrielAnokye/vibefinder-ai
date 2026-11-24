@@ -145,6 +145,7 @@ class Explanation:
     items: Dict[int, str]              # song id -> prose
     citations: Dict[int, List[str]]    # song id -> source ids
     limitations: List[str]
+    features: Dict[int, List[str]] = field(default_factory=dict)   # song id -> features referenced
 
 
 @dataclass
@@ -159,6 +160,8 @@ class AssistantResponse:
     recommendations: List[Recommendation] = field(default_factory=list)
     explanation: Optional[Explanation] = None
     generator: str = ""                # who wrote the explanation prose
-    generation_status: str = ""        # validation / fallback status line
+    generation_status: str = ""        # validation / correction / fallback status line
     message: Optional[str] = None
-    steps: List[Dict[str, Any]] = field(default_factory=list)   # observable step log
+    payload: Optional[Dict[str, Any]] = None   # grounding payload given to the explanation provider
+    http_attempts: int = 0             # external HTTP attempts used (never more than the budget)
+    trace: Any = None                  # src.assistant.trace.Trace

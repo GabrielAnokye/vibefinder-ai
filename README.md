@@ -18,12 +18,14 @@
 python -m src.main --ask "I'm studying for finals. Recommend calm instrumental music with some variety."
 python -m src.main --ask "I need energetic music for a workout, preferably rock or hip-hop."
 python -m src.main --ask "Only recommend metal songs."
-python -m src.main --ask "..." --show-plan       # structured plan, hints, retrieval scores, steps
+python -m src.main --ask "..." --show-plan       # plan, hints, retrieval scores, all engine reasons, trace summary
 python -m src.main --ask "..." --no-retrieval    # same request without the knowledge guides
+python -m src.main --ask "..." --trace           # print the execution trace
+python -m src.main --ask "..." --trace-file evaluation/traces/my_run.json   # save it as JSON
 python -m src.main --ask "..." --table           # existing --table, --diverse and --mode also work with --ask
 ```
 
-**Template vs. LLM explanations.** By default the explanation prose comes from a **deterministic template** built only from engine results and retrieved source ids. It is labeled `template (deterministic, not an LLM)` and is not model-generated. An optional **OpenRouter-compatible LLM provider** (`--provider openrouter`) receives the same grounded payload and must return structured JSON. Its output is used only if it cites only songs in the results and only retrieved source ids; otherwise the template is used and the output says why. Song titles, artists, scores, and order always come from the engine, never from the model. Configure it with `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` (see `.env.example`). **The live provider has not yet been validated against a real API; its tests use a mock transport.**
+**Template vs. LLM explanations.** By default the explanation prose comes from a **deterministic template** built only from engine results and retrieved source ids. It is labeled `template (deterministic, not an LLM)` and is not model-generated. An optional **OpenRouter-compatible LLM provider** (`--provider openrouter`, with `--prompt-style specialized` (default) or `general`) receives the same grounded payload and must return structured JSON. Song titles, artists, scores, and order always come from the engine, never from the model. Configure it with `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` (see `.env.example`). **No real external model request has been made yet. All provider tests use mocks or a fake HTTP transport, so live LLM behavior is unverified.**
 
 **Sample interaction** (actual offline output; the explanation lines are shortened with `...`):
 
@@ -40,22 +42,22 @@ Interpreted request:
   Mood tags: nostalgic (you said "nostalgic")
   Songs requested: 3 (you said "three nostalgic acoustic songs")
   Not specified (no points either way): genre, popularity, release decade, instrumentalness, vocal intensity
-Retrieved sources: listening_contexts#relaxing (0.37), listening_contexts#nostalgia (0.21), catalog#mood-relaxed (0.13), catalog#song-7 (0.12), music_features#acousticness (0.11), catalog#energy-vs-acousticness (0.10)
+Retrieved sources: listening_contexts#relaxing (0.37), listening_contexts#nostalgia (0.22), catalog#mood-relaxed (0.13), catalog#song-7 (0.12), music_features#acousticness (0.11), catalog#energy-vs-acousticness (0.10)
 Strategy: baseline ranking (default genre-first ranking); advanced features on; diversity reranking off
 
-Recommendations (3 of 3 requested). Scores are out of 8 points available from your preferences (14 if every preference were set):
+Recommendations (3 of 3 requested). Scores are out of 8 points available from your preferences (14 if every preference were set). [inferred] marks a target taken from a knowledge guide, not from you.
 
 1. Coffee Shop Stories by Slow Stereo  [jazz, relaxed]
    Relevance: 7.83 / 8 (98%, strong match)
-   Scoring (engine): Mood match: relaxed (+3.00); Energy 0.37 vs target 0.35 (+2.94); Acousticness 0.89, you like acoustic (+0.89); Mood tags 1/1 matched: nostalgic (+1.00)
+   Scoring (engine): Mood match: relaxed (+3.00) [inferred]; Energy 0.37 vs target 0.35 (+2.94) [inferred]; Acousticness 0.89, you like acoustic (+0.89); Mood tags 1/1 matched: nostalgic (+1.00)
 
 2. Midnight Coding by LoRoom  [lofi, chill]
    Relevance: 7.50 / 8 (94%, strong match)
-   Scoring (engine): Mood match: chill (+3.00); Energy 0.42 vs target 0.35 (+2.79); Acousticness 0.71, you like acoustic (+0.71); Mood tags 1/1 matched: nostalgic (+1.00)
+   Scoring (engine): Mood match: chill (+3.00) [inferred]; Energy 0.42 vs target 0.35 (+2.79) [inferred]; Acousticness 0.71, you like acoustic (+0.71); Mood tags 1/1 matched: nostalgic (+1.00)
 
 3. Library Rain by Paper Lanterns  [lofi, chill]
    Relevance: 6.86 / 8 (86%, partial match; misses: mood tags)
-   Scoring (engine): Mood match: chill (+3.00); Energy 0.35 vs target 0.35 (+3.00); Acousticness 0.86, you like acoustic (+0.86); Mood tags 0/1 matched (+0.00)
+   Scoring (engine): Mood match: chill (+3.00) [inferred]; Energy 0.35 vs target 0.35 (+3.00) [inferred]; Acousticness 0.86, you like acoustic (+0.86); Mood tags 0/1 matched (+0.00)
 
 Explanation: Interpreted as a nostalgia and relaxing request and ranked 18 catalog songs with baseline ranking plus advanced features.
   1. Coffee Shop Stories by Slow Stereo (jazz, relaxed) scored 7.83 of the 8.00 points available from your preferences. ... [listening_contexts#relaxing]
@@ -64,9 +66,36 @@ Explanation generated by: template (deterministic, not an LLM)
 Generation status: validated
 ```
 
-Scores are reported against the points available from the preferences you gave (8 here), not only the theoretical maximum (14), so a partial request isn't made to look like a poor match. The "strong / partial / weak" label is a heuristic, not a probability.
+Scores are reported against the points available from the preferences you gave (8 here), not only the theoretical maximum (14), so a partial request isn't made to look like a poor match. The "strong / partial / weak" label is a heuristic, not a probability. Engine lines for preferences you never gave ("No genre preference given (+0.00)") are hidden in the normal view; `--show-plan` shows all of them.
 
-The design and decisions are in [docs/applied_ai_design.md](docs/applied_ai_design.md). The full README, model card, architecture diagram, and evaluation will be completed in later phases.
+### Agentic workflow
+
+`Assistant.ask()` runs a bounded, code-controlled workflow: validate request → interpret → retrieve → plan → filter catalog → rank (existing engine) → check coverage → validate results → generate explanation → validate explanation → (one correction) → (template fallback) → return. Decisions depend on intermediate results:
+
+- **Stops early:** invalid input gives an error; conflicting or unusable requests get a clarification question; an unsatisfiable hard constraint ("only metal") gives a no-match, with nothing substituted.
+- **Invalid generated explanation** (bad JSON, unknown song id, unsupported citation, extra fields such as `score`, numbers not in the song's data, few-shot example names, overclaiming): one correction request listing the exact errors, with the same authoritative data. If the correction also fails, the generated text is discarded and the validated template is used.
+- **Provider failures:** fall back to the template. Authentication and configuration errors are never retried. Rate limits, server errors and timeouts get one transport retry. At most **3 external HTTP attempts per request** in total, counting transport retries and the correction.
+
+### Execution traces
+
+Every run records a trace: step number, stage, action, input and result summaries, source ids, validation outcome, and decision. It contains no model reasoning, headers, or keys, and offline traces are byte-for-byte reproducible. Seven committed demonstration traces are in [evaluation/traces/](evaluation/traces/), listed in [evaluation/README.md](evaluation/README.md). The two whose names start with `simulated_` use a scripted mock provider and are labeled as simulated.
+
+### Evaluation harness
+
+```bash
+python -m evaluation.run_evaluation            # 22 predefined cases through the real assistant
+python -m evaluation.run_evaluation --json evaluation/results/offline_evaluation.json
+```
+
+Verified result (offline): **22/22 cases, 197/197 checks pass**. Three of the cases use a simulated provider to exercise correction and fallback. This measures agreement with independently written expectations in `evaluation/cases.json`; it is not a measure of recommendation quality. The exit status is nonzero if a required case fails.
+
+### Retrieval comparisons and prompt specialization
+
+- `python -m evaluation.retrieval_comparison` compares retrieval on vs off, and the contexts guide alone vs all sources. In the offline runs, "Music for studying.", "Music for a workout." and "Something for a quiet evening." are only answerable with retrieval; without it the assistant asks for clarification. Explicit preferences are never overwritten by hints. The extra sources mainly add evidence for limitations. See [evaluation/results/retrieval_comparison.md](evaluation/results/retrieval_comparison.md). This is retrieval-driven planning with template explanations, not LLM-based RAG.
+- `--prompt-style general|specialized` selects the live provider's prompt. Both styles share the same schema and safety rules; the specialized one adds music-specific guidance and two labeled few-shot examples using fictional songs that are rejected if they appear in output. `python -m evaluation.live_experiments` holds the plan, songs and payload fixed and compares the arms. **The live comparison is pending**; mocked runs only test the mechanics.
+- `python -m evaluation.floor_comparison` compares quality floors of 0%, 40% and 60%. 40% was kept. See [evaluation/results/quality_floor.md](evaluation/results/quality_floor.md).
+
+The design and decisions are in [docs/applied_ai_design.md](docs/applied_ai_design.md). The full README, model card, final architecture diagram and presentation will be completed in a later phase.
 
 ---
 

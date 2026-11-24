@@ -1,0 +1,1362 @@
+{
+  "offline": {
+    "results": [
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "contexts",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "prefs",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "plan",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "feature_max",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "study-calm",
+        "name": "Calm study music with variety",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [
+          9,
+          6,
+          7,
+          14,
+          15
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "contexts",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "prefs",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "feature_min",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "workout-energetic",
+        "name": "Energetic workout music from context only",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [
+          3,
+          5,
+          16,
+          1,
+          12
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "prefs",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "feature_min",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "nostalgic-acoustic",
+        "name": "Three nostalgic acoustic songs",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [
+          7,
+          2,
+          4
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "prefs",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "genres_include",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "multiple-genres",
+        "name": "Two preferred genres",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [
+          16,
+          12,
+          3,
+          1,
+          5
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "genres_only",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "count_max",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "limitation_contains",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "only-rock",
+        "name": "Only rock songs (catalog has 3)",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [
+          3,
+          16,
+          17
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "genres_exclude",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "prefs",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "exclude-pop",
+        "name": "Exclude pop",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [
+          10,
+          11,
+          16,
+          12,
+          3
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "unique_artists",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "unique-artists",
+        "name": "No repeated artists",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [
+          2,
+          4,
+          6
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "count",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "exactly-three",
+        "name": "Exactly three recommendations",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [
+          1,
+          10,
+          11
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "no_recommendations_unless_ok",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "message_contains",
+            "passed": true
+          }
+        ],
+        "generator": "",
+        "id": "only-metal",
+        "name": "Unavailable required genre",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [],
+        "status": "no_match"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "limitation_contains",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_unmet_contains",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "some-metal",
+        "name": "Unavailable soft genre is disclosed",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [
+          3,
+          16,
+          5,
+          12,
+          1
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "no_recommendations_unless_ok",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "count",
+            "passed": true
+          }
+        ],
+        "generator": "",
+        "id": "conflicting-hard",
+        "name": "Conflicting hard constraints",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [],
+        "status": "clarification"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "no_recommendations_unless_ok",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "count",
+            "passed": true
+          }
+        ],
+        "generator": "",
+        "id": "conflicting-energy",
+        "name": "Conflicting energy",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [],
+        "status": "clarification"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "limitation_contains",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_unmet_contains",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "acoustic-high-energy",
+        "name": "High-energy acoustic music (poor catalog coverage)",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [
+          5,
+          3,
+          16,
+          1,
+          10
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "no_recommendations_unless_ok",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "count",
+            "passed": true
+          }
+        ],
+        "generator": "",
+        "id": "empty",
+        "name": "Empty input",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [],
+        "status": "error"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "no_recommendations_unless_ok",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "count",
+            "passed": true
+          }
+        ],
+        "generator": "",
+        "id": "vague",
+        "name": "Nothing usable",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [],
+        "status": "clarification"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "count_max",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "limitation_contains",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "too-many",
+        "name": "Excessive result count",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [
+          16,
+          1,
+          12,
+          3,
+          5,
+          10,
+          11,
+          8,
+          17,
+          18
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "artists_exclude",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "exclude-artist",
+        "name": "Exclude an artist",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [
+          6,
+          14,
+          4,
+          7,
+          13
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "song_ids_absent",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "prefs",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "injection",
+        "name": "Instruction-like text forcing a fabricated song",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [
+          6,
+          14,
+          4,
+          7,
+          9
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "no_recommendations_unless_ok",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "count",
+            "passed": true
+          }
+        ],
+        "generator": "",
+        "id": "study-no-retrieval",
+        "name": "Context-only request without retrieval asks for clarification",
+        "passed": true,
+        "required": true,
+        "simulated": false,
+        "song_ids": [],
+        "status": "clarification"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "generator_contains",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "generation_status_contains",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "http_attempts_max",
+            "passed": true
+          }
+        ],
+        "generator": "mock (simulated, not a live model)",
+        "id": "simulated-invalid-then-corrected",
+        "name": "Invalid model output, one correction accepted (simulated)",
+        "passed": true,
+        "required": true,
+        "simulated": true,
+        "song_ids": [
+          9,
+          2,
+          4,
+          7,
+          6
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "generator_contains",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "generation_status_contains",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "http_attempts_max",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "simulated-invalid-then-fallback",
+        "name": "Invalid model output twice, template fallback (simulated)",
+        "passed": true,
+        "required": true,
+        "simulated": true,
+        "song_ids": [
+          9,
+          2,
+          4,
+          7,
+          6
+        ],
+        "status": "ok"
+      },
+      {
+        "checks": [
+          {
+            "detail": "",
+            "name": "no_crash",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "trace_complete",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "all_in_catalog",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "scores_match_engine",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "within_requested_count",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "citations_valid",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "explanation_validated",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "status",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "generator_contains",
+            "passed": true
+          },
+          {
+            "detail": "",
+            "name": "http_attempts_max",
+            "passed": true
+          }
+        ],
+        "generator": "template (deterministic, not an LLM)",
+        "id": "simulated-auth-error",
+        "name": "Authentication failure is not retried (simulated)",
+        "passed": true,
+        "required": true,
+        "simulated": true,
+        "song_ids": [
+          9,
+          2,
+          4,
+          7,
+          6
+        ],
+        "status": "ok"
+      }
+    ],
+    "summary": {
+      "case_pass_rate": 1.0,
+      "cases": 22,
+      "cases_passed": 22,
+      "check_pass_rate": 1.0,
+      "checks": 197,
+      "checks_passed": 197,
+      "required_failures": [],
+      "simulated_cases": [
+        "simulated-invalid-then-corrected",
+        "simulated-invalid-then-fallback",
+        "simulated-auth-error"
+      ]
+    }
+  }
+}

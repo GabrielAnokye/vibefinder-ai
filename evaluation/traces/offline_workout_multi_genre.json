@@ -1,0 +1,260 @@
+{
+  "events": [
+    {
+      "action": "check length and content",
+      "decision": null,
+      "event_id": "01-validate_request",
+      "input": {
+        "characters": 65
+      },
+      "result": {},
+      "sources": [],
+      "stage": "validate_request",
+      "step": 1,
+      "validation": "accepted"
+    },
+    {
+      "action": "rule-based interpretation",
+      "decision": null,
+      "event_id": "02-interpret",
+      "input": {},
+      "result": {
+        "ambiguities": [],
+        "contexts": [
+          "workout"
+        ],
+        "count": 5,
+        "excluded_artists": [],
+        "excluded_genres": [],
+        "explicit": {
+          "energy": "0.85",
+          "genres": "rock or hip-hop"
+        },
+        "genre_requirement": "soft",
+        "unavailable_genres": [],
+        "unique_artists": false
+      },
+      "sources": [],
+      "stage": "interpret",
+      "step": 2,
+      "validation": null
+    },
+    {
+      "action": "TF-IDF search over guides and catalog facts",
+      "decision": null,
+      "event_id": "03-retrieve",
+      "input": {
+        "enabled": true,
+        "index_size": 62
+      },
+      "result": {
+        "scores": {
+          "catalog#genre-coverage": 0.2646,
+          "catalog#genre-hip-hop": 0.4306,
+          "catalog#song-12": 0.2236,
+          "listening_contexts#workout": 0.1695,
+          "music_features#genre-vs-mood": 0.2174,
+          "music_features#instrumentalness": 0.0971
+        }
+      },
+      "sources": [
+        "catalog#genre-hip-hop",
+        "catalog#genre-coverage",
+        "catalog#song-12",
+        "music_features#genre-vs-mood",
+        "listening_contexts#workout",
+        "music_features#instrumentalness"
+      ],
+      "stage": "retrieve",
+      "step": 3,
+      "validation": null
+    },
+    {
+      "action": "build recommendation plan",
+      "decision": null,
+      "event_id": "04-plan",
+      "input": {},
+      "result": {
+        "advanced": true,
+        "diverse": false,
+        "engine_prefs": {
+          "favorite_genre": [
+            "rock",
+            "hip-hop"
+          ],
+          "favorite_mood": "NO_PREFERENCE",
+          "likes_acoustic": false,
+          "preferred_decade": "NO_PREFERENCE",
+          "preferred_tags": [
+            "energetic"
+          ],
+          "target_energy": 0.85,
+          "target_instrumentalness": "NO_PREFERENCE",
+          "target_popularity": "NO_PREFERENCE",
+          "target_vocal_intensity": "NO_PREFERENCE"
+        },
+        "hints_not_used": {
+          "energy": "your explicit value was kept"
+        },
+        "hints_used": {
+          "acoustic": "listening_contexts#workout",
+          "mode": "listening_contexts#workout",
+          "mood_tags": "listening_contexts#workout"
+        },
+        "k": 5,
+        "mode": "energy-focused",
+        "mode_reason": "suggested by listening_contexts#workout",
+        "status": "ok",
+        "unknown": [
+          "mood",
+          "popularity",
+          "release decade",
+          "instrumentalness",
+          "vocal intensity"
+        ]
+      },
+      "sources": [
+        "listening_contexts#workout"
+      ],
+      "stage": "plan",
+      "step": 4,
+      "validation": null
+    },
+    {
+      "action": "apply hard genres and exclusions",
+      "decision": null,
+      "event_id": "05-filter_catalog",
+      "input": {
+        "excluded_artists": [],
+        "excluded_genres": [],
+        "hard_genres": []
+      },
+      "result": {
+        "candidates": 18
+      },
+      "sources": [],
+      "stage": "filter_catalog",
+      "step": 5,
+      "validation": null
+    },
+    {
+      "action": "call recommend_songs",
+      "decision": null,
+      "event_id": "06-rank",
+      "input": {
+        "advanced": true,
+        "candidates": 18,
+        "k": 5,
+        "mode": "energy-focused"
+      },
+      "result": {
+        "active_max": 10.0,
+        "scores": [
+          9.81,
+          9.61,
+          9.54,
+          7.64,
+          7.47
+        ],
+        "selected": [
+          16,
+          12,
+          3,
+          1,
+          5
+        ]
+      },
+      "sources": [],
+      "stage": "rank",
+      "step": 6,
+      "validation": null
+    },
+    {
+      "action": "compare stated preferences with the catalog and the selected results",
+      "decision": null,
+      "event_id": "07-check_coverage",
+      "input": {},
+      "result": {
+        "limitations": [],
+        "unmet_by_song": {
+          "1": [
+            "genre"
+          ],
+          "5": [
+            "genre"
+          ]
+        }
+      },
+      "sources": [
+        "catalog#genre-hip-hop",
+        "catalog#genre-coverage",
+        "catalog#song-12"
+      ],
+      "stage": "check_coverage",
+      "step": 7,
+      "validation": "all stated preferences covered"
+    },
+    {
+      "action": "re-score every result and check constraints",
+      "decision": null,
+      "event_id": "08-validate_results",
+      "input": {},
+      "result": {},
+      "sources": [],
+      "stage": "validate_results",
+      "step": 8,
+      "validation": "accepted"
+    },
+    {
+      "action": "template explanation (deterministic, not an LLM)",
+      "decision": null,
+      "event_id": "09-generate_explanation",
+      "input": {},
+      "result": {},
+      "sources": [
+        "catalog#genre-hip-hop",
+        "catalog#genre-coverage",
+        "catalog#song-12",
+        "music_features#genre-vs-mood",
+        "listening_contexts#workout",
+        "music_features#instrumentalness"
+      ],
+      "stage": "generate_explanation",
+      "step": 9,
+      "validation": "accepted"
+    },
+    {
+      "action": "return response",
+      "decision": null,
+      "event_id": "10-return",
+      "input": {},
+      "result": {
+        "generator": "template (deterministic, not an LLM)",
+        "http_attempts": 0,
+        "message": null,
+        "song_ids": [
+          16,
+          12,
+          3,
+          1,
+          5
+        ],
+        "status": "ok"
+      },
+      "sources": [],
+      "stage": "return",
+      "step": 10,
+      "validation": null
+    }
+  ],
+  "metadata": {
+    "format": "vibefinder-trace/1",
+    "max_http_attempts": 3,
+    "prompt_style": null,
+    "provider": "template (deterministic, not an LLM)",
+    "provider_kind": "template",
+    "quality_floor": 0.4,
+    "request": "I need energetic music for a workout, preferably rock or hip-hop.",
+    "retrieval": true
+  }
+}

@@ -29,6 +29,49 @@ I'm building Project 4 with Claude Code, an AI coding agent that reads files, ru
   7. **Documentation accuracy.** The agent first wrote in the design doc that a 50 % quality floor "dropped reasonable results". That was never tested, so the agent replaced it with the actual reason: an untested design choice.
 - **Not yet done:** a live OpenRouter request has **not** been made (no key configured during development); provider behaviour is covered by mocked tests only. Trace files, the evaluation harness, and the measured retrieval and specialization comparisons are planned for later phases.
 
+### Phase 3 — Agentic workflow, traces, prompt styles, evaluation
+
+- **Prompt (excerpts):** *"Your task is to implement Phase 3: a bounded agentic correction workflow, observable execution traces, grounded LLM generation, specialized prompting, and an automated evaluation harness."* *"Enforce a global bound of at most three actual external HTTP attempts per assistant execution, including transport retries and correction requests."* *"Do not attempt to extract or save private model chain-of-thought."* *"Mock providers may test the mechanics, but they do not establish actual specialized model performance."* *"Do not automatically select the threshold that maximizes the existing evaluation score."*
+- **Major AI-generated changes:**
+  - `src/assistant/workflow.py`: staged workflow with trace events, one content correction, template fallback, and a shared 3-attempt HTTP budget (`AttemptBudget` in `providers.py`).
+  - `src/assistant/trace.py`: deterministic JSON traces with secret redaction. `--trace` and `--trace-file` flags.
+  - `src/assistant/providers.py`: `general` / `specialized` prompts over one schema and one set of safety rules; few-shot examples with fictional songs; correction messages.
+  - `src/assistant/validation.py`: allowed keys, `unmet_preferences` consistency, numbers not in the song's data, few-shot names, overclaims, and length.
+  - `src/assistant/render.py`: zero-point lines for unspecified preferences hidden, `[inferred]` markers, full reasons under `--show-plan`.
+  - `evaluation/`:
+    - the harness (22 cases)
+    - trace generator with a `--check` mode
+    - retrieval and quality-floor experiments
+    - demo capture
+    - live-experiment runner that needs `--yes` and stays pending without credentials
+  - 51 new tests (`tests/test_agentic.py`, `tests/test_evaluation.py`). `tests/test_providers.py` was rewritten for the new provider interface, keeping each Phase 2 check and adding HTTP-attempt counts.
+- **Committed execution traces** (details in [evaluation/README.md](evaluation/README.md)):
+  - Offline, template provider:
+    - [offline_study_success.json](evaluation/traces/offline_study_success.json)
+    - [offline_workout_multi_genre.json](evaluation/traces/offline_workout_multi_genre.json)
+    - [offline_unique_artists.json](evaluation/traces/offline_unique_artists.json)
+    - [offline_no_match_only_metal.json](evaluation/traces/offline_no_match_only_metal.json)
+    - [offline_poor_coverage_acoustic_energy.json](evaluation/traces/offline_poor_coverage_acoustic_energy.json)
+  - **Simulated (scripted mock provider, not a live model):**
+    - [simulated_invalid_then_corrected.json](evaluation/traces/simulated_invalid_then_corrected.json): unsupported citation rejected, one correction accepted.
+    - [simulated_invalid_then_fallback.json](evaluation/traces/simulated_invalid_then_fallback.json): unknown song id rejected, correction rejected, template used.
+- **Actual vs offline vs mocked:**
+  - Every result in this phase comes from offline runs, either the deterministic template provider or a scripted mock.
+  - **No real external model request was made.** The general vs specialized comparison and the sources supplied vs withheld comparison are implemented but **pending**.
+  - Mocked runs show only that the mechanics work.
+- **Findings and corrections during the session** (from running the code, tests, and experiments):
+  1. When a correction also failed, the status line kept only the last error and lost the first attempt's errors. It now keeps the full history.
+  2. A new test meant to tell the two prompts apart checked for the word "unmet", which also appears in the shared schema. The test was wrong, not the prompts; it now checks a phrase unique to the specialized guidance.
+  3. The trace generator first passed `secrets=[]`, which turned redaction off for committed traces. Default redaction was restored.
+  4. The retrieval experiment's first "cited in limitations" metric counted every retrieved catalog passage, not the ones a limitation actually cites. It now parses the `[catalog#…]` citations, and no-match rows fall back to the retrieved ids.
+  5. The single-source run showed "Only recommend metal songs" retrieving `listening_contexts#nostalgia` because both contain the word "only". The planner ignored it, but "only" and "exactly" are now retrieval stopwords.
+  6. The energy-tolerance boundary review found a floating-point bug: a gap of exactly 0.20 (0.55 vs 0.35) was reported as a miss. Tolerances are now inclusive.
+  7. While writing up the floor experiment, the agent assumed Spacewalk Thoughts was the 57% song for "Chill lofi music". Checking the output showed it is Focus Flow (Spacewalk is 43%). The write-up was corrected before saving.
+- **AI suggestions to review:**
+  - **Kept as-is:** the agent recommended keeping the 40% floor and the ±0.20 energy tolerance, based on the comparison in [evaluation/results/quality_floor.md](evaluation/results/quality_floor.md). They are heuristics, not tuned values.
+  - **Caveat:** the evaluation expectations were written by the same agent that built the system, so a 100% offline pass rate shows consistency with intended behavior, not independent validation.
+- **Outstanding:** live OpenRouter verification (smoke test, generation comparisons, live evaluation subset). The commands are in the README and `evaluation/live_experiments.py`.
+
 #### My manual verification notes (Project 4)
 
 > ✍️ *To be completed by me.*
@@ -36,6 +79,8 @@ I'm building Project 4 with Claude Code, an AI coding agent that reads files, ru
 - [ ] I ran the six `--ask` demonstrations myself and checked the results:
 - [ ] I tried a live `--provider openrouter` run (model used, outcome):
 - [ ] Interpretations I disagree with, or phrasings that failed:
+- [ ] I read the committed traces and the simulated ones are clearly labeled:
+- [ ] My judgment on the 40% floor / ±0.20 tolerance and on the live prompt comparison (once run):
 
 ---
 

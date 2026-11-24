@@ -1,0 +1,241 @@
+{
+  "events": [
+    {
+      "action": "check length and content",
+      "decision": null,
+      "event_id": "01-validate_request",
+      "input": {
+        "characters": 77
+      },
+      "result": {},
+      "sources": [],
+      "stage": "validate_request",
+      "step": 1,
+      "validation": "accepted"
+    },
+    {
+      "action": "rule-based interpretation",
+      "decision": null,
+      "event_id": "02-interpret",
+      "input": {},
+      "result": {
+        "ambiguities": [],
+        "contexts": [
+          "studying"
+        ],
+        "count": 5,
+        "excluded_artists": [],
+        "excluded_genres": [],
+        "explicit": {
+          "energy": "0.30",
+          "instrumentalness": "0.85"
+        },
+        "genre_requirement": "none",
+        "unavailable_genres": [],
+        "unique_artists": false
+      },
+      "sources": [],
+      "stage": "interpret",
+      "step": 2,
+      "validation": null
+    },
+    {
+      "action": "TF-IDF search over guides and catalog facts",
+      "decision": null,
+      "event_id": "03-retrieve",
+      "input": {
+        "enabled": true,
+        "index_size": 62
+      },
+      "result": {
+        "scores": {
+          "listening_contexts#discovery": 0.1796,
+          "listening_contexts#studying": 0.2949,
+          "music_features#instrumentalness": 0.1779
+        }
+      },
+      "sources": [
+        "listening_contexts#studying",
+        "listening_contexts#discovery",
+        "music_features#instrumentalness"
+      ],
+      "stage": "retrieve",
+      "step": 3,
+      "validation": null
+    },
+    {
+      "action": "build recommendation plan",
+      "decision": null,
+      "event_id": "04-plan",
+      "input": {},
+      "result": {
+        "advanced": true,
+        "diverse": true,
+        "engine_prefs": {
+          "favorite_genre": "NO_PREFERENCE",
+          "favorite_mood": "NO_PREFERENCE",
+          "likes_acoustic": "NO_PREFERENCE",
+          "preferred_decade": "NO_PREFERENCE",
+          "preferred_tags": [
+            "focused"
+          ],
+          "target_energy": 0.3,
+          "target_instrumentalness": 0.85,
+          "target_popularity": "NO_PREFERENCE",
+          "target_vocal_intensity": 0.15
+        },
+        "hints_not_used": {
+          "energy": "your explicit value was kept",
+          "instrumentalness": "your explicit value was kept"
+        },
+        "hints_used": {
+          "mood_tags": "listening_contexts#studying",
+          "vocal_intensity": "listening_contexts#studying"
+        },
+        "k": 5,
+        "mode": "baseline",
+        "mode_reason": "default genre-first ranking",
+        "status": "ok",
+        "unknown": [
+          "genre",
+          "mood",
+          "acoustic sound",
+          "popularity",
+          "release decade"
+        ]
+      },
+      "sources": [
+        "listening_contexts#studying"
+      ],
+      "stage": "plan",
+      "step": 4,
+      "validation": null
+    },
+    {
+      "action": "apply hard genres and exclusions",
+      "decision": null,
+      "event_id": "05-filter_catalog",
+      "input": {
+        "excluded_artists": [],
+        "excluded_genres": [],
+        "hard_genres": []
+      },
+      "result": {
+        "candidates": 18
+      },
+      "sources": [],
+      "stage": "filter_catalog",
+      "step": 5,
+      "validation": null
+    },
+    {
+      "action": "call recommend_diverse_songs",
+      "decision": null,
+      "event_id": "06-rank",
+      "input": {
+        "advanced": true,
+        "candidates": 18,
+        "k": 5,
+        "mode": "baseline"
+      },
+      "result": {
+        "active_max": 5.0,
+        "scores": [
+          4.615,
+          3.835,
+          3.625,
+          3.46,
+          3.39
+        ],
+        "selected": [
+          9,
+          6,
+          7,
+          14,
+          15
+        ]
+      },
+      "sources": [],
+      "stage": "rank",
+      "step": 6,
+      "validation": null
+    },
+    {
+      "action": "compare stated preferences with the catalog and the selected results",
+      "decision": null,
+      "event_id": "07-check_coverage",
+      "input": {},
+      "result": {
+        "limitations": [],
+        "unmet_by_song": {
+          "14": [
+            "instrumentalness"
+          ]
+        }
+      },
+      "sources": [],
+      "stage": "check_coverage",
+      "step": 7,
+      "validation": "all stated preferences covered"
+    },
+    {
+      "action": "re-score every result and check constraints",
+      "decision": null,
+      "event_id": "08-validate_results",
+      "input": {},
+      "result": {},
+      "sources": [],
+      "stage": "validate_results",
+      "step": 8,
+      "validation": "accepted"
+    },
+    {
+      "action": "template explanation (deterministic, not an LLM)",
+      "decision": null,
+      "event_id": "09-generate_explanation",
+      "input": {},
+      "result": {},
+      "sources": [
+        "listening_contexts#studying",
+        "listening_contexts#discovery",
+        "music_features#instrumentalness"
+      ],
+      "stage": "generate_explanation",
+      "step": 9,
+      "validation": "accepted"
+    },
+    {
+      "action": "return response",
+      "decision": null,
+      "event_id": "10-return",
+      "input": {},
+      "result": {
+        "generator": "template (deterministic, not an LLM)",
+        "http_attempts": 0,
+        "message": null,
+        "song_ids": [
+          9,
+          6,
+          7,
+          14,
+          15
+        ],
+        "status": "ok"
+      },
+      "sources": [],
+      "stage": "return",
+      "step": 10,
+      "validation": null
+    }
+  ],
+  "metadata": {
+    "format": "vibefinder-trace/1",
+    "max_http_attempts": 3,
+    "prompt_style": null,
+    "provider": "template (deterministic, not an LLM)",
+    "provider_kind": "template",
+    "quality_floor": 0.4,
+    "request": "I'm studying for finals. Recommend calm instrumental music with some variety.",
+    "retrieval": true
+  }
+}

@@ -1,0 +1,291 @@
+{
+  "events": [
+    {
+      "action": "check length and content",
+      "decision": null,
+      "event_id": "01-validate_request",
+      "input": {
+        "characters": 19
+      },
+      "result": {},
+      "sources": [],
+      "stage": "validate_request",
+      "step": 1,
+      "validation": "accepted"
+    },
+    {
+      "action": "rule-based interpretation",
+      "decision": null,
+      "event_id": "02-interpret",
+      "input": {},
+      "result": {
+        "ambiguities": [],
+        "contexts": [
+          "studying"
+        ],
+        "count": 5,
+        "excluded_artists": [],
+        "excluded_genres": [],
+        "explicit": {},
+        "genre_requirement": "none",
+        "unavailable_genres": [],
+        "unique_artists": false
+      },
+      "sources": [],
+      "stage": "interpret",
+      "step": 2,
+      "validation": null
+    },
+    {
+      "action": "TF-IDF search over guides and catalog facts",
+      "decision": null,
+      "event_id": "03-retrieve",
+      "input": {
+        "enabled": true,
+        "index_size": 62
+      },
+      "result": {
+        "scores": {
+          "listening_contexts#studying": 0.3631,
+          "music_features#instrumentalness": 0.1573,
+          "music_features#vocal-intensity": 0.1741
+        }
+      },
+      "sources": [
+        "listening_contexts#studying",
+        "music_features#vocal-intensity",
+        "music_features#instrumentalness"
+      ],
+      "stage": "retrieve",
+      "step": 3,
+      "validation": null
+    },
+    {
+      "action": "build recommendation plan",
+      "decision": null,
+      "event_id": "04-plan",
+      "input": {},
+      "result": {
+        "advanced": true,
+        "diverse": false,
+        "engine_prefs": {
+          "favorite_genre": "NO_PREFERENCE",
+          "favorite_mood": "NO_PREFERENCE",
+          "likes_acoustic": "NO_PREFERENCE",
+          "preferred_decade": "NO_PREFERENCE",
+          "preferred_tags": [
+            "focused"
+          ],
+          "target_energy": 0.35,
+          "target_instrumentalness": 0.8,
+          "target_popularity": "NO_PREFERENCE",
+          "target_vocal_intensity": 0.15
+        },
+        "hints_not_used": {},
+        "hints_used": {
+          "energy": "listening_contexts#studying",
+          "instrumentalness": "listening_contexts#studying",
+          "mood_tags": "listening_contexts#studying",
+          "vocal_intensity": "listening_contexts#studying"
+        },
+        "k": 5,
+        "mode": "baseline",
+        "mode_reason": "default genre-first ranking",
+        "status": "ok",
+        "unknown": [
+          "genre",
+          "mood",
+          "acoustic sound",
+          "popularity",
+          "release decade"
+        ]
+      },
+      "sources": [
+        "listening_contexts#studying"
+      ],
+      "stage": "plan",
+      "step": 4,
+      "validation": null
+    },
+    {
+      "action": "apply hard genres and exclusions",
+      "decision": null,
+      "event_id": "05-filter_catalog",
+      "input": {
+        "excluded_artists": [],
+        "excluded_genres": [],
+        "hard_genres": []
+      },
+      "result": {
+        "candidates": 18
+      },
+      "sources": [],
+      "stage": "filter_catalog",
+      "step": 5,
+      "validation": null
+    },
+    {
+      "action": "call recommend_songs",
+      "decision": null,
+      "event_id": "06-rank",
+      "input": {
+        "advanced": true,
+        "candidates": 18,
+        "k": 5,
+        "mode": "baseline"
+      },
+      "result": {
+        "active_max": 5.0,
+        "scores": [
+          4.74,
+          4.715,
+          3.905,
+          3.8,
+          3.66
+        ],
+        "selected": [
+          9,
+          2,
+          4,
+          7,
+          6
+        ]
+      },
+      "sources": [],
+      "stage": "rank",
+      "step": 6,
+      "validation": null
+    },
+    {
+      "action": "compare stated preferences with the catalog and the selected results",
+      "decision": null,
+      "event_id": "07-check_coverage",
+      "input": {},
+      "result": {
+        "limitations": [],
+        "unmet_by_song": {}
+      },
+      "sources": [],
+      "stage": "check_coverage",
+      "step": 7,
+      "validation": "all stated preferences covered"
+    },
+    {
+      "action": "re-score every result and check constraints",
+      "decision": null,
+      "event_id": "08-validate_results",
+      "input": {},
+      "result": {},
+      "sources": [],
+      "stage": "validate_results",
+      "step": 8,
+      "validation": "accepted"
+    },
+    {
+      "action": "call mock (simulated, not a live model)",
+      "decision": null,
+      "event_id": "09-generate_explanation",
+      "input": {
+        "correction": false,
+        "errors_sent": [],
+        "prompt_style": "specialized"
+      },
+      "result": {
+        "characters": 2691,
+        "http_attempts": 1
+      },
+      "sources": [],
+      "stage": "generate_explanation",
+      "step": 9,
+      "validation": null
+    },
+    {
+      "action": "validate generated JSON against the payload",
+      "decision": "request one correction",
+      "event_id": "10-validate_explanation",
+      "input": {},
+      "result": {},
+      "sources": [
+        "listening_contexts#studying",
+        "music_features#vocal-intensity",
+        "music_features#instrumentalness"
+      ],
+      "stage": "validate_explanation",
+      "step": 10,
+      "validation": "rejected: song_id 9 cites unsupported source(s): invented#source"
+    },
+    {
+      "action": "call mock (simulated, not a live model)",
+      "decision": null,
+      "event_id": "11-correct_explanation",
+      "input": {
+        "correction": true,
+        "errors_sent": [
+          "song_id 9 cites unsupported source(s): invented#source"
+        ],
+        "prompt_style": "specialized"
+      },
+      "result": {
+        "characters": 2703,
+        "http_attempts": 1
+      },
+      "sources": [],
+      "stage": "correct_explanation",
+      "step": 11,
+      "validation": null
+    },
+    {
+      "action": "validate corrected JSON against the payload",
+      "decision": null,
+      "event_id": "12-validate_explanation",
+      "input": {},
+      "result": {},
+      "sources": [
+        "listening_contexts#studying",
+        "music_features#vocal-intensity",
+        "music_features#instrumentalness"
+      ],
+      "stage": "validate_explanation",
+      "step": 12,
+      "validation": "accepted"
+    },
+    {
+      "action": "return response",
+      "decision": null,
+      "event_id": "13-return",
+      "input": {},
+      "result": {
+        "generator": "mock (simulated, not a live model)",
+        "http_attempts": 2,
+        "message": null,
+        "song_ids": [
+          9,
+          2,
+          4,
+          7,
+          6
+        ],
+        "status": "ok"
+      },
+      "sources": [],
+      "stage": "return",
+      "step": 13,
+      "validation": null
+    }
+  ],
+  "metadata": {
+    "format": "vibefinder-trace/1",
+    "max_http_attempts": 3,
+    "mock_script": [
+      "bad_citation",
+      "valid"
+    ],
+    "note": "SIMULATED provider: responses were scripted by evaluation/generate_traces.py to exercise validation, correction and fallback. This is not a live model execution.",
+    "prompt_style": "specialized",
+    "provider": "mock (simulated, not a live model)",
+    "provider_kind": "simulated",
+    "quality_floor": 0.4,
+    "request": "Music for studying.",
+    "retrieval": true
+  }
+}
