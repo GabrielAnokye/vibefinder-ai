@@ -9,13 +9,14 @@ OpenRouter smoke records a certificate failure and template fallback.
 |---|---|---|
 | Evaluation cases (22, expectations written from the requests and catalog facts) | [cases.json](cases.json) | — |
 | Evaluation results | [results/offline_evaluation.txt](results/offline_evaluation.txt), [.json](results/offline_evaluation.json) | `python -m evaluation.run_evaluation --json evaluation/results/offline_evaluation.json` |
-| Execution traces (7) | [traces/](traces/) | `python -m evaluation.generate_traces` (`--check` verifies) |
+| Offline and simulated traces (7) | [traces/](traces/) | `python -m evaluation.generate_traces` (`--check` verifies) |
 | Retrieval on/off and single- vs multi-source | [results/retrieval_comparison.md](results/retrieval_comparison.md) | `python -m evaluation.retrieval_comparison` |
 | Quality floor and energy tolerance | [results/quality_floor.md](results/quality_floor.md) | `python -m evaluation.floor_comparison` |
 | Demonstration CLI outputs | [results/demo_outputs.md](results/demo_outputs.md) | `python -m evaluation.capture_demos` |
 | Phase 4 regression and dry-run checks | [results/phase4_verification.txt](results/phase4_verification.txt) | Commands included in the record |
 | Gemini integration verification | [results/gemini_integration_verification.txt](results/gemini_integration_verification.txt) | Mocked Gemini requests, offline tests and byte comparisons |
 | Gemini live experiments | [Report](results/live_evaluation_report.md), [smoke JSON](results/live_gemini_smoke.json), [retrieval JSON](results/live_gemini_retrieval.json), [prompt JSON](results/live_gemini_prompts.json) | [Approved live commands](#setup-and-request-budget) |
+| Final submission evidence | [Rubric audit and verification](../docs/submission_checklist.md) | [Offline setup](../README.md#getting-started) |
 
 ## Traces
 

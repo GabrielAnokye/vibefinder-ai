@@ -2,7 +2,7 @@
 
 ## Project 4 — VibeFinder AI development log
 
-Claude Code assisted in Phases 1–3. Codex took over evaluation in Phase 4. Entries record the work and evidence by phase.
+Claude Code assisted in Phases 1–3. Codex took over evaluation in Phase 4 and prepared the Phase 5 documentation. Entries record the work and evidence by phase.
 
 ### Phase 1 — Repository audit and system design
 
@@ -75,10 +75,13 @@ Claude Code assisted in Phases 1–3. Codex took over evaluation in Phase 4. Ent
 - **Handover:** Phase 3 left the optional provider and experiment commands in the
   [evaluation guide](evaluation/README.md#live-provider-evaluation).
 
-### Phase 4 — Evaluation handover
+### Phase 4 — Gemini integration, debugging, and live experiments
 
-- **Handover brief.** Verify the prior agent's claims, preserve the original recommender, and
-  conduct live evaluation only after explicit approval and model configuration.
+#### Evaluation handover
+
+- **Handover brief.** Verify the prior agent's claims and preserve the original recommender.
+  The user specified “Do not create a paid account, purchase credits, or make external model
+  requests without my approval.”
 - **Verification.** Codex started from clean `main` at `9472c7a`. It reproduced 375 passing tests,
   including the 186 original tests, all seven golden outputs, all seven saved traces, and the
   22-case, 197-check offline evaluation. It checked the unchanged 18-song catalog and reran the
@@ -95,7 +98,7 @@ Claude Code assisted in Phases 1–3. Codex took over evaluation in Phase 4. Ent
   [fallback trace](evaluation/traces/simulated_invalid_then_fallback.json) use scripted responses.
   Codex also verified the experiment mechanics with mocks and fake HTTP before Gemini integration.
 
-### Phase 4 amendment — Gemini integration
+#### Gemini integration
 
 - The user selected direct Gemini for the planned live comparisons and kept OpenRouter as an
   option. Codex chose the native Gemini endpoint for its JSON schema, finish reasons, and served
@@ -105,7 +108,7 @@ Claude Code assisted in Phases 1–3. Codex took over evaluation in Phase 4. Ent
   evidence still reproduces.
   [Gemini integration verification](evaluation/results/gemini_integration_verification.txt)
 
-### Phase 4 — HTTPS recovery and live evaluation
+#### HTTPS recovery and live evaluation
 
 - The user reported that curl reached both providers while the Python smoke runs fell back to
   templates. Codex reproduced certificate verification code 20 using credential-free Python
@@ -123,15 +126,27 @@ Claude Code assisted in Phases 1–3. Codex took over evaluation in Phase 4. Ent
   specialized prompt, along with longer explanations and fewer structured citations.
   [Live report](evaluation/results/live_evaluation_report.md) · [Smoke trace](evaluation/traces/live_gemini_smoke.json) · [Retrieval traces](evaluation/traces/live_gemini_retrieval.json) · [Prompt traces](evaluation/traces/live_gemini_prompts.json)
 
-#### My manual verification notes (Project 4)
+### Phase 5 — Final documentation and submission
 
-> ✍️ *To be completed by me.*
-
-- [ ] I ran the six `--ask` demonstrations myself and checked the results:
-- [ ] I tried a live `--provider openrouter` run (model used, outcome):
-- [ ] Interpretations I disagree with, or phrasings that failed:
-- [ ] I read the committed traces and the simulated ones are clearly labeled:
-- [ ] My judgment on the 40% floor / ±0.20 tolerance and on the live prompt comparison:
+- **Prompt excerpts.** “The diagram must represent the actual implemented architecture” and
+  “The grader must be able to execute the system without API credentials.”
+- **Documentation decisions.** Codex followed the implemented branches in `Assistant.ask()`
+  and the provider workflow to draw the Mermaid source. The root README now serves the
+  Applied AI project, while the Module 3 README and model card are archived with their original
+  experiment history. Live examples are quoted from saved results. The author reviewed and
+  approved the first-person reflection in the Model Card.
+  [Architecture](docs/architecture.md) · [Model card](model_card.md#ai-collaboration-reflection)
+- **Verification.** Fresh virtual environments on Python 3.12.7 and 3.14.7 passed all
+  417 tests without provider credentials. The 22 offline cases, 197 checks, seven golden outputs,
+  and original catalog were rechecked. The diagram was rendered with Mermaid CLI. Phase 5 used
+  saved live evidence and ran the demo offline. [Rubric and verification checklist](docs/submission_checklist.md)
+- **Trace index.** The [offline study recommendation](evaluation/traces/offline_study_success.json)
+  and [hard-constraint no-match](evaluation/traces/offline_no_match_only_metal.json) use the
+  template. The [invalid citation and successful correction](evaluation/traces/simulated_invalid_then_corrected.json)
+  and [failed correction and fallback](evaluation/traces/simulated_invalid_then_fallback.json)
+  are scripted simulations. The [Gemini smoke](evaluation/traces/live_gemini_smoke.json),
+  [retrieval comparison](evaluation/traces/live_gemini_retrieval.json), and
+  [prompt comparison](evaluation/traces/live_gemini_prompts.json) are actual live runs.
 
 ---
 

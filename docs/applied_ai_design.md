@@ -1,9 +1,8 @@
 # VibeFinder AI — Applied AI System Design
 
-> **Status (Phase 3, 2026-11-23): agentic workflow, traces, prompt styles, and evaluation
-> implemented.** §P3 covers Phase 3 and §0 covers Phase 2. §1–§14 are the original Phase 1 design,
-> kept for history; where they conflict, §P3 and §0 are current. The architecture diagram at the
-> end is still the *proposed* one; the final `diagrams/architecture.mmd` comes in a later phase.
+> This record preserves the Phase 1 proposal and the Phase 2–4 implementation notes. The
+> implemented workflow is documented in the [final architecture](architecture.md), with its
+> [Mermaid source](../diagrams/architecture.mmd). The sketch at the end records the Phase 1 design.
 
 ---
 
