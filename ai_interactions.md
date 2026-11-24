@@ -2,7 +2,7 @@
 
 ## Project 4 — VibeFinder AI development log
 
-I'm building Project 4 with Claude Code, an AI coding agent that reads files, runs commands, and edits code in this repository. Entries are added phase by phase. The Project 3 history further down is kept unchanged.
+Claude Code assisted in Phases 1–3. Codex took over evaluation in Phase 4. Entries record the work and evidence by phase.
 
 ### Phase 1 — Repository audit and system design
 
@@ -27,7 +27,8 @@ I'm building Project 4 with Claude Code, an AI coding agent that reads files, ru
   5. **Match labels.** Substitutes for "some metal" were labeled "strong match". Results now list the unavailable genre as missed, and "strong" requires that no stated preference is missed.
   6. **Rounding.** The template explanation showed 7.32 where the score line showed 7.31, because the agent had rounded the payload score before formatting. It now passes the exact engine score.
   7. **Documentation accuracy.** The agent first wrote in the design doc that a 50 % quality floor "dropped reasonable results". That was never tested, so the agent replaced it with the actual reason: an untested design choice.
-- **Not yet done:** a live OpenRouter request has **not** been made (no key configured during development); provider behaviour is covered by mocked tests only. Trace files, the evaluation harness, and the measured retrieval and specialization comparisons are planned for later phases.
+- **Verification at this stage:** fake HTTP tests exercised provider behavior. Phase 3 added the
+  traces and evaluation harness. Phase 4 recorded the measured live comparisons.
 
 ### Phase 3 — Agentic workflow, traces, prompt styles, evaluation
 
@@ -57,7 +58,8 @@ I'm building Project 4 with Claude Code, an AI coding agent that reads files, ru
     - [simulated_invalid_then_fallback.json](evaluation/traces/simulated_invalid_then_fallback.json): unknown song id rejected, correction rejected, template used.
 - **Actual vs offline vs mocked:**
   - Every result in this phase comes from offline runs, either the deterministic template provider or a scripted mock.
-  - **No real external model request was made.** The general vs specialized comparison and the sources supplied vs withheld comparison are implemented but **pending**.
+  - Phase 3 prepared the general versus specialized and sources supplied versus withheld runners.
+    The Phase 4 record below links to the live results.
   - Mocked runs show only that the mechanics work.
 - **Findings and corrections during the session** (from running the code, tests, and experiments):
   1. When a correction also failed, the status line kept only the last error and lost the first attempt's errors. It now keeps the full history.
@@ -70,7 +72,56 @@ I'm building Project 4 with Claude Code, an AI coding agent that reads files, ru
 - **AI suggestions to review:**
   - **Kept as-is:** the agent recommended keeping the 40% floor and the ±0.20 energy tolerance, based on the comparison in [evaluation/results/quality_floor.md](evaluation/results/quality_floor.md). They are heuristics, not tuned values.
   - **Caveat:** the evaluation expectations were written by the same agent that built the system, so a 100% offline pass rate shows consistency with intended behavior, not independent validation.
-- **Outstanding:** live OpenRouter verification (smoke test, generation comparisons, live evaluation subset). The commands are in the README and `evaluation/live_experiments.py`.
+- **Handover:** Phase 3 left the optional provider and experiment commands in the
+  [evaluation guide](evaluation/README.md#live-provider-evaluation).
+
+### Phase 4 — Evaluation handover
+
+- **Handover brief.** Verify the prior agent's claims, preserve the original recommender, and
+  conduct live evaluation only after explicit approval and model configuration.
+- **Verification.** Codex started from clean `main` at `9472c7a`. It reproduced 375 passing tests,
+  including the 186 original tests, all seven golden outputs, all seven saved traces, and the
+  22-case, 197-check offline evaluation. It checked the unchanged 18-song catalog and reran the
+  original CLI, assistant examples and offline experiments. [Phase 4 verification record](evaluation/results/phase4_verification.txt)
+- **Evaluation decisions.** The inherited runner captured first answers only and crashed on a
+  simulated answer with null citations. Codex separated raw retrieval measurement from the
+  smoke and prompt runs, which reuse the assistant's correction and fallback. It added a
+  regression check for malformed citations, kept failures in the results, and captured final
+  generator and provider-reported model metadata. The no-network plan reports 13 initial
+  requests and 33 HTTP attempts at most, including retries and possible corrections.
+- **Execution evidence.** The [study trace](evaluation/traces/offline_study_success.json) records
+  a template execution. The
+  [correction trace](evaluation/traces/simulated_invalid_then_corrected.json) and
+  [fallback trace](evaluation/traces/simulated_invalid_then_fallback.json) use scripted responses.
+  Codex also verified the experiment mechanics with mocks and fake HTTP before Gemini integration.
+
+### Phase 4 amendment — Gemini integration
+
+- The user selected direct Gemini for the planned live comparisons and kept OpenRouter as an
+  option. Codex chose the native Gemini endpoint for its JSON schema, finish reasons, and served
+  model version. Both live clients use the shared HTTP retry budget and explanation workflow.
+- Tests with a fake Gemini HTTP transport exercised the CLI, both comparisons, optional harness,
+  failure handling, model attribution and credential redaction. The saved Phase 3 offline
+  evidence still reproduces.
+  [Gemini integration verification](evaluation/results/gemini_integration_verification.txt)
+
+### Phase 4 — HTTPS recovery and live evaluation
+
+- The user reported that curl reached both providers while the Python smoke runs fell back to
+  templates. Codex reproduced certificate verification code 20 using credential-free Python
+  requests. The Python install had no default CA bundle. The shared transport now uses the macOS
+  system bundle when Python has no configured CA source, with certificate and hostname
+  verification enabled. Diagnostics distinguish TLS failures, connection or write failures, and
+  response timeouts. The retained OpenRouter trace identifies the verification failure. The
+  earlier Gemini log contained a generic network message. During the outage the engine and
+  template still returned recommendations.
+  [HTTPS investigation](evaluation/README.md#https-troubleshooting) · [OpenRouter fallback trace](evaluation/traces/live_smoke.json)
+- The user ran all three live Gemini experiments. Codex rechecked the stored JSON, controls, and
+  traces offline and reviewed the saved prose against the grounding. The 13-request batch had
+  12 valid initial answers. The study response with passages withheld failed five structured
+  citation checks. The audit found more explicit provenance and preference-miss wording with the
+  specialized prompt, along with longer explanations and fewer structured citations.
+  [Live report](evaluation/results/live_evaluation_report.md) · [Smoke trace](evaluation/traces/live_gemini_smoke.json) · [Retrieval traces](evaluation/traces/live_gemini_retrieval.json) · [Prompt traces](evaluation/traces/live_gemini_prompts.json)
 
 #### My manual verification notes (Project 4)
 
@@ -80,7 +131,7 @@ I'm building Project 4 with Claude Code, an AI coding agent that reads files, ru
 - [ ] I tried a live `--provider openrouter` run (model used, outcome):
 - [ ] Interpretations I disagree with, or phrasings that failed:
 - [ ] I read the committed traces and the simulated ones are clearly labeled:
-- [ ] My judgment on the 40% floor / ±0.20 tolerance and on the live prompt comparison (once run):
+- [ ] My judgment on the 40% floor / ±0.20 tolerance and on the live prompt comparison:
 
 ---
 

@@ -1,0 +1,397 @@
+{
+  "experiment": "prompts",
+  "runs": [
+    {
+      "events": [
+        {
+          "action": "call gemini:gemini-3.5-flash-lite (LLM)",
+          "decision": null,
+          "event_id": "01-generate_explanation",
+          "input": {
+            "correction": false,
+            "errors_sent": [],
+            "prompt_style": "general"
+          },
+          "result": {
+            "characters": 2057,
+            "http_attempts": 1,
+            "response_metadata": {
+              "finish_reason": "STOP",
+              "model": "gemini-3.5-flash-lite"
+            }
+          },
+          "sources": [],
+          "stage": "generate_explanation",
+          "step": 1,
+          "validation": null
+        },
+        {
+          "action": "validate generated JSON against the payload",
+          "decision": null,
+          "event_id": "02-validate_explanation",
+          "input": {},
+          "result": {},
+          "sources": [
+            "listening_contexts#studying",
+            "music_features#vocal-intensity",
+            "music_features#instrumentalness"
+          ],
+          "stage": "validate_explanation",
+          "step": 2,
+          "validation": "accepted"
+        },
+        {
+          "action": "record experimental result",
+          "decision": null,
+          "event_id": "03-return",
+          "input": {},
+          "result": {
+            "generator": "gemini:gemini-3.5-flash-lite (LLM)",
+            "http_attempts": 1,
+            "outcome": "live_validated"
+          },
+          "sources": [],
+          "stage": "return",
+          "step": 3,
+          "validation": null
+        }
+      ],
+      "metadata": {
+        "arm": "general prompt",
+        "format": "vibefinder-trace/1",
+        "prompt_style": "general",
+        "provider": "gemini:gemini-3.5-flash-lite (LLM)",
+        "provider_kind": "live",
+        "request": "Music for studying."
+      }
+    },
+    {
+      "events": [
+        {
+          "action": "call gemini:gemini-3.5-flash-lite (LLM)",
+          "decision": null,
+          "event_id": "01-generate_explanation",
+          "input": {
+            "correction": false,
+            "errors_sent": [],
+            "prompt_style": "specialized"
+          },
+          "result": {
+            "characters": 3193,
+            "http_attempts": 1,
+            "response_metadata": {
+              "finish_reason": "STOP",
+              "model": "gemini-3.5-flash-lite"
+            }
+          },
+          "sources": [],
+          "stage": "generate_explanation",
+          "step": 1,
+          "validation": null
+        },
+        {
+          "action": "validate generated JSON against the payload",
+          "decision": null,
+          "event_id": "02-validate_explanation",
+          "input": {},
+          "result": {},
+          "sources": [
+            "listening_contexts#studying",
+            "music_features#vocal-intensity",
+            "music_features#instrumentalness"
+          ],
+          "stage": "validate_explanation",
+          "step": 2,
+          "validation": "accepted"
+        },
+        {
+          "action": "record experimental result",
+          "decision": null,
+          "event_id": "03-return",
+          "input": {},
+          "result": {
+            "generator": "gemini:gemini-3.5-flash-lite (LLM)",
+            "http_attempts": 1,
+            "outcome": "live_validated"
+          },
+          "sources": [],
+          "stage": "return",
+          "step": 3,
+          "validation": null
+        }
+      ],
+      "metadata": {
+        "arm": "specialized prompt",
+        "format": "vibefinder-trace/1",
+        "prompt_style": "specialized",
+        "provider": "gemini:gemini-3.5-flash-lite (LLM)",
+        "provider_kind": "live",
+        "request": "Music for studying."
+      }
+    },
+    {
+      "events": [
+        {
+          "action": "call gemini:gemini-3.5-flash-lite (LLM)",
+          "decision": null,
+          "event_id": "01-generate_explanation",
+          "input": {
+            "correction": false,
+            "errors_sent": [],
+            "prompt_style": "general"
+          },
+          "result": {
+            "characters": 2312,
+            "http_attempts": 1,
+            "response_metadata": {
+              "finish_reason": "STOP",
+              "model": "gemini-3.5-flash-lite"
+            }
+          },
+          "sources": [],
+          "stage": "generate_explanation",
+          "step": 1,
+          "validation": null
+        },
+        {
+          "action": "validate generated JSON against the payload",
+          "decision": null,
+          "event_id": "02-validate_explanation",
+          "input": {},
+          "result": {},
+          "sources": [
+            "catalog#genre-hip-hop",
+            "catalog#genre-coverage",
+            "catalog#song-12",
+            "music_features#genre-vs-mood",
+            "listening_contexts#workout",
+            "music_features#instrumentalness"
+          ],
+          "stage": "validate_explanation",
+          "step": 2,
+          "validation": "accepted"
+        },
+        {
+          "action": "record experimental result",
+          "decision": null,
+          "event_id": "03-return",
+          "input": {},
+          "result": {
+            "generator": "gemini:gemini-3.5-flash-lite (LLM)",
+            "http_attempts": 1,
+            "outcome": "live_validated"
+          },
+          "sources": [],
+          "stage": "return",
+          "step": 3,
+          "validation": null
+        }
+      ],
+      "metadata": {
+        "arm": "general prompt",
+        "format": "vibefinder-trace/1",
+        "prompt_style": "general",
+        "provider": "gemini:gemini-3.5-flash-lite (LLM)",
+        "provider_kind": "live",
+        "request": "I need energetic music for a workout, preferably rock or hip-hop."
+      }
+    },
+    {
+      "events": [
+        {
+          "action": "call gemini:gemini-3.5-flash-lite (LLM)",
+          "decision": null,
+          "event_id": "01-generate_explanation",
+          "input": {
+            "correction": false,
+            "errors_sent": [],
+            "prompt_style": "specialized"
+          },
+          "result": {
+            "characters": 1745,
+            "http_attempts": 1,
+            "response_metadata": {
+              "finish_reason": "STOP",
+              "model": "gemini-3.5-flash-lite"
+            }
+          },
+          "sources": [],
+          "stage": "generate_explanation",
+          "step": 1,
+          "validation": null
+        },
+        {
+          "action": "validate generated JSON against the payload",
+          "decision": null,
+          "event_id": "02-validate_explanation",
+          "input": {},
+          "result": {},
+          "sources": [
+            "catalog#genre-hip-hop",
+            "catalog#genre-coverage",
+            "catalog#song-12",
+            "music_features#genre-vs-mood",
+            "listening_contexts#workout",
+            "music_features#instrumentalness"
+          ],
+          "stage": "validate_explanation",
+          "step": 2,
+          "validation": "accepted"
+        },
+        {
+          "action": "record experimental result",
+          "decision": null,
+          "event_id": "03-return",
+          "input": {},
+          "result": {
+            "generator": "gemini:gemini-3.5-flash-lite (LLM)",
+            "http_attempts": 1,
+            "outcome": "live_validated"
+          },
+          "sources": [],
+          "stage": "return",
+          "step": 3,
+          "validation": null
+        }
+      ],
+      "metadata": {
+        "arm": "specialized prompt",
+        "format": "vibefinder-trace/1",
+        "prompt_style": "specialized",
+        "provider": "gemini:gemini-3.5-flash-lite (LLM)",
+        "provider_kind": "live",
+        "request": "I need energetic music for a workout, preferably rock or hip-hop."
+      }
+    },
+    {
+      "events": [
+        {
+          "action": "call gemini:gemini-3.5-flash-lite (LLM)",
+          "decision": null,
+          "event_id": "01-generate_explanation",
+          "input": {
+            "correction": false,
+            "errors_sent": [],
+            "prompt_style": "general"
+          },
+          "result": {
+            "characters": 2225,
+            "http_attempts": 1,
+            "response_metadata": {
+              "finish_reason": "STOP",
+              "model": "gemini-3.5-flash-lite"
+            }
+          },
+          "sources": [],
+          "stage": "generate_explanation",
+          "step": 1,
+          "validation": null
+        },
+        {
+          "action": "validate generated JSON against the payload",
+          "decision": null,
+          "event_id": "02-validate_explanation",
+          "input": {},
+          "result": {},
+          "sources": [
+            "music_features#acousticness",
+            "catalog#energy-vs-acousticness",
+            "music_features#instrumentalness",
+            "listening_contexts#workout"
+          ],
+          "stage": "validate_explanation",
+          "step": 2,
+          "validation": "accepted"
+        },
+        {
+          "action": "record experimental result",
+          "decision": null,
+          "event_id": "03-return",
+          "input": {},
+          "result": {
+            "generator": "gemini:gemini-3.5-flash-lite (LLM)",
+            "http_attempts": 1,
+            "outcome": "live_validated"
+          },
+          "sources": [],
+          "stage": "return",
+          "step": 3,
+          "validation": null
+        }
+      ],
+      "metadata": {
+        "arm": "general prompt",
+        "format": "vibefinder-trace/1",
+        "prompt_style": "general",
+        "provider": "gemini:gemini-3.5-flash-lite (LLM)",
+        "provider_kind": "live",
+        "request": "Recommend acoustic music with very high energy."
+      }
+    },
+    {
+      "events": [
+        {
+          "action": "call gemini:gemini-3.5-flash-lite (LLM)",
+          "decision": null,
+          "event_id": "01-generate_explanation",
+          "input": {
+            "correction": false,
+            "errors_sent": [],
+            "prompt_style": "specialized"
+          },
+          "result": {
+            "characters": 2256,
+            "http_attempts": 1,
+            "response_metadata": {
+              "finish_reason": "STOP",
+              "model": "gemini-3.5-flash-lite"
+            }
+          },
+          "sources": [],
+          "stage": "generate_explanation",
+          "step": 1,
+          "validation": null
+        },
+        {
+          "action": "validate generated JSON against the payload",
+          "decision": null,
+          "event_id": "02-validate_explanation",
+          "input": {},
+          "result": {},
+          "sources": [
+            "music_features#acousticness",
+            "catalog#energy-vs-acousticness",
+            "music_features#instrumentalness",
+            "listening_contexts#workout"
+          ],
+          "stage": "validate_explanation",
+          "step": 2,
+          "validation": "accepted"
+        },
+        {
+          "action": "record experimental result",
+          "decision": null,
+          "event_id": "03-return",
+          "input": {},
+          "result": {
+            "generator": "gemini:gemini-3.5-flash-lite (LLM)",
+            "http_attempts": 1,
+            "outcome": "live_validated"
+          },
+          "sources": [],
+          "stage": "return",
+          "step": 3,
+          "validation": null
+        }
+      ],
+      "metadata": {
+        "arm": "specialized prompt",
+        "format": "vibefinder-trace/1",
+        "prompt_style": "specialized",
+        "provider": "gemini:gemini-3.5-flash-lite (LLM)",
+        "provider_kind": "live",
+        "request": "Recommend acoustic music with very high energy."
+      }
+    }
+  ]
+}

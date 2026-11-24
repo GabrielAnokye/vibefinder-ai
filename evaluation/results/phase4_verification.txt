@@ -1,0 +1,114 @@
+VibeFinder AI Phase 4 verification (2026-11-23, America/Chicago)
+Started from clean main at 9472c7a, tracking origin/main.
+The offline runs use deterministic templates. Scripted provider cases are labeled simulated.
+Real OpenRouter requests and HTTP attempts: 0.
+
+$ .venv/bin/python --version
+Python 3.14.7
+$ .venv/bin/python -m pytest --version
+pytest 9.2.0
+$ .venv/bin/python -m pytest -q
+379 passed in 0.68s
+$ .venv/bin/python -m pytest -q tests/test_advanced.py tests/test_diversity.py tests/test_main.py tests/test_modes.py tests/test_recommender.py tests/test_table.py
+186 passed in 0.16s
+$ git diff --exit-code aa45400 -- tests/test_advanced.py tests/test_diversity.py tests/test_main.py tests/test_modes.py tests/test_recommender.py tests/test_table.py
+All six original test files match the Module 3 baseline.
+$ .venv/bin/python -m evaluation.run_evaluation --json "$temporary_directory/offline_evaluation.json"
+Offline evaluation (template provider; mock cases are simulated)
+================================================================
+PASS  study-calm                         13/13 checks
+PASS  workout-energetic                  11/11 checks
+PASS  nostalgic-acoustic                 11/11 checks
+PASS  multiple-genres                    10/10 checks
+PASS  only-rock                          11/11 checks
+PASS  exclude-pop                        10/10 checks
+PASS  unique-artists                     9/9 checks
+PASS  exactly-three                      9/9 checks
+PASS  only-metal                         6/6 checks
+PASS  some-metal                         10/10 checks
+PASS  conflicting-hard                   5/5 checks
+PASS  conflicting-energy                 5/5 checks
+PASS  acoustic-high-energy               10/10 checks
+PASS  empty                              5/5 checks
+PASS  vague                              5/5 checks
+PASS  too-many                           10/10 checks
+PASS  exclude-artist                     9/9 checks
+PASS  injection                          11/11 checks
+PASS  study-no-retrieval                 5/5 checks
+PASS  simulated-invalid-then-corrected   11/11 checks [simulated provider]
+PASS  simulated-invalid-then-fallback    11/11 checks [simulated provider]
+PASS  simulated-auth-error               10/10 checks [simulated provider]
+
+Cases: 22/22 passed (100.0%)
+Checks: 197/197 passed (100.0%)
+This measures agreement with the expectations in evaluation/cases.json, not real-world recommendation quality.
+The offline report and structured results matched the saved Phase 3 evidence.
+$ git diff --exit-code 58565ff -- tests/golden
+$ .venv/bin/python -m src.main
+Byte-for-byte match: tests/golden/main_default.txt
+$ .venv/bin/python -m src.main --all-profiles
+Byte-for-byte match: tests/golden/main_all_profiles.txt
+$ .venv/bin/python -m src.main --mode mood-first
+Byte-for-byte match: tests/golden/main_mode_mood_first.txt
+$ .venv/bin/python -m src.main --advanced
+Byte-for-byte match: tests/golden/main_advanced.txt
+$ .venv/bin/python -m src.main --diverse --table
+Byte-for-byte match: tests/golden/main_diverse_table.txt
+$ .venv/bin/python -m src.main --advanced --diverse --table
+Byte-for-byte match: tests/golden/main_advanced_diverse_table.txt
+$ .venv/bin/python -m experiments.weight_experiment
+Byte-for-byte match: tests/golden/weight_experiment.txt
+7/7 original CLI and weight experiment outputs matched.
+$ git diff --exit-code aa45400 -- data/songs.csv
+The unchanged catalog has 18 songs and 15 columns.
+$ .venv/bin/python -m evaluation.capture_demos
+$ .venv/bin/python -m evaluation.retrieval_comparison
+$ .venv/bin/python -m evaluation.floor_comparison
+$ git diff --exit-code HEAD -- evaluation/results evaluation/traces
+Regenerated outputs for 8 offline demonstrations and both offline experiments matched the saved evidence.
+$ .venv/bin/python -m evaluation.generate_traces --check
+All traces up to date.
+7/7 traces reproduced: five offline template executions and two simulated provider executions.
+$ .venv/bin/python -m src.main --ask 'Recommend three nostalgic acoustic songs for a quiet evening.'
+Matches the README transcript.
+$ .venv/bin/python -m src.main --ask 'Give me two rock songs only, no repeated artists.'
+Matches the README transcript.
+$ .venv/bin/python -m src.main --ask 'Only recommend metal songs.'
+Matches the README transcript.
+Input boundary via Assistant.ask: 500 characters accepted offline, 501 rejected before any provider call.
+$ .venv/bin/python -m evaluation.live_experiments plan
+Planned: smoke, retrieval, prompts -> 13 initial logical requests, up to 7 corrections (20 total logical requests), at most 33 HTTP attempts.
+The next command exercises the live runner with scripted responses.
+$ .venv/bin/python -m evaluation.live_experiments all --mock
+Planned: smoke, retrieval, prompts -> 13 initial logical requests, up to 7 corrections (20 total logical requests), at most 33 HTTP attempts.
+SIMULATED provider: scripted template output. These numbers do not measure a real model.
+[smoke] Music for studying.                           specialized          initial_valid=True correction_valid=None final_accepted=True outcome=simulated_validated
+  Final generator: mock (simulated, not a live model)
+Logical requests: 1; simulated HTTP attempts: 1
+[retrieval] Music for studying.                           sources supplied     initial_valid=True correction_valid=None final_accepted=None outcome=simulated_raw_validated
+[retrieval] Music for studying.                           sources withheld     initial_valid=True correction_valid=None final_accepted=None outcome=simulated_raw_validated
+[retrieval] I need energetic music for a workout, prefera sources supplied     initial_valid=True correction_valid=None final_accepted=None outcome=simulated_raw_validated
+[retrieval] I need energetic music for a workout, prefera sources withheld     initial_valid=True correction_valid=None final_accepted=None outcome=simulated_raw_validated
+[retrieval] Recommend acoustic music with very high energ sources supplied     initial_valid=True correction_valid=None final_accepted=None outcome=simulated_raw_validated
+[retrieval] Recommend acoustic music with very high energ sources withheld     initial_valid=True correction_valid=None final_accepted=None outcome=simulated_raw_validated
+Logical requests: 6; simulated HTTP attempts: 6
+[prompts] Music for studying.                           general prompt       initial_valid=True correction_valid=None final_accepted=True outcome=simulated_validated
+  Final generator: mock (simulated, not a live model)
+[prompts] Music for studying.                           specialized prompt   initial_valid=True correction_valid=None final_accepted=True outcome=simulated_validated
+  Final generator: mock (simulated, not a live model)
+[prompts] I need energetic music for a workout, prefera general prompt       initial_valid=True correction_valid=None final_accepted=True outcome=simulated_validated
+  Final generator: mock (simulated, not a live model)
+[prompts] I need energetic music for a workout, prefera specialized prompt   initial_valid=True correction_valid=None final_accepted=True outcome=simulated_validated
+  Final generator: mock (simulated, not a live model)
+[prompts] Recommend acoustic music with very high energ general prompt       initial_valid=True correction_valid=None final_accepted=True outcome=simulated_validated
+  Final generator: mock (simulated, not a live model)
+[prompts] Recommend acoustic music with very high energ specialized prompt   initial_valid=True correction_valid=None final_accepted=True outcome=simulated_validated
+  Final generator: mock (simulated, not a live model)
+Logical requests: 6; simulated HTTP attempts: 6
+The mock run wrote no live evidence. Fake-transport evidence in pytest used temporary directories.
+$ git ls-files -- '.env*' '*.pem' '*.key'
+.env.example
+$ git check-ignore .env
+.env
+$ git diff --check
+Live smoke, retrieval and prompt comparison remain pending configuration and approval.

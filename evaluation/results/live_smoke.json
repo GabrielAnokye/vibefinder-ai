@@ -1,0 +1,394 @@
+{
+  "date": "2026-11-23",
+  "experiment": "smoke",
+  "generation_settings": {
+    "max_tokens": 800,
+    "temperature": 0.2,
+    "thinking_config": null
+  },
+  "http_attempts": 2,
+  "logical_requests": 1,
+  "model_consistent": true,
+  "provider": "openrouter:liquid/lfm-3-1.7b:free (LLM)",
+  "reported_models": [],
+  "requested_model": "liquid/lfm-3-1.7b:free",
+  "requests": [
+    "Music for studying."
+  ],
+  "runs": [
+    {
+      "arm": "specialized",
+      "correction": null,
+      "final": {
+        "accepted": true,
+        "explanation": {
+          "citations": {
+            "2": [
+              "listening_contexts#studying"
+            ],
+            "4": [
+              "listening_contexts#studying"
+            ],
+            "6": [
+              "listening_contexts#studying"
+            ],
+            "7": [
+              "listening_contexts#studying"
+            ],
+            "9": [
+              "listening_contexts#studying"
+            ]
+          },
+          "features": {
+            "2": [
+              "energy",
+              "instrumentalness",
+              "mood_tags",
+              "vocal_intensity"
+            ],
+            "4": [
+              "energy",
+              "instrumentalness",
+              "mood_tags",
+              "vocal_intensity"
+            ],
+            "6": [
+              "energy",
+              "instrumentalness",
+              "mood_tags",
+              "vocal_intensity"
+            ],
+            "7": [
+              "energy",
+              "instrumentalness",
+              "mood_tags",
+              "vocal_intensity"
+            ],
+            "9": [
+              "energy",
+              "instrumentalness",
+              "mood_tags",
+              "vocal_intensity"
+            ]
+          },
+          "items": {
+            "2": "Midnight Coding by LoRoom (lofi, chill) scored 4.71 of the 5.00 points available from your preferences. It also fits targets inferred from the knowledge guides: energy (listening_contexts#studying), instrumentalness (listening_contexts#studying), vocal intensity (listening_contexts#studying) and mood tags (listening_contexts#studying).",
+            "4": "Library Rain by Paper Lanterns (lofi, chill) scored 3.91 of the 5.00 points available from your preferences. It also fits targets inferred from the knowledge guides: energy (listening_contexts#studying), instrumentalness (listening_contexts#studying) and vocal intensity (listening_contexts#studying).",
+            "6": "Spacewalk Thoughts by Orbit Bloom (ambient, chill) scored 3.66 of the 5.00 points available from your preferences. It also fits targets inferred from the knowledge guides: energy (listening_contexts#studying), instrumentalness (listening_contexts#studying) and vocal intensity (listening_contexts#studying).",
+            "7": "Coffee Shop Stories by Slow Stereo (jazz, relaxed) scored 3.80 of the 5.00 points available from your preferences. It also fits targets inferred from the knowledge guides: energy (listening_contexts#studying), instrumentalness (listening_contexts#studying) and vocal intensity (listening_contexts#studying).",
+            "9": "Focus Flow by LoRoom (lofi, focused) scored 4.74 of the 5.00 points available from your preferences. It also fits targets inferred from the knowledge guides: energy (listening_contexts#studying), instrumentalness (listening_contexts#studying), vocal intensity (listening_contexts#studying) and mood tags (listening_contexts#studying)."
+          },
+          "limitations": [],
+          "summary": "Interpreted as a studying request and ranked 18 catalog songs with baseline ranking plus advanced features."
+        },
+        "generator": "template (deterministic, not an LLM)",
+        "metrics": {
+          "citation_validity": 1.0,
+          "citations": 5,
+          "coverage": 1.0,
+          "errors": [],
+          "feature_mentioned (heuristic)": 1.0,
+          "inferred_distinguished (heuristic)": 1.0,
+          "limitations_present (heuristic)": null,
+          "mean_words_per_item": 35.0,
+          "schema_valid": true,
+          "song_reference_validity": 1.0,
+          "unmet_disclosed (heuristic)": null,
+          "unsupported_claims": "pending human review",
+          "valid_json": true
+        },
+        "status": "openrouter:liquid/lfm-3-1.7b:free (LLM) output not used (network: network error or timeout: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1082)); fell back to the template"
+      },
+      "grounding": {
+        "contexts": [
+          "studying"
+        ],
+        "inferred_sources": {
+          "energy": "listening_contexts#studying",
+          "instrumentalness": "listening_contexts#studying",
+          "mood tags": "listening_contexts#studying",
+          "vocal intensity": "listening_contexts#studying"
+        },
+        "limitations": [],
+        "plan": {
+          "advanced": true,
+          "candidates": 18,
+          "diverse": false,
+          "excluded_artists": [],
+          "excluded_genres": [],
+          "hard_genres": [],
+          "k": 5,
+          "mode": "baseline",
+          "mode_reason": "default genre-first ranking",
+          "unique_artists": false
+        },
+        "request": "Music for studying.",
+        "results": [
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "LoRoom",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.78,
+              "energy": 0.4,
+              "instrumentalness": 0.9,
+              "mood_tags": [
+                "focused"
+              ],
+              "popularity": 41,
+              "release_decade": 2020,
+              "vocal_intensity": 0.03
+            },
+            "genre": "lofi",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity",
+              "mood tags"
+            ],
+            "match_label": "strong",
+            "mood": "focused",
+            "rank": 1,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.40 vs target 0.35 (+2.85)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.90 vs target 0.80 (+0.45)",
+              "Vocal intensity 0.03 vs target 0.15 (+0.44)",
+              "Mood tags 1/1 matched: focused (+1.00)"
+            ],
+            "score": 4.74,
+            "song_id": 9,
+            "theoretical_max": 14.0,
+            "title": "Focus Flow",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "LoRoom",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.71,
+              "energy": 0.42,
+              "instrumentalness": 0.85,
+              "mood_tags": [
+                "focused",
+                "nostalgic"
+              ],
+              "popularity": 64,
+              "release_decade": 2020,
+              "vocal_intensity": 0.05
+            },
+            "genre": "lofi",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity",
+              "mood tags"
+            ],
+            "match_label": "strong",
+            "mood": "chill",
+            "rank": 2,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.42 vs target 0.35 (+2.79)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.85 vs target 0.80 (+0.48)",
+              "Vocal intensity 0.05 vs target 0.15 (+0.45)",
+              "Mood tags 1/1 matched: focused (+1.00)"
+            ],
+            "score": 4.715,
+            "song_id": 2,
+            "theoretical_max": 14.0,
+            "title": "Midnight Coding",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "Paper Lanterns",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.86,
+              "energy": 0.35,
+              "instrumentalness": 0.88,
+              "mood_tags": [
+                "reflective",
+                "dreamy"
+              ],
+              "popularity": 52,
+              "release_decade": 2020,
+              "vocal_intensity": 0.04
+            },
+            "genre": "lofi",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity"
+            ],
+            "match_label": "strong",
+            "mood": "chill",
+            "rank": 3,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.35 vs target 0.35 (+3.00)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.88 vs target 0.80 (+0.46)",
+              "Vocal intensity 0.04 vs target 0.15 (+0.45)",
+              "Mood tags 0/1 matched (+0.00)"
+            ],
+            "score": 3.9050000000000002,
+            "song_id": 4,
+            "theoretical_max": 14.0,
+            "title": "Library Rain",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "Slow Stereo",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.89,
+              "energy": 0.37,
+              "instrumentalness": 0.62,
+              "mood_tags": [
+                "nostalgic",
+                "reflective"
+              ],
+              "popularity": 45,
+              "release_decade": 2000,
+              "vocal_intensity": 0.25
+            },
+            "genre": "jazz",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity"
+            ],
+            "match_label": "strong",
+            "mood": "relaxed",
+            "rank": 4,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.37 vs target 0.35 (+2.94)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.62 vs target 0.80 (+0.41)",
+              "Vocal intensity 0.25 vs target 0.15 (+0.45)",
+              "Mood tags 0/1 matched (+0.00)"
+            ],
+            "score": 3.8,
+            "song_id": 7,
+            "theoretical_max": 14.0,
+            "title": "Coffee Shop Stories",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "Orbit Bloom",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.92,
+              "energy": 0.28,
+              "instrumentalness": 0.93,
+              "mood_tags": [
+                "dreamy",
+                "reflective"
+              ],
+              "popularity": 38,
+              "release_decade": 2010,
+              "vocal_intensity": 0.02
+            },
+            "genre": "ambient",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity"
+            ],
+            "match_label": "partial",
+            "mood": "chill",
+            "rank": 5,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.28 vs target 0.35 (+2.79)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.93 vs target 0.80 (+0.43)",
+              "Vocal intensity 0.02 vs target 0.15 (+0.43)",
+              "Mood tags 0/1 matched (+0.00)"
+            ],
+            "score": 3.66,
+            "song_id": 6,
+            "theoretical_max": 14.0,
+            "title": "Spacewalk Thoughts",
+            "unmet": []
+          }
+        ],
+        "sources": [
+          {
+            "id": "listening_contexts#studying",
+            "text": "For studying, exams, finals, homework, reading, or any task that needs concentration and focus. Many listeners find lyrics distracting while they read or write, so steady music with low vocal intensity and relatively low energy is a common choice for study sessions. Relevant features: energy, instrumentalness, vocal intensity, the `focused` mood tag. May not apply: some people concentrate better with familiar songs that have lyrics, or with upbeat music that keeps them awake. Studying does **not** imply a particular genre; the assistant never assumes lofi just because someone is studying.",
+            "title": "Studying and concentration"
+          },
+          {
+            "id": "music_features#vocal-intensity",
+            "text": "Vocal intensity is a 0 to 1 estimate of how prominent and forceful the vocals are. Low values suit background or study listening; high values suit sing-along or performance-driven songs. It is only scored when advanced scoring is on.",
+            "title": "Vocal intensity"
+          },
+          {
+            "id": "music_features#instrumentalness",
+            "text": "Instrumentalness is a 0 to 1 estimate of how much of a song has no vocals. High values suit requests for instrumental music, music without lyrics, or music without distracting vocals. It is only scored when advanced scoring is on.",
+            "title": "Instrumentalness"
+          }
+        ],
+        "stated": {},
+        "unknown": [
+          "genre",
+          "mood",
+          "acoustic sound",
+          "popularity",
+          "release decade"
+        ]
+      },
+      "http_attempts": 2,
+      "initial": {
+        "error": "network: network error or timeout: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1082)",
+        "error_kind": "network",
+        "http_attempts": 2,
+        "metrics": {
+          "errors": [
+            "network: network error or timeout: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1082)",
+            "no answer"
+          ],
+          "schema_valid": false,
+          "valid_json": false
+        },
+        "raw": null,
+        "response_metadata": {},
+        "stage": "initial"
+      },
+      "logical_requests": 1,
+      "outcome": "live_template_fallback",
+      "request": "Music for studying.",
+      "style": "specialized"
+    }
+  ],
+  "simulated": false
+}

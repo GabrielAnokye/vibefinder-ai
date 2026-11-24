@@ -1,0 +1,405 @@
+{
+  "date": "2026-11-23",
+  "experiment": "smoke",
+  "generation_settings": {
+    "max_tokens": 4096,
+    "temperature": null,
+    "thinking_config": {
+      "thinkingLevel": "MINIMAL"
+    }
+  },
+  "http_attempts": 1,
+  "logical_requests": 1,
+  "model_consistent": true,
+  "provider": "gemini:gemini-3.5-flash-lite (LLM)",
+  "reported_models": [
+    "gemini-3.5-flash-lite"
+  ],
+  "requested_model": "gemini-3.5-flash-lite",
+  "requests": [
+    "Music for studying."
+  ],
+  "runs": [
+    {
+      "arm": "specialized",
+      "correction": null,
+      "final": {
+        "accepted": true,
+        "explanation": {
+          "citations": {
+            "2": [
+              "listening_contexts#studying"
+            ],
+            "4": [
+              "listening_contexts#studying"
+            ],
+            "6": [
+              "listening_contexts#studying"
+            ],
+            "7": [
+              "listening_contexts#studying",
+              "music_features#vocal-intensity"
+            ],
+            "9": [
+              "listening_contexts#studying"
+            ]
+          },
+          "features": {
+            "2": [
+              "energy",
+              "instrumentalness",
+              "vocal_intensity",
+              "mood_tags"
+            ],
+            "4": [
+              "energy",
+              "instrumentalness",
+              "vocal_intensity"
+            ],
+            "6": [
+              "energy",
+              "instrumentalness",
+              "vocal_intensity"
+            ],
+            "7": [
+              "energy",
+              "instrumentalness",
+              "vocal_intensity"
+            ],
+            "9": [
+              "energy",
+              "instrumentalness",
+              "vocal_intensity",
+              "mood_tags"
+            ]
+          },
+          "items": {
+            "2": "It offers low energy (0.42) and low vocal intensity (0.05) alongside high instrumentalness (0.85), aligning with the focused mood tag suggested by the study guide.",
+            "4": "Suggested by the studying guide, this song has low energy (0.35), high instrumentalness (0.88), and low vocal intensity (0.04) to support focus.",
+            "6": "This track features low energy (0.28) and very low vocal intensity (0.02) with high instrumentalness (0.93), as suggested by the studying guide.",
+            "7": "Its energy (0.37) and vocal intensity (0.25) align with the targets inferred from the studying guide, alongside moderate instrumentalness (0.62).",
+            "9": "This track features low energy (0.4) and low vocal intensity (0.03) with high instrumentalness (0.9), and matches the focused mood tag suggested by the studying guide."
+          },
+          "limitations": [],
+          "summary": "Here are music recommendations tailored for your studying session, based on suggested targets for energy, instrumentalness, and vocal intensity."
+        },
+        "generator": "gemini:gemini-3.5-flash-lite (LLM)",
+        "metrics": {
+          "citation_validity": 1.0,
+          "citations": 6,
+          "coverage": 1.0,
+          "errors": [],
+          "feature_mentioned (heuristic)": 1.0,
+          "inferred_distinguished (heuristic)": 1.0,
+          "limitations_present (heuristic)": null,
+          "mean_words_per_item": 23.0,
+          "schema_valid": true,
+          "song_reference_validity": 1.0,
+          "unmet_disclosed (heuristic)": null,
+          "unsupported_claims": "pending human review",
+          "valid_json": true
+        },
+        "status": "LLM output validated on the first attempt"
+      },
+      "grounding": {
+        "contexts": [
+          "studying"
+        ],
+        "inferred_sources": {
+          "energy": "listening_contexts#studying",
+          "instrumentalness": "listening_contexts#studying",
+          "mood tags": "listening_contexts#studying",
+          "vocal intensity": "listening_contexts#studying"
+        },
+        "limitations": [],
+        "plan": {
+          "advanced": true,
+          "candidates": 18,
+          "diverse": false,
+          "excluded_artists": [],
+          "excluded_genres": [],
+          "hard_genres": [],
+          "k": 5,
+          "mode": "baseline",
+          "mode_reason": "default genre-first ranking",
+          "unique_artists": false
+        },
+        "request": "Music for studying.",
+        "results": [
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "LoRoom",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.78,
+              "energy": 0.4,
+              "instrumentalness": 0.9,
+              "mood_tags": [
+                "focused"
+              ],
+              "popularity": 41,
+              "release_decade": 2020,
+              "vocal_intensity": 0.03
+            },
+            "genre": "lofi",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity",
+              "mood tags"
+            ],
+            "match_label": "strong",
+            "mood": "focused",
+            "rank": 1,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.40 vs target 0.35 (+2.85)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.90 vs target 0.80 (+0.45)",
+              "Vocal intensity 0.03 vs target 0.15 (+0.44)",
+              "Mood tags 1/1 matched: focused (+1.00)"
+            ],
+            "score": 4.74,
+            "song_id": 9,
+            "theoretical_max": 14.0,
+            "title": "Focus Flow",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "LoRoom",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.71,
+              "energy": 0.42,
+              "instrumentalness": 0.85,
+              "mood_tags": [
+                "focused",
+                "nostalgic"
+              ],
+              "popularity": 64,
+              "release_decade": 2020,
+              "vocal_intensity": 0.05
+            },
+            "genre": "lofi",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity",
+              "mood tags"
+            ],
+            "match_label": "strong",
+            "mood": "chill",
+            "rank": 2,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.42 vs target 0.35 (+2.79)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.85 vs target 0.80 (+0.48)",
+              "Vocal intensity 0.05 vs target 0.15 (+0.45)",
+              "Mood tags 1/1 matched: focused (+1.00)"
+            ],
+            "score": 4.715,
+            "song_id": 2,
+            "theoretical_max": 14.0,
+            "title": "Midnight Coding",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "Paper Lanterns",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.86,
+              "energy": 0.35,
+              "instrumentalness": 0.88,
+              "mood_tags": [
+                "reflective",
+                "dreamy"
+              ],
+              "popularity": 52,
+              "release_decade": 2020,
+              "vocal_intensity": 0.04
+            },
+            "genre": "lofi",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity"
+            ],
+            "match_label": "strong",
+            "mood": "chill",
+            "rank": 3,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.35 vs target 0.35 (+3.00)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.88 vs target 0.80 (+0.46)",
+              "Vocal intensity 0.04 vs target 0.15 (+0.45)",
+              "Mood tags 0/1 matched (+0.00)"
+            ],
+            "score": 3.9050000000000002,
+            "song_id": 4,
+            "theoretical_max": 14.0,
+            "title": "Library Rain",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "Slow Stereo",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.89,
+              "energy": 0.37,
+              "instrumentalness": 0.62,
+              "mood_tags": [
+                "nostalgic",
+                "reflective"
+              ],
+              "popularity": 45,
+              "release_decade": 2000,
+              "vocal_intensity": 0.25
+            },
+            "genre": "jazz",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity"
+            ],
+            "match_label": "strong",
+            "mood": "relaxed",
+            "rank": 4,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.37 vs target 0.35 (+2.94)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.62 vs target 0.80 (+0.41)",
+              "Vocal intensity 0.25 vs target 0.15 (+0.45)",
+              "Mood tags 0/1 matched (+0.00)"
+            ],
+            "score": 3.8,
+            "song_id": 7,
+            "theoretical_max": 14.0,
+            "title": "Coffee Shop Stories",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "Orbit Bloom",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.92,
+              "energy": 0.28,
+              "instrumentalness": 0.93,
+              "mood_tags": [
+                "dreamy",
+                "reflective"
+              ],
+              "popularity": 38,
+              "release_decade": 2010,
+              "vocal_intensity": 0.02
+            },
+            "genre": "ambient",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity"
+            ],
+            "match_label": "partial",
+            "mood": "chill",
+            "rank": 5,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.28 vs target 0.35 (+2.79)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.93 vs target 0.80 (+0.43)",
+              "Vocal intensity 0.02 vs target 0.15 (+0.43)",
+              "Mood tags 0/1 matched (+0.00)"
+            ],
+            "score": 3.66,
+            "song_id": 6,
+            "theoretical_max": 14.0,
+            "title": "Spacewalk Thoughts",
+            "unmet": []
+          }
+        ],
+        "sources": [
+          {
+            "id": "listening_contexts#studying",
+            "text": "For studying, exams, finals, homework, reading, or any task that needs concentration and focus. Many listeners find lyrics distracting while they read or write, so steady music with low vocal intensity and relatively low energy is a common choice for study sessions. Relevant features: energy, instrumentalness, vocal intensity, the `focused` mood tag. May not apply: some people concentrate better with familiar songs that have lyrics, or with upbeat music that keeps them awake. Studying does **not** imply a particular genre; the assistant never assumes lofi just because someone is studying.",
+            "title": "Studying and concentration"
+          },
+          {
+            "id": "music_features#vocal-intensity",
+            "text": "Vocal intensity is a 0 to 1 estimate of how prominent and forceful the vocals are. Low values suit background or study listening; high values suit sing-along or performance-driven songs. It is only scored when advanced scoring is on.",
+            "title": "Vocal intensity"
+          },
+          {
+            "id": "music_features#instrumentalness",
+            "text": "Instrumentalness is a 0 to 1 estimate of how much of a song has no vocals. High values suit requests for instrumental music, music without lyrics, or music without distracting vocals. It is only scored when advanced scoring is on.",
+            "title": "Instrumentalness"
+          }
+        ],
+        "stated": {},
+        "unknown": [
+          "genre",
+          "mood",
+          "acoustic sound",
+          "popularity",
+          "release decade"
+        ]
+      },
+      "http_attempts": 1,
+      "initial": {
+        "error": null,
+        "http_attempts": 1,
+        "metrics": {
+          "citation_validity": 1.0,
+          "citations": 6,
+          "coverage": 1.0,
+          "errors": [],
+          "feature_mentioned (heuristic)": 1.0,
+          "inferred_distinguished (heuristic)": 1.0,
+          "limitations_present (heuristic)": null,
+          "mean_words_per_item": 23.0,
+          "schema_valid": true,
+          "song_reference_validity": 1.0,
+          "unmet_disclosed (heuristic)": null,
+          "unsupported_claims": "pending human review",
+          "valid_json": true
+        },
+        "raw": "{\n  \"summary\": \"Here are music recommendations tailored for your studying session, based on suggested targets for energy, instrumentalness, and vocal intensity.\",\n  \"items\": [\n    {\n      \"song_id\": 9,\n      \"explanation\": \"This track features low energy (0.4) and low vocal intensity (0.03) with high instrumentalness (0.9), and matches the focused mood tag suggested by the studying guide.\",\n      \"citations\": [\n        \"listening_contexts#studying\"\n      ],\n      \"features_referenced\": [\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\",\n        \"mood_tags\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 2,\n      \"explanation\": \"It offers low energy (0.42) and low vocal intensity (0.05) alongside high instrumentalness (0.85), aligning with the focused mood tag suggested by the study guide.\",\n      \"citations\": [\n        \"listening_contexts#studying\"\n      ],\n      \"features_referenced\": [\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\",\n        \"mood_tags\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 4,\n      \"explanation\": \"Suggested by the studying guide, this song has low energy (0.35), high instrumentalness (0.88), and low vocal intensity (0.04) to support focus.\",\n      \"citations\": [\n        \"listening_contexts#studying\"\n      ],\n      \"features_referenced\": [\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 7,\n      \"explanation\": \"Its energy (0.37) and vocal intensity (0.25) align with the targets inferred from the studying guide, alongside moderate instrumentalness (0.62).\",\n      \"citations\": [\n        \"listening_contexts#studying\",\n        \"music_features#vocal-intensity\"\n      ],\n      \"features_referenced\": [\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 6,\n      \"explanation\": \"This track features low energy (0.28) and very low vocal intensity (0.02) with high instrumentalness (0.93), as suggested by the studying guide.\",\n      \"citations\": [\n        \"listening_contexts#studying\"\n      ],\n      \"features_referenced\": [\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\"\n      ],\n      \"unmet_preferences\": []\n    }\n  ],\n  \"limitations\": []\n}",
+        "response_metadata": {
+          "finish_reason": "STOP",
+          "model": "gemini-3.5-flash-lite"
+        },
+        "stage": "initial"
+      },
+      "logical_requests": 1,
+      "outcome": "live_validated",
+      "request": "Music for studying.",
+      "style": "specialized"
+    }
+  ],
+  "simulated": false
+}

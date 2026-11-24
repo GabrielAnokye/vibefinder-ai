@@ -1,5 +1,79 @@
 # 🎧 Model Card: Music Recommender Simulation
 
+## VibeFinder AI (Project 4)
+
+VibeFinder AI takes a natural-language listening request, labels stated and inferred preferences,
+retrieves guidance, and calls the existing content-based recommender. It uses an 18-song fictional
+catalog. The optional Gemini and OpenRouter providers generate explanation prose from a grounding payload.
+The engine retains authority over the catalog, scores, and ranking.
+
+### Responsible AI and collaboration
+
+- **Respecting listener intent.** The study guide treats quiet, low-vocal music as a starting
+  point. Users who study best with lyrics or more energy can specify that. The system labels
+  inferred targets with their sources and gives explicit preferences precedence. An unspecified
+  field contributes zero points, and the assistant asks for clarification when it has no usable
+  preferences. [Offline comparison](evaluation/results/retrieval_comparison.md)
+- **Catalog limits.** Matching depends on the labels and trade-offs in a small synthetic dataset.
+  Several genres have one track and others are absent. A high score can still miss a stated
+  preference. The assistant discloses missed preferences and returns a no-match when a hard
+  requirement is impossible. The 40% floor reflects a trade-off observed in eight requests. It
+  retains some partial matches while dropping zero-point results. [Quality floor evidence](evaluation/results/quality_floor.md)
+- **Grounding and privacy.** Result validation rechecks engine scores and hard constraints.
+  Explanation validation checks song references, allowed citation IDs and certain numerical
+  claims. A cited ID can still accompany an unsupported statement. Untrusted request and passage
+  text can influence generated prose, so invalid answers receive at most one correction before
+  template fallback. Offline execution keeps the request local. The optional provider receives
+  the request and grounding, so evaluation uses synthetic requests. [Reliability review](evaluation/README.md#reliability-review)
+- **Use of coding agents.** The handover treated prior test and experiment counts as claims to
+  reproduce. Codex verified the original baseline and found that the live runner could lose a
+  failed arm on malformed citations. It reused the assistant's existing workflow to record
+  corrections and final provider attribution. Mock and offline tests covered recovery paths.
+  Credential-free probes later reproduced a missing macOS Python trust bundle, an issue the
+  mocked transports could not exercise. After the verified CA fix, the user ran the live
+  Gemini experiments. Listener satisfaction remains unmeasured.
+  [Development log](ai_interactions.md#phase-4--https-recovery-and-live-evaluation)
+
+### Prompt specialization comparison
+
+Both arms used the served `gemini-3.5-flash-lite` model, identical grounding, the same schema and
+generation settings, and the same three requests. The specialized prompt adds music-specific
+guidance and two few-shot examples. The specialization is entirely in the prompt.
+
+| Measure | General | Specialized |
+|---|---:|---:|
+| Valid initial answers | 3/3 | 3/3 |
+| Corrections attempted | 0 | 0 |
+| Final Gemini explanations | 3/3 | 3/3 |
+| Template fallbacks | 0 | 0 |
+| Ranked songs explained | 15/15 | 15/15 |
+| Items with a numeric track feature | 10/15 | 15/15 |
+| Guide or inference wording where inferred targets fit | 0/10 | 10/10 |
+| Valid structured citation IDs among emitted IDs | 29/29 | 20/20 |
+| Explicit item-level disclosure of preference misses, qualitative review | 0/7 | 7/7 |
+| Applicable response retaining the catalog limitations | 1/1 | 1/1 |
+| Mean words per song explanation | 16.5 | 23.6 |
+
+For the very high-energy acoustic request, these are the actual explanations for Gym Hero
+(song 5). General states the user's energy target and cites the catalog limitation in its
+structured citation field. Specialized states the acoustic miss explicitly, and its item
+citation field is empty.
+
+- **General:** “Gym Hero features an energy level of 0.93 compared to your 0.95 target, but its acousticness is 0.05.”
+- **Specialized:** “Its very high energy (0.93) is close to your target, but its low acousticness (0.05) misses your acoustic preference.”
+
+In this sample, specialization made source attribution and preference misses more explicit
+in item prose. Both styles copied all seven applicable `unmet_preferences` fields correctly.
+General was shorter and emitted structured citations on all three answers, while specialized
+used them on two. Valid citation IDs show which passages were available. Claim support
+requires reading the passages and the catalog facts. The workout guide supports the
+high-energy rationale, and the engine chooses the tracks. One answer per arm on three
+synthetic requests and a qualitative review by the coding agent provide limited evidence
+about clarity or reliability. Listener satisfaction was outside the experiment.
+[Paired JSON](evaluation/results/live_gemini_prompts.json) · [Prompt traces](evaluation/traces/live_gemini_prompts.json) · [Full comparison and scoring definitions](evaluation/results/live_evaluation_report.md#prompt-specialization)
+
+---
+
 ## 1. Model Name  
 
 **VibeFinder 1.0 — Content-Based Music Recommender**

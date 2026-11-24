@@ -14,7 +14,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, Iterable, List, Optional
 
 TRACE_FORMAT = "vibefinder-trace/1"
-SECRET_ENV_VARS = ("OPENROUTER_API_KEY",)
+SECRET_ENV_VARS = ("OPENROUTER_API_KEY", "GEMINI_API_KEY")
 
 
 @dataclass
@@ -51,8 +51,7 @@ class Trace:
         return {"metadata": self.metadata, "events": [asdict(event) for event in self.events]}
 
     def to_json(self, secrets: Optional[Iterable[str]] = None) -> str:
-        text = json.dumps(self.to_dict(), indent=2, sort_keys=True, ensure_ascii=False, default=str)
-        return redact(text, secrets) + "\n"
+        return sanitized_json(self.to_dict(), secrets)
 
     def summary_lines(self) -> List[str]:
         lines = []
@@ -67,9 +66,21 @@ class Trace:
 
 
 def redact(text: str, secrets: Optional[Iterable[str]] = None) -> str:
-    """Remove any secret values (by default, the configured API key) from serialized text."""
-    values = list(secrets) if secrets is not None else [os.environ.get(name, "") for name in SECRET_ENV_VARS]
+    """Remove explicitly supplied secrets or the configured provider keys from text."""
+    values = list(secrets) if secrets is not None else _environment_keys()
     for value in values:
         if value and len(value) >= 4:
             text = text.replace(value, "[redacted]")
     return text
+
+
+def _environment_keys() -> List[str]:
+    return [os.environ.get(name, "").strip() for name in SECRET_ENV_VARS]
+
+
+def sanitized_json(data: Any, secrets: Optional[Iterable[str]] = None, *, ensure_ascii: bool = False) -> str:
+    """Redact key literals in their JSON-escaped form before saving any live evidence."""
+    values = list(secrets) if secrets is not None else _environment_keys()
+    encoded = [json.dumps(value, ensure_ascii=ensure_ascii)[1:-1] for value in values]
+    text = json.dumps(data, indent=2, sort_keys=True, ensure_ascii=ensure_ascii, default=str)
+    return redact(text, encoded) + "\n"

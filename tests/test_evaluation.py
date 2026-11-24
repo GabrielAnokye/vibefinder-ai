@@ -2,12 +2,13 @@
 
 import json
 import urllib.request
+from io import BytesIO
 
 import pytest
 
 from evaluation import generate_traces, live_experiments, retrieval_comparison, run_evaluation
 from evaluation.run_evaluation import evaluate_case, load_cases, summarize
-from src.assistant import Assistant, MockProvider
+from src.assistant import Assistant, MockProvider, OpenRouterProvider
 from src.assistant.planner import satisfies
 from src.assistant.providers import template_explanation
 
@@ -148,6 +149,77 @@ def test_retrieval_generation_comparison_withholds_only_the_sources(assistant):
     supplied, withheld = mock.calls[0].payload, mock.calls[1].payload
     assert supplied["sources"] and withheld["sources"] == []
     assert {k: v for k, v in supplied.items() if k != "sources"} == {k: v for k, v in withheld.items() if k != "sources"}
+
+
+def test_prompt_experiment_records_malformed_initials_corrections_and_final_provider(assistant):
+    def valid(req):
+        return json.dumps(template_explanation(req.payload))
+
+    def malformed(req):
+        data = template_explanation(req.payload)
+        data["items"][0]["citations"] = None
+        return json.dumps(data)
+
+    mock = MockProvider([malformed, valid, malformed, "not JSON"] + [valid] * 4)
+    result = live_experiments.run_experiment("prompts", mock, assistant)
+    corrected, fallback = result["runs"][:2]
+    assert result["logical_requests"] == result["http_attempts"] == 8
+    assert all(run["initial"]["metrics"]["valid_json"] for run in (corrected, fallback))
+    assert all(not run["initial"]["metrics"]["schema_valid"] for run in (corrected, fallback))
+    assert corrected["correction"]["metrics"]["schema_valid"] and corrected["outcome"] == "simulated_validated"
+    assert not fallback["correction"]["metrics"]["schema_valid"]
+    assert fallback["outcome"] == "simulated_template_fallback"
+    assert fallback["final"]["accepted"] and fallback["final"]["generator"].startswith("template")
+    assert mock.calls[0].payload == mock.calls[1].payload == mock.calls[2].payload == mock.calls[3].payload
+    assert mock.calls[1].is_correction and mock.calls[3].is_correction
+
+
+def test_live_plan_has_no_provider_and_includes_correction_budget(monkeypatch, capsys):
+    monkeypatch.setattr(live_experiments, "make_provider", lambda *args: pytest.fail("provider configured"))
+    assert live_experiments.main(["plan"]) == 0
+    assert "13 initial logical requests, up to 7 corrections (20 total logical requests), at most 33 HTTP attempts" in (
+        capsys.readouterr().out)
+
+
+@pytest.mark.parametrize("valid", [True, False])
+def test_smoke_cli_records_fake_transport_evidence_and_gates_all(monkeypatch, tmp_path, valid):
+    key = "fake-test-secret"
+    monkeypatch.setenv("OPENROUTER_API_KEY", key)
+    monkeypatch.setattr(live_experiments, "RESULTS_DIR", tmp_path / "results")
+    monkeypatch.setattr(live_experiments, "TRACE_DIR", tmp_path / "traces")
+    calls = []
+
+    def opener(request, timeout):
+        body = json.loads(request.data)
+        calls.append(body)
+        grounding = json.loads(body["messages"][1]["content"])
+        answer = template_explanation(grounding)
+        answer["summary"] = f"Grounded study explanation. {key}"
+        if not valid:
+            answer["items"][0]["song_id"] = 999
+        response = {"model": "test/served-model", "choices": [
+            {"message": {"content": json.dumps(answer)}, "finish_reason": "stop"},
+        ]}
+        return BytesIO(json.dumps(response).encode())
+
+    provider = OpenRouterProvider(key, "test/requested-model", opener=opener)
+    monkeypatch.setattr(live_experiments, "make_provider", lambda name: (provider, ""))
+    assert live_experiments.main(["smoke" if valid else "all", "--provider", "openrouter", "--yes"]) == (
+        0 if valid else 1)
+    assert len(calls) == (1 if valid else 2)
+    assert not (tmp_path / "results/live_retrieval.json").exists()
+    saved = (tmp_path / "results/live_smoke.json").read_text()
+    traced = (tmp_path / "traces/live_smoke.json").read_text()
+    assert key not in saved and key not in traced and "[redacted]" in saved
+    result = json.loads(saved)
+    assert result["requested_model"] == "test/requested-model"
+    run = result["runs"][0]
+    assert run["initial"]["response_metadata"] == {"model": "test/served-model", "finish_reason": "stop"}
+    assert run["outcome"] == ("live_validated" if valid else "live_template_fallback")
+    assert run["final"]["generator"].startswith("openrouter:" if valid else "template")
+    trace = json.loads(traced)
+    assert trace["events"][0]["stage"] == "validate_request" and trace["events"][-1]["stage"] == "return"
+    assert trace["events"][-1]["result"]["generator"] == run["final"]["generator"]
 
 
 def test_live_runner_makes_no_request_without_configuration(monkeypatch, capsys):

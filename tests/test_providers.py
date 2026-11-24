@@ -157,13 +157,19 @@ EMPTY = GenerationRequest({"results": []})
 
 
 def test_successful_request_shape():
-    provider, calls = make([ok_body()])
-    assert provider.generate(EMPTY) == '{"summary": "s", "items": []}'
+    response = ok_body()
+    response["model"] = "test/served-model"
+    response["choices"][0]["finish_reason"] = "stop"
+    provider, calls = make([response])
+    generation = GenerationRequest({"results": []})
+    assert provider.generate(generation) == '{"summary": "s", "items": []}'
+    assert generation.response_metadata == {"model": "test/served-model", "finish_reason": "stop"}
     request, timeout = calls[0]
     body = json.loads(request.data)
     assert request.full_url == "https://openrouter.ai/api/v1/chat/completions"
     assert request.get_header("Authorization") == f"Bearer {SECRET}"
     assert body["model"] == "test/model" and body["max_tokens"] == provider.max_tokens
+    assert body["temperature"] == provider.temperature and "response_format" not in body
     assert body["messages"][0]["role"] == "system" and timeout == 7
 
 

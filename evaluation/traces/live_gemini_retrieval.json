@@ -1,0 +1,291 @@
+{
+  "experiment": "retrieval",
+  "runs": [
+    {
+      "events": [
+        {
+          "action": "measure the first answer",
+          "decision": null,
+          "event_id": "01-measure_initial",
+          "input": {},
+          "result": {
+            "errors": [],
+            "response_metadata": {
+              "finish_reason": "STOP",
+              "model": "gemini-3.5-flash-lite"
+            }
+          },
+          "sources": [
+            "listening_contexts#studying",
+            "music_features#vocal-intensity",
+            "music_features#instrumentalness"
+          ],
+          "stage": "measure_initial",
+          "step": 1,
+          "validation": "accepted"
+        },
+        {
+          "action": "record experimental result",
+          "decision": null,
+          "event_id": "02-return",
+          "input": {},
+          "result": {
+            "generator": null,
+            "http_attempts": 1,
+            "outcome": "live_raw_validated"
+          },
+          "sources": [],
+          "stage": "return",
+          "step": 2,
+          "validation": null
+        }
+      ],
+      "metadata": {
+        "arm": "sources supplied",
+        "format": "vibefinder-trace/1",
+        "prompt_style": "specialized",
+        "provider": "gemini:gemini-3.5-flash-lite (LLM)",
+        "provider_kind": "live",
+        "request": "Music for studying."
+      }
+    },
+    {
+      "events": [
+        {
+          "action": "measure the first answer",
+          "decision": null,
+          "event_id": "01-measure_initial",
+          "input": {},
+          "result": {
+            "errors": [
+              "song_id 9 cites unsupported source(s): listening_contexts#studying",
+              "song_id 2 cites unsupported source(s): listening_contexts#studying",
+              "song_id 4 cites unsupported source(s): listening_contexts#studying",
+              "song_id 7 cites unsupported source(s): listening_contexts#studying",
+              "song_id 6 cites unsupported source(s): listening_contexts#studying"
+            ],
+            "response_metadata": {
+              "finish_reason": "STOP",
+              "model": "gemini-3.5-flash-lite"
+            }
+          },
+          "sources": [],
+          "stage": "measure_initial",
+          "step": 1,
+          "validation": "rejected"
+        },
+        {
+          "action": "record experimental result",
+          "decision": null,
+          "event_id": "02-return",
+          "input": {},
+          "result": {
+            "generator": null,
+            "http_attempts": 1,
+            "outcome": "live_raw_rejected"
+          },
+          "sources": [],
+          "stage": "return",
+          "step": 2,
+          "validation": null
+        }
+      ],
+      "metadata": {
+        "arm": "sources withheld",
+        "format": "vibefinder-trace/1",
+        "prompt_style": "specialized",
+        "provider": "gemini:gemini-3.5-flash-lite (LLM)",
+        "provider_kind": "live",
+        "request": "Music for studying."
+      }
+    },
+    {
+      "events": [
+        {
+          "action": "measure the first answer",
+          "decision": null,
+          "event_id": "01-measure_initial",
+          "input": {},
+          "result": {
+            "errors": [],
+            "response_metadata": {
+              "finish_reason": "STOP",
+              "model": "gemini-3.5-flash-lite"
+            }
+          },
+          "sources": [
+            "catalog#genre-hip-hop",
+            "catalog#genre-coverage",
+            "catalog#song-12",
+            "music_features#genre-vs-mood",
+            "listening_contexts#workout",
+            "music_features#instrumentalness"
+          ],
+          "stage": "measure_initial",
+          "step": 1,
+          "validation": "accepted"
+        },
+        {
+          "action": "record experimental result",
+          "decision": null,
+          "event_id": "02-return",
+          "input": {},
+          "result": {
+            "generator": null,
+            "http_attempts": 1,
+            "outcome": "live_raw_validated"
+          },
+          "sources": [],
+          "stage": "return",
+          "step": 2,
+          "validation": null
+        }
+      ],
+      "metadata": {
+        "arm": "sources supplied",
+        "format": "vibefinder-trace/1",
+        "prompt_style": "specialized",
+        "provider": "gemini:gemini-3.5-flash-lite (LLM)",
+        "provider_kind": "live",
+        "request": "I need energetic music for a workout, preferably rock or hip-hop."
+      }
+    },
+    {
+      "events": [
+        {
+          "action": "measure the first answer",
+          "decision": null,
+          "event_id": "01-measure_initial",
+          "input": {},
+          "result": {
+            "errors": [],
+            "response_metadata": {
+              "finish_reason": "STOP",
+              "model": "gemini-3.5-flash-lite"
+            }
+          },
+          "sources": [],
+          "stage": "measure_initial",
+          "step": 1,
+          "validation": "accepted"
+        },
+        {
+          "action": "record experimental result",
+          "decision": null,
+          "event_id": "02-return",
+          "input": {},
+          "result": {
+            "generator": null,
+            "http_attempts": 1,
+            "outcome": "live_raw_validated"
+          },
+          "sources": [],
+          "stage": "return",
+          "step": 2,
+          "validation": null
+        }
+      ],
+      "metadata": {
+        "arm": "sources withheld",
+        "format": "vibefinder-trace/1",
+        "prompt_style": "specialized",
+        "provider": "gemini:gemini-3.5-flash-lite (LLM)",
+        "provider_kind": "live",
+        "request": "I need energetic music for a workout, preferably rock or hip-hop."
+      }
+    },
+    {
+      "events": [
+        {
+          "action": "measure the first answer",
+          "decision": null,
+          "event_id": "01-measure_initial",
+          "input": {},
+          "result": {
+            "errors": [],
+            "response_metadata": {
+              "finish_reason": "STOP",
+              "model": "gemini-3.5-flash-lite"
+            }
+          },
+          "sources": [
+            "music_features#acousticness",
+            "catalog#energy-vs-acousticness",
+            "music_features#instrumentalness",
+            "listening_contexts#workout"
+          ],
+          "stage": "measure_initial",
+          "step": 1,
+          "validation": "accepted"
+        },
+        {
+          "action": "record experimental result",
+          "decision": null,
+          "event_id": "02-return",
+          "input": {},
+          "result": {
+            "generator": null,
+            "http_attempts": 1,
+            "outcome": "live_raw_validated"
+          },
+          "sources": [],
+          "stage": "return",
+          "step": 2,
+          "validation": null
+        }
+      ],
+      "metadata": {
+        "arm": "sources supplied",
+        "format": "vibefinder-trace/1",
+        "prompt_style": "specialized",
+        "provider": "gemini:gemini-3.5-flash-lite (LLM)",
+        "provider_kind": "live",
+        "request": "Recommend acoustic music with very high energy."
+      }
+    },
+    {
+      "events": [
+        {
+          "action": "measure the first answer",
+          "decision": null,
+          "event_id": "01-measure_initial",
+          "input": {},
+          "result": {
+            "errors": [],
+            "response_metadata": {
+              "finish_reason": "STOP",
+              "model": "gemini-3.5-flash-lite"
+            }
+          },
+          "sources": [],
+          "stage": "measure_initial",
+          "step": 1,
+          "validation": "accepted"
+        },
+        {
+          "action": "record experimental result",
+          "decision": null,
+          "event_id": "02-return",
+          "input": {},
+          "result": {
+            "generator": null,
+            "http_attempts": 1,
+            "outcome": "live_raw_validated"
+          },
+          "sources": [],
+          "stage": "return",
+          "step": 2,
+          "validation": null
+        }
+      ],
+      "metadata": {
+        "arm": "sources withheld",
+        "format": "vibefinder-trace/1",
+        "prompt_style": "specialized",
+        "provider": "gemini:gemini-3.5-flash-lite (LLM)",
+        "provider_kind": "live",
+        "request": "Recommend acoustic music with very high energy."
+      }
+    }
+  ]
+}

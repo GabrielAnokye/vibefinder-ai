@@ -63,6 +63,7 @@ class Assistant:
     def ask(self, text: str, provider=None, retrieval: bool = True, mode: Optional[str] = None,
             diverse: bool = False, provider_note: str = "", prompt_style: str = DEFAULT_PROMPT_STYLE,
             max_http_attempts: int = MAX_HTTP_ATTEMPTS) -> AssistantResponse:
+        max_http_attempts = min(max_http_attempts, MAX_HTTP_ATTEMPTS)
         provider = provider or TemplateProvider()
         is_template = isinstance(provider, TemplateProvider)
         response = AssistantResponse(status="ok", request=text if isinstance(text, str) else "",
@@ -286,7 +287,7 @@ class Assistant:
                 max_http_attempts: int = MAX_HTTP_ATTEMPTS) -> Tuple[Optional[Explanation], str, str, int]:
         """Return (explanation, generator label, status line, external HTTP attempts used)."""
         trace = trace or Trace()
-        budget = AttemptBudget(max_http_attempts)
+        budget = AttemptBudget(min(max_http_attempts, MAX_HTTP_ATTEMPTS))
         sources = [s["id"] for s in payload["sources"]]
         status = provider_note
 
@@ -340,18 +341,22 @@ class Assistant:
                        errors: Sequence[str] = ()) -> Tuple[Optional[str], Optional[str]]:
         """Call the provider once (it may use one transport retry). Return (raw text, failure reason)."""
         before = budget.used
+        event_input = {"prompt_style": request.style, "correction": request.is_correction, "errors_sent": list(errors)}
         try:
             raw = provider.generate(request, budget)
         except ProviderError as error:
+            result = {"http_attempts": budget.used - before, "error_kind": error.kind}
+            if error.kind in ("network", "tls_certificate"):
+                result["error_detail"] = str(error)
+            if request.response_metadata:
+                result["response_metadata"] = request.response_metadata.copy()
             trace.add(stage, f"call {provider.label}",
-                      input={"prompt_style": request.style, "correction": request.is_correction,
-                             "errors_sent": list(errors)},
-                      result={"http_attempts": budget.used - before, "error_kind": error.kind},
+                      input=event_input, result=result,
                       validation=f"provider failure: {error.kind}",
                       decision="fall back to template" + ("" if error.retryable else " (not retried: permanent error)"))
             return None, f"{error.kind}: {error}"
-        trace.add(stage, f"call {provider.label}",
-                  input={"prompt_style": request.style, "correction": request.is_correction,
-                         "errors_sent": list(errors)},
-                  result={"http_attempts": budget.used - before, "characters": len(raw)})
+        result = {"http_attempts": budget.used - before, "characters": len(raw)}
+        if request.response_metadata:
+            result["response_metadata"] = request.response_metadata.copy()
+        trace.add(stage, f"call {provider.label}", input=event_input, result=result)
         return raw, None

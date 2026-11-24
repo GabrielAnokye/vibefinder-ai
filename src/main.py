@@ -14,7 +14,7 @@ VibeFinder AI assistant (natural-language requests):
     python -m src.main --ask "Recommend calm music for studying"
     python -m src.main --ask "..." --show-plan       # show the structured plan and steps
     python -m src.main --ask "..." --no-retrieval    # disable the knowledge guides
-    python -m src.main --ask "..." --provider openrouter   # optional LLM explanations
+    python -m src.main --ask "..." --provider gemini       # optional LLM explanations
 """
 
 import argparse
@@ -152,6 +152,8 @@ def print_recommendations(
 
 
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
+    from src.assistant.providers import LIVE_PROVIDERS
+
     parser = argparse.ArgumentParser(description="Music Recommender Simulation")
     parser.add_argument(
         "--all-profiles",
@@ -182,7 +184,7 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     assistant = parser.add_argument_group("VibeFinder AI assistant")
     assistant.add_argument("--ask", metavar="REQUEST", help="describe what you want to hear in plain language")
     assistant.add_argument(
-        "--provider", choices=["template", "openrouter"], default=None,
+        "--provider", choices=["template", *LIVE_PROVIDERS], default=None,
         help="who writes the explanation prose (default: template, offline)",
     )
     assistant.add_argument("--no-retrieval", action="store_true", help="do not use the knowledge guides")
@@ -190,7 +192,7 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
                            help="show the structured plan, all engine reasons, and the trace summary")
     assistant.add_argument(
         "--prompt-style", choices=["general", "specialized"], default=None,
-        help="prompt for --provider openrouter (default: specialized); ignored by the template provider",
+        help="prompt for live providers (default: specialized); ignored by the template provider",
     )
     assistant.add_argument("--trace", action="store_true", help="print the execution trace after the answer")
     assistant.add_argument("--trace-file", metavar="PATH", help="write the execution trace as JSON to PATH")
@@ -215,6 +217,7 @@ def run_assistant_cli(args: argparse.Namespace) -> int:
     """--ask: run the natural-language assistant. --mode and --diverse override its choices."""
     from src.assistant import Assistant, TemplateProvider, make_provider, render
     from src.assistant.providers import DEFAULT_PROMPT_STYLE
+    from src.assistant.trace import redact
 
     provider, note = make_provider(args.provider or "template")
     if args.prompt_style and isinstance(provider, TemplateProvider):
@@ -225,10 +228,10 @@ def run_assistant_cli(args: argparse.Namespace) -> int:
         mode=args.mode, diverse=args.diverse, provider_note=note,
         prompt_style=args.prompt_style or DEFAULT_PROMPT_STYLE,
     )
-    print(render(response, show_plan=args.show_plan, table=args.table))
+    print(redact(render(response, show_plan=args.show_plan, table=args.table)))
     if args.trace:
         print("\nExecution trace:")
-        print("\n".join(f"  {line}" for line in response.trace.summary_lines()))
+        print(redact("\n".join(f"  {line}" for line in response.trace.summary_lines())))
     if args.trace_file:
         path = Path(args.trace_file)
         path.parent.mkdir(parents=True, exist_ok=True)

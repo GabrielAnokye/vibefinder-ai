@@ -29,7 +29,7 @@
 | return | — |
 
 **Two kinds of retry:**
-- **Transport retry**, inside `OpenRouterProvider.generate`: one retry for rate limits, server errors and network errors. Authentication and configuration errors are never retried.
+- **Transport retry**, shared by the Gemini and OpenRouter providers. Transient rate limits, server errors and network errors allow one retry. Authentication and configuration errors fail immediately.
 - **Content correction**, in the workflow: one new request that lists the validation errors and repeats the authoritative payload.
 
 Both draw on one `AttemptBudget` of **3 HTTP attempts per execution**, so the worst case is: first call, transport retry, correction.
@@ -71,7 +71,7 @@ All of these are in `evaluation/`; [evaluation/README.md](../evaluation/README.m
 - **Retrieval on vs off, and single vs multi-source:** see the evaluation README for findings.
 - **Quality floor:** 0% / 40% / 60% compared; 40% kept. With no floor, zero-point songs are returned; at 60%, songs matching one of two stated labels are dropped.
 - **Energy tolerance:** boundary review found an inclusive-boundary floating-point bug, now fixed.
-- **Live experiments:** smoke test, sources supplied vs withheld, and general vs specialized prompts. Plan and songs are held fixed, and only the first answer is measured. All are pending credentials.
+- **Live experiments:** The Gemini amendment adds a native REST provider with the shared explanation schema. The Phase 4 batch used `gemini-3.5-flash-lite` for 13 HTTP attempts. The smoke and all six prompt answers passed initially. Five of six retrieval answers passed, with one unsupported-citation rejection. The passage comparison holds the plan and ranked results fixed. The prompt comparison records initial, corrected and final provider outcomes separately. [Live report](../evaluation/results/live_evaluation_report.md)
 
 ### Other Phase 3 changes
 
@@ -95,7 +95,7 @@ src/assistant/
     interpreter.py        deterministic rule-based interpreter (documented vocabulary tables)
     retrieval.py          Markdown sectioning, whitelisted hints, stdlib TF-IDF
     planner.py            hints -> preferences, mode/advanced/diversity, filters, coverage checks
-    providers.py          TemplateProvider (default), OpenRouterProvider (optional), MockProvider (tests)
+    providers.py          TemplateProvider (default), GeminiProvider and OpenRouterProvider (optional), MockProvider (tests)
     validation.py         request, result, and explanation checks
     workflow.py           Assistant.ask(): the end-to-end pipeline
     render.py             CLI text output

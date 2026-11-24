@@ -1,0 +1,1751 @@
+{
+  "date": "2026-11-23",
+  "experiment": "retrieval",
+  "generation_settings": {
+    "max_tokens": 4096,
+    "temperature": null,
+    "thinking_config": {
+      "thinkingLevel": "MINIMAL"
+    }
+  },
+  "http_attempts": 6,
+  "logical_requests": 6,
+  "model_consistent": true,
+  "provider": "gemini:gemini-3.5-flash-lite (LLM)",
+  "reported_models": [
+    "gemini-3.5-flash-lite"
+  ],
+  "requested_model": "gemini-3.5-flash-lite",
+  "requests": [
+    "Music for studying.",
+    "I need energetic music for a workout, preferably rock or hip-hop.",
+    "Recommend acoustic music with very high energy."
+  ],
+  "runs": [
+    {
+      "arm": "sources supplied",
+      "correction": null,
+      "final": null,
+      "grounding": {
+        "contexts": [
+          "studying"
+        ],
+        "inferred_sources": {
+          "energy": "listening_contexts#studying",
+          "instrumentalness": "listening_contexts#studying",
+          "mood tags": "listening_contexts#studying",
+          "vocal intensity": "listening_contexts#studying"
+        },
+        "limitations": [],
+        "plan": {
+          "advanced": true,
+          "candidates": 18,
+          "diverse": false,
+          "excluded_artists": [],
+          "excluded_genres": [],
+          "hard_genres": [],
+          "k": 5,
+          "mode": "baseline",
+          "mode_reason": "default genre-first ranking",
+          "unique_artists": false
+        },
+        "request": "Music for studying.",
+        "results": [
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "LoRoom",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.78,
+              "energy": 0.4,
+              "instrumentalness": 0.9,
+              "mood_tags": [
+                "focused"
+              ],
+              "popularity": 41,
+              "release_decade": 2020,
+              "vocal_intensity": 0.03
+            },
+            "genre": "lofi",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity",
+              "mood tags"
+            ],
+            "match_label": "strong",
+            "mood": "focused",
+            "rank": 1,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.40 vs target 0.35 (+2.85)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.90 vs target 0.80 (+0.45)",
+              "Vocal intensity 0.03 vs target 0.15 (+0.44)",
+              "Mood tags 1/1 matched: focused (+1.00)"
+            ],
+            "score": 4.74,
+            "song_id": 9,
+            "theoretical_max": 14.0,
+            "title": "Focus Flow",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "LoRoom",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.71,
+              "energy": 0.42,
+              "instrumentalness": 0.85,
+              "mood_tags": [
+                "focused",
+                "nostalgic"
+              ],
+              "popularity": 64,
+              "release_decade": 2020,
+              "vocal_intensity": 0.05
+            },
+            "genre": "lofi",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity",
+              "mood tags"
+            ],
+            "match_label": "strong",
+            "mood": "chill",
+            "rank": 2,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.42 vs target 0.35 (+2.79)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.85 vs target 0.80 (+0.48)",
+              "Vocal intensity 0.05 vs target 0.15 (+0.45)",
+              "Mood tags 1/1 matched: focused (+1.00)"
+            ],
+            "score": 4.715,
+            "song_id": 2,
+            "theoretical_max": 14.0,
+            "title": "Midnight Coding",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "Paper Lanterns",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.86,
+              "energy": 0.35,
+              "instrumentalness": 0.88,
+              "mood_tags": [
+                "reflective",
+                "dreamy"
+              ],
+              "popularity": 52,
+              "release_decade": 2020,
+              "vocal_intensity": 0.04
+            },
+            "genre": "lofi",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity"
+            ],
+            "match_label": "strong",
+            "mood": "chill",
+            "rank": 3,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.35 vs target 0.35 (+3.00)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.88 vs target 0.80 (+0.46)",
+              "Vocal intensity 0.04 vs target 0.15 (+0.45)",
+              "Mood tags 0/1 matched (+0.00)"
+            ],
+            "score": 3.9050000000000002,
+            "song_id": 4,
+            "theoretical_max": 14.0,
+            "title": "Library Rain",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "Slow Stereo",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.89,
+              "energy": 0.37,
+              "instrumentalness": 0.62,
+              "mood_tags": [
+                "nostalgic",
+                "reflective"
+              ],
+              "popularity": 45,
+              "release_decade": 2000,
+              "vocal_intensity": 0.25
+            },
+            "genre": "jazz",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity"
+            ],
+            "match_label": "strong",
+            "mood": "relaxed",
+            "rank": 4,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.37 vs target 0.35 (+2.94)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.62 vs target 0.80 (+0.41)",
+              "Vocal intensity 0.25 vs target 0.15 (+0.45)",
+              "Mood tags 0/1 matched (+0.00)"
+            ],
+            "score": 3.8,
+            "song_id": 7,
+            "theoretical_max": 14.0,
+            "title": "Coffee Shop Stories",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "Orbit Bloom",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.92,
+              "energy": 0.28,
+              "instrumentalness": 0.93,
+              "mood_tags": [
+                "dreamy",
+                "reflective"
+              ],
+              "popularity": 38,
+              "release_decade": 2010,
+              "vocal_intensity": 0.02
+            },
+            "genre": "ambient",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity"
+            ],
+            "match_label": "partial",
+            "mood": "chill",
+            "rank": 5,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.28 vs target 0.35 (+2.79)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.93 vs target 0.80 (+0.43)",
+              "Vocal intensity 0.02 vs target 0.15 (+0.43)",
+              "Mood tags 0/1 matched (+0.00)"
+            ],
+            "score": 3.66,
+            "song_id": 6,
+            "theoretical_max": 14.0,
+            "title": "Spacewalk Thoughts",
+            "unmet": []
+          }
+        ],
+        "sources": [
+          {
+            "id": "listening_contexts#studying",
+            "text": "For studying, exams, finals, homework, reading, or any task that needs concentration and focus. Many listeners find lyrics distracting while they read or write, so steady music with low vocal intensity and relatively low energy is a common choice for study sessions. Relevant features: energy, instrumentalness, vocal intensity, the `focused` mood tag. May not apply: some people concentrate better with familiar songs that have lyrics, or with upbeat music that keeps them awake. Studying does **not** imply a particular genre; the assistant never assumes lofi just because someone is studying.",
+            "title": "Studying and concentration"
+          },
+          {
+            "id": "music_features#vocal-intensity",
+            "text": "Vocal intensity is a 0 to 1 estimate of how prominent and forceful the vocals are. Low values suit background or study listening; high values suit sing-along or performance-driven songs. It is only scored when advanced scoring is on.",
+            "title": "Vocal intensity"
+          },
+          {
+            "id": "music_features#instrumentalness",
+            "text": "Instrumentalness is a 0 to 1 estimate of how much of a song has no vocals. High values suit requests for instrumental music, music without lyrics, or music without distracting vocals. It is only scored when advanced scoring is on.",
+            "title": "Instrumentalness"
+          }
+        ],
+        "stated": {},
+        "unknown": [
+          "genre",
+          "mood",
+          "acoustic sound",
+          "popularity",
+          "release decade"
+        ]
+      },
+      "http_attempts": 1,
+      "initial": {
+        "error": null,
+        "http_attempts": 1,
+        "metrics": {
+          "citation_validity": 1.0,
+          "citations": 15,
+          "coverage": 1.0,
+          "errors": [],
+          "feature_mentioned (heuristic)": 1.0,
+          "inferred_distinguished (heuristic)": 1.0,
+          "limitations_present (heuristic)": null,
+          "mean_words_per_item": 21.0,
+          "schema_valid": true,
+          "song_reference_validity": 1.0,
+          "unmet_disclosed (heuristic)": null,
+          "unsupported_claims": "pending human review",
+          "valid_json": true
+        },
+        "raw": "{\n  \"summary\": \"Here are music recommendations tailored for studying, drawing on inferred targets for low energy, high instrumentalness, and low vocal intensity from the studying guide.\",\n  \"items\": [\n    {\n      \"song_id\": 9,\n      \"explanation\": \"This track fits the studying guide's suggested energy (0.4), high instrumentalness (0.9), and low vocal intensity (0.03). It also features the focused mood tag suggested by the guide.\",\n      \"citations\": [\n        \"listening_contexts#studying\",\n        \"music_features#instrumentalness\",\n        \"music_features#vocal-intensity\"\n      ],\n      \"features_referenced\": [\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\",\n        \"mood_tags\",\n        \"genre\",\n        \"mood\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 2,\n      \"explanation\": \"It aligns with the studying guide's suggested energy (0.42), instrumentalness (0.85), and low vocal intensity (0.05). It also matches the focused mood tag from the guide.\",\n      \"citations\": [\n        \"listening_contexts#studying\",\n        \"music_features#instrumentalness\",\n        \"music_features#vocal-intensity\"\n      ],\n      \"features_referenced\": [\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\",\n        \"mood_tags\",\n        \"genre\",\n        \"mood\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 4,\n      \"explanation\": \"This song matches the studying guide's suggested energy (0.35), high instrumentalness (0.88), and low vocal intensity (0.04).\",\n      \"citations\": [\n        \"listening_contexts#studying\",\n        \"music_features#instrumentalness\",\n        \"music_features#vocal-intensity\"\n      ],\n      \"features_referenced\": [\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\",\n        \"genre\",\n        \"mood\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 7,\n      \"explanation\": \"It matches the studying guide's suggested energy (0.37), instrumentalness (0.62), and vocal intensity (0.25).\",\n      \"citations\": [\n        \"listening_contexts#studying\",\n        \"music_features#instrumentalness\",\n        \"music_features#vocal-intensity\"\n      ],\n      \"features_referenced\": [\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\",\n        \"genre\",\n        \"mood\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 6,\n      \"explanation\": \"This ambient track features low energy (0.28), high instrumentalness (0.93), and low vocal intensity (0.02) inferred from the studying guide.\",\n      \"citations\": [\n        \"listening_contexts#studying\",\n        \"music_features#instrumentalness\",\n        \"music_features#vocal-intensity\"\n      ],\n      \"features_referenced\": [\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\",\n        \"genre\",\n        \"mood\"\n      ],\n      \"unmet_preferences\": []\n    }\n  ],\n  \"limitations\": []\n}",
+        "response_metadata": {
+          "finish_reason": "STOP",
+          "model": "gemini-3.5-flash-lite"
+        },
+        "stage": "initial"
+      },
+      "logical_requests": 1,
+      "outcome": "live_raw_validated",
+      "request": "Music for studying.",
+      "style": "specialized"
+    },
+    {
+      "arm": "sources withheld",
+      "correction": null,
+      "final": null,
+      "grounding": {
+        "contexts": [
+          "studying"
+        ],
+        "inferred_sources": {
+          "energy": "listening_contexts#studying",
+          "instrumentalness": "listening_contexts#studying",
+          "mood tags": "listening_contexts#studying",
+          "vocal intensity": "listening_contexts#studying"
+        },
+        "limitations": [],
+        "plan": {
+          "advanced": true,
+          "candidates": 18,
+          "diverse": false,
+          "excluded_artists": [],
+          "excluded_genres": [],
+          "hard_genres": [],
+          "k": 5,
+          "mode": "baseline",
+          "mode_reason": "default genre-first ranking",
+          "unique_artists": false
+        },
+        "request": "Music for studying.",
+        "results": [
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "LoRoom",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.78,
+              "energy": 0.4,
+              "instrumentalness": 0.9,
+              "mood_tags": [
+                "focused"
+              ],
+              "popularity": 41,
+              "release_decade": 2020,
+              "vocal_intensity": 0.03
+            },
+            "genre": "lofi",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity",
+              "mood tags"
+            ],
+            "match_label": "strong",
+            "mood": "focused",
+            "rank": 1,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.40 vs target 0.35 (+2.85)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.90 vs target 0.80 (+0.45)",
+              "Vocal intensity 0.03 vs target 0.15 (+0.44)",
+              "Mood tags 1/1 matched: focused (+1.00)"
+            ],
+            "score": 4.74,
+            "song_id": 9,
+            "theoretical_max": 14.0,
+            "title": "Focus Flow",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "LoRoom",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.71,
+              "energy": 0.42,
+              "instrumentalness": 0.85,
+              "mood_tags": [
+                "focused",
+                "nostalgic"
+              ],
+              "popularity": 64,
+              "release_decade": 2020,
+              "vocal_intensity": 0.05
+            },
+            "genre": "lofi",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity",
+              "mood tags"
+            ],
+            "match_label": "strong",
+            "mood": "chill",
+            "rank": 2,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.42 vs target 0.35 (+2.79)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.85 vs target 0.80 (+0.48)",
+              "Vocal intensity 0.05 vs target 0.15 (+0.45)",
+              "Mood tags 1/1 matched: focused (+1.00)"
+            ],
+            "score": 4.715,
+            "song_id": 2,
+            "theoretical_max": 14.0,
+            "title": "Midnight Coding",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "Paper Lanterns",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.86,
+              "energy": 0.35,
+              "instrumentalness": 0.88,
+              "mood_tags": [
+                "reflective",
+                "dreamy"
+              ],
+              "popularity": 52,
+              "release_decade": 2020,
+              "vocal_intensity": 0.04
+            },
+            "genre": "lofi",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity"
+            ],
+            "match_label": "strong",
+            "mood": "chill",
+            "rank": 3,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.35 vs target 0.35 (+3.00)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.88 vs target 0.80 (+0.46)",
+              "Vocal intensity 0.04 vs target 0.15 (+0.45)",
+              "Mood tags 0/1 matched (+0.00)"
+            ],
+            "score": 3.9050000000000002,
+            "song_id": 4,
+            "theoretical_max": 14.0,
+            "title": "Library Rain",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "Slow Stereo",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.89,
+              "energy": 0.37,
+              "instrumentalness": 0.62,
+              "mood_tags": [
+                "nostalgic",
+                "reflective"
+              ],
+              "popularity": 45,
+              "release_decade": 2000,
+              "vocal_intensity": 0.25
+            },
+            "genre": "jazz",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity"
+            ],
+            "match_label": "strong",
+            "mood": "relaxed",
+            "rank": 4,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.37 vs target 0.35 (+2.94)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.62 vs target 0.80 (+0.41)",
+              "Vocal intensity 0.25 vs target 0.15 (+0.45)",
+              "Mood tags 0/1 matched (+0.00)"
+            ],
+            "score": 3.8,
+            "song_id": 7,
+            "theoretical_max": 14.0,
+            "title": "Coffee Shop Stories",
+            "unmet": []
+          },
+          {
+            "active_max": 5.0,
+            "adjusted_score": null,
+            "artist": "Orbit Bloom",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.92,
+              "energy": 0.28,
+              "instrumentalness": 0.93,
+              "mood_tags": [
+                "dreamy",
+                "reflective"
+              ],
+              "popularity": 38,
+              "release_decade": 2010,
+              "vocal_intensity": 0.02
+            },
+            "genre": "ambient",
+            "inferred_used": [
+              "energy",
+              "instrumentalness",
+              "vocal intensity"
+            ],
+            "match_label": "partial",
+            "mood": "chill",
+            "rank": 5,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.28 vs target 0.35 (+2.79)",
+              "No acoustic preference given (+0.00)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "Instrumentalness 0.93 vs target 0.80 (+0.43)",
+              "Vocal intensity 0.02 vs target 0.15 (+0.43)",
+              "Mood tags 0/1 matched (+0.00)"
+            ],
+            "score": 3.66,
+            "song_id": 6,
+            "theoretical_max": 14.0,
+            "title": "Spacewalk Thoughts",
+            "unmet": []
+          }
+        ],
+        "sources": [],
+        "stated": {},
+        "unknown": [
+          "genre",
+          "mood",
+          "acoustic sound",
+          "popularity",
+          "release decade"
+        ]
+      },
+      "http_attempts": 1,
+      "initial": {
+        "error": null,
+        "http_attempts": 1,
+        "metrics": {
+          "citation_validity": 0.0,
+          "citations": 5,
+          "coverage": 1.0,
+          "errors": [
+            "song_id 9 cites unsupported source(s): listening_contexts#studying",
+            "song_id 2 cites unsupported source(s): listening_contexts#studying",
+            "song_id 4 cites unsupported source(s): listening_contexts#studying",
+            "song_id 7 cites unsupported source(s): listening_contexts#studying",
+            "song_id 6 cites unsupported source(s): listening_contexts#studying"
+          ],
+          "feature_mentioned (heuristic)": 1.0,
+          "inferred_distinguished (heuristic)": 1.0,
+          "limitations_present (heuristic)": null,
+          "mean_words_per_item": 24.0,
+          "schema_valid": false,
+          "song_reference_validity": 1.0,
+          "unmet_disclosed (heuristic)": null,
+          "unsupported_claims": "pending human review",
+          "valid_json": true
+        },
+        "raw": "{\n  \"summary\": \"This selection offers calm music for studying. Targets for energy, instrumentalness, vocal intensity, and mood tags were suggested by the guide.\",\n  \"items\": [\n    {\n      \"song_id\": 9,\n      \"explanation\": \"Focus Flow is a lofi track with energy 0.4, instrumentalness 0.9, vocal intensity 0.03, and mood tags including focused. These targets were suggested by the studying guide.\",\n      \"citations\": [\n        \"listening_contexts#studying\"\n      ],\n      \"features_referenced\": [\n        \"genre\",\n        \"mood\",\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\",\n        \"mood_tags\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 2,\n      \"explanation\": \"Midnight Coding features lofi style, energy 0.42, instrumentalness 0.85, vocal intensity 0.05, and focused mood tags. The guidance suggested these attributes for studying.\",\n      \"citations\": [\n        \"listening_contexts#studying\"\n      ],\n      \"features_referenced\": [\n        \"genre\",\n        \"mood\",\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\",\n        \"mood_tags\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 4,\n      \"explanation\": \"Library Rain is a lofi piece with energy 0.35, instrumentalness 0.88, and vocal intensity 0.04. The studying guide suggested these specific feature ranges.\",\n      \"citations\": [\n        \"listening_contexts#studying\"\n      ],\n      \"features_referenced\": [\n        \"genre\",\n        \"mood\",\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\",\n        \"mood_tags\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 7,\n      \"explanation\": \"Coffee Shop Stories is a jazz track featuring energy 0.37, instrumentalness 0.62, and vocal intensity 0.25, aligning with suggested parameters from the studying guide.\",\n      \"citations\": [\n        \"listening_contexts#studying\"\n      ],\n      \"features_referenced\": [\n        \"genre\",\n        \"mood\",\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\",\n        \"mood_tags\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 6,\n      \"explanation\": \"Spacewalk Thoughts is an ambient song matching studying guide targets with an energy of 0.28, instrumentalness of 0.93, and vocal intensity of 0.02.\",\n      \"citations\": [\n        \"listening_contexts#studying\"\n      ],\n      \"features_referenced\": [\n        \"genre\",\n        \"mood\",\n        \"energy\",\n        \"instrumentalness\",\n        \"vocal_intensity\",\n        \"mood_tags\"\n      ],\n      \"unmet_preferences\": []\n    }\n  ],\n  \"limitations\": []\n}",
+        "response_metadata": {
+          "finish_reason": "STOP",
+          "model": "gemini-3.5-flash-lite"
+        },
+        "stage": "initial"
+      },
+      "logical_requests": 1,
+      "outcome": "live_raw_rejected",
+      "request": "Music for studying.",
+      "style": "specialized"
+    },
+    {
+      "arm": "sources supplied",
+      "correction": null,
+      "final": null,
+      "grounding": {
+        "contexts": [
+          "workout"
+        ],
+        "inferred_sources": {
+          "acoustic sound": "listening_contexts#workout",
+          "mood tags": "listening_contexts#workout"
+        },
+        "limitations": [],
+        "plan": {
+          "advanced": true,
+          "candidates": 18,
+          "diverse": false,
+          "excluded_artists": [],
+          "excluded_genres": [],
+          "hard_genres": [],
+          "k": 5,
+          "mode": "energy-focused",
+          "mode_reason": "suggested by listening_contexts#workout",
+          "unique_artists": false
+        },
+        "request": "I need energetic music for a workout, preferably rock or hip-hop.",
+        "results": [
+          {
+            "active_max": 10.0,
+            "adjusted_score": null,
+            "artist": "Redline Arcade",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.07,
+              "energy": 0.87,
+              "instrumentalness": 0.12,
+              "mood_tags": [
+                "aggressive",
+                "energetic"
+              ],
+              "popularity": 48,
+              "release_decade": 2000,
+              "vocal_intensity": 0.88
+            },
+            "genre": "rock",
+            "inferred_used": [
+              "acoustic sound",
+              "mood tags"
+            ],
+            "match_label": "strong",
+            "mood": "intense",
+            "rank": 1,
+            "reasons": [
+              "Genre match: rock (+2.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.87 vs target 0.85 (+5.88)",
+              "Acousticness 0.07, you prefer less acoustic (+0.93)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "No instrumentalness preference given (+0.00)",
+              "No vocal intensity preference given (+0.00)",
+              "Mood tags 1/1 matched: energetic (+1.00)"
+            ],
+            "score": 9.81,
+            "song_id": 16,
+            "theoretical_max": 15.0,
+            "title": "Breakwater",
+            "unmet": []
+          },
+          {
+            "active_max": 10.0,
+            "adjusted_score": null,
+            "artist": "Verse Theory",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.09,
+              "energy": 0.8,
+              "instrumentalness": 0.02,
+              "mood_tags": [
+                "energetic",
+                "uplifting"
+              ],
+              "popularity": 81,
+              "release_decade": 2010,
+              "vocal_intensity": 0.9
+            },
+            "genre": "hip-hop",
+            "inferred_used": [
+              "acoustic sound",
+              "mood tags"
+            ],
+            "match_label": "strong",
+            "mood": "confident",
+            "rank": 2,
+            "reasons": [
+              "Genre match: hip-hop (+2.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.80 vs target 0.85 (+5.70)",
+              "Acousticness 0.09, you prefer less acoustic (+0.91)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "No instrumentalness preference given (+0.00)",
+              "No vocal intensity preference given (+0.00)",
+              "Mood tags 1/1 matched: energetic (+1.00)"
+            ],
+            "score": 9.61,
+            "song_id": 12,
+            "theoretical_max": 15.0,
+            "title": "Concrete Crown",
+            "unmet": []
+          },
+          {
+            "active_max": 10.0,
+            "adjusted_score": null,
+            "artist": "Voltline",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.1,
+              "energy": 0.91,
+              "instrumentalness": 0.1,
+              "mood_tags": [
+                "aggressive",
+                "energetic"
+              ],
+              "popularity": 71,
+              "release_decade": 2010,
+              "vocal_intensity": 0.85
+            },
+            "genre": "rock",
+            "inferred_used": [
+              "acoustic sound",
+              "mood tags"
+            ],
+            "match_label": "strong",
+            "mood": "intense",
+            "rank": 3,
+            "reasons": [
+              "Genre match: rock (+2.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.91 vs target 0.85 (+5.64)",
+              "Acousticness 0.10, you prefer less acoustic (+0.90)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "No instrumentalness preference given (+0.00)",
+              "No vocal intensity preference given (+0.00)",
+              "Mood tags 1/1 matched: energetic (+1.00)"
+            ],
+            "score": 9.54,
+            "song_id": 3,
+            "theoretical_max": 15.0,
+            "title": "Storm Runner",
+            "unmet": []
+          },
+          {
+            "active_max": 10.0,
+            "adjusted_score": null,
+            "artist": "Neon Echo",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.18,
+              "energy": 0.82,
+              "instrumentalness": 0.05,
+              "mood_tags": [
+                "uplifting",
+                "energetic"
+              ],
+              "popularity": 78,
+              "release_decade": 2020,
+              "vocal_intensity": 0.7
+            },
+            "genre": "pop",
+            "inferred_used": [
+              "acoustic sound",
+              "mood tags"
+            ],
+            "match_label": "partial",
+            "mood": "happy",
+            "rank": 4,
+            "reasons": [
+              "Genre pop is not rock or hip-hop (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.82 vs target 0.85 (+5.82)",
+              "Acousticness 0.18, you prefer less acoustic (+0.82)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "No instrumentalness preference given (+0.00)",
+              "No vocal intensity preference given (+0.00)",
+              "Mood tags 1/1 matched: energetic (+1.00)"
+            ],
+            "score": 7.640000000000001,
+            "song_id": 1,
+            "theoretical_max": 15.0,
+            "title": "Sunrise City",
+            "unmet": [
+              "genre"
+            ]
+          },
+          {
+            "active_max": 10.0,
+            "adjusted_score": null,
+            "artist": "Max Pulse",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.05,
+              "energy": 0.93,
+              "instrumentalness": 0.04,
+              "mood_tags": [
+                "energetic",
+                "euphoric"
+              ],
+              "popularity": 85,
+              "release_decade": 2010,
+              "vocal_intensity": 0.8
+            },
+            "genre": "pop",
+            "inferred_used": [
+              "acoustic sound",
+              "mood tags"
+            ],
+            "match_label": "partial",
+            "mood": "intense",
+            "rank": 5,
+            "reasons": [
+              "Genre pop is not rock or hip-hop (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.93 vs target 0.85 (+5.52)",
+              "Acousticness 0.05, you prefer less acoustic (+0.95)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "No instrumentalness preference given (+0.00)",
+              "No vocal intensity preference given (+0.00)",
+              "Mood tags 1/1 matched: energetic (+1.00)"
+            ],
+            "score": 7.47,
+            "song_id": 5,
+            "theoretical_max": 15.0,
+            "title": "Gym Hero",
+            "unmet": [
+              "genre"
+            ]
+          }
+        ],
+        "sources": [
+          {
+            "id": "catalog#genre-hip-hop",
+            "text": "Genre hip-hop has 1 song(s): Concrete Crown by Verse Theory (id 12, hip-hop, confident, energy 0.80, acousticness 0.09).",
+            "title": "Genre hip-hop"
+          },
+          {
+            "id": "catalog#genre-coverage",
+            "text": "The catalog has 18 songs in 13 genres: lofi (3), rock (3), pop (2), afrobeats (1), ambient (1), classical (1), folk (1), hip-hop (1), indie pop (1), jazz (1), r&b (1), reggae (1), synthwave (1). Genres with only one song: afrobeats, ambient, classical, folk, hip-hop, indie pop, jazz, r&b, reggae, synthwave. Any other genre, such as metal or country, is not in the catalog.",
+            "title": "Genre coverage"
+          },
+          {
+            "id": "catalog#song-12",
+            "text": "Concrete Crown by Verse Theory (id 12, hip-hop, confident, energy 0.80, acousticness 0.09); tempo 92 BPM; valence 0.55; danceability 0.84; mood tags: energetic, uplifting.",
+            "title": "Concrete Crown"
+          },
+          {
+            "id": "music_features#genre-vs-mood",
+            "text": "Genre describes a song's style (rock, lofi, jazz). Mood describes how it feels (happy, chill, sad). A rock song can be moody and a pop song can be intense, so the two are scored separately. Labels match exactly after case and spacing are normalized: \"indie pop\" does not count as \"pop\". When a listener names several genres (\"rock or hip-hop\"), a song matching any of them earns the single genre contribution once.",
+            "title": "Genre versus mood"
+          },
+          {
+            "id": "listening_contexts#workout",
+            "text": "For workouts, the gym, running, lifting, cardio, training, or exercise. High energy and a produced, non-acoustic sound usually suit movement, and closeness to a high energy target matters more than an exact genre label. Relevant features: energy, acousticness, the `energetic` mood tag, energy-focused ranking. May not apply: stretching, yoga, or cool-down sessions call for much lower energy.",
+            "title": "Workouts and movement"
+          },
+          {
+            "id": "music_features#instrumentalness",
+            "text": "Instrumentalness is a 0 to 1 estimate of how much of a song has no vocals. High values suit requests for instrumental music, music without lyrics, or music without distracting vocals. It is only scored when advanced scoring is on.",
+            "title": "Instrumentalness"
+          }
+        ],
+        "stated": {
+          "energy": "0.85",
+          "genre": "rock or hip-hop"
+        },
+        "unknown": [
+          "mood",
+          "popularity",
+          "release decade",
+          "instrumentalness",
+          "vocal intensity"
+        ]
+      },
+      "http_attempts": 1,
+      "initial": {
+        "error": null,
+        "http_attempts": 1,
+        "metrics": {
+          "citation_validity": 1.0,
+          "citations": 5,
+          "coverage": 1.0,
+          "errors": [],
+          "feature_mentioned (heuristic)": 1.0,
+          "inferred_distinguished (heuristic)": 0.4,
+          "limitations_present (heuristic)": null,
+          "mean_words_per_item": 22.2,
+          "schema_valid": true,
+          "song_reference_validity": 1.0,
+          "unmet_disclosed (heuristic)": 0.0,
+          "unsupported_claims": "pending human review",
+          "valid_json": true
+        },
+        "raw": "{\n  \"summary\": \"You are looking for energetic rock or hip-hop music for a workout. The workout guide suggested an energetic, non-acoustic sound.\",\n  \"items\": [\n    {\n      \"song_id\": 16,\n      \"explanation\": \"This rock song has high energy (0.87) and low acousticness (0.07), matching your workout request and the workout guide's suggested non-acoustic style.\",\n      \"citations\": [\n        \"listening_contexts#workout\"\n      ],\n      \"features_referenced\": [\n        \"genre\",\n        \"energy\",\n        \"acousticness\",\n        \"mood_tags\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 12,\n      \"explanation\": \"This hip-hop track features an energy of 0.80 and low acousticness (0.09) alongside an energetic mood tag, aligning with your workout needs.\",\n      \"citations\": [\n        \"listening_contexts#workout\"\n      ],\n      \"features_referenced\": [\n        \"genre\",\n        \"energy\",\n        \"acousticness\",\n        \"mood_tags\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 3,\n      \"explanation\": \"A rock song with high energy (0.91) and low acousticness (0.10) that fits the workout guide's suggestion for non-acoustic, high-energy tracks.\",\n      \"citations\": [\n        \"listening_contexts#workout\"\n      ],\n      \"features_referenced\": [\n        \"genre\",\n        \"energy\",\n        \"acousticness\",\n        \"mood_tags\"\n      ],\n      \"unmet_preferences\": []\n    },\n    {\n      \"song_id\": 1,\n      \"explanation\": \"It features an energy of 0.82 and includes the energetic mood tag, but it is a pop song rather than rock or hip-hop.\",\n      \"citations\": [\n        \"listening_contexts#workout\"\n      ],\n      \"features_referenced\": [\n        \"genre\",\n        \"energy\",\n        \"acousticness\",\n        \"mood_tags\"\n      ],\n      \"unmet_preferences\": [\n        \"genre\"\n      ]\n    },\n    {\n      \"song_id\": 5,\n      \"explanation\": \"This track delivers high energy (0.93) and low acousticness (0.05), but it falls under pop instead of your stated rock or hip-hop preference.\",\n      \"citations\": [\n        \"listening_contexts#workout\"\n      ],\n      \"features_referenced\": [\n        \"genre\",\n        \"energy\",\n        \"acousticness\",\n        \"mood_tags\"\n      ],\n      \"unmet_preferences\": [\n        \"genre\"\n      ]\n    }\n  ],\n  \"limitations\": []\n}",
+        "response_metadata": {
+          "finish_reason": "STOP",
+          "model": "gemini-3.5-flash-lite"
+        },
+        "stage": "initial"
+      },
+      "logical_requests": 1,
+      "outcome": "live_raw_validated",
+      "request": "I need energetic music for a workout, preferably rock or hip-hop.",
+      "style": "specialized"
+    },
+    {
+      "arm": "sources withheld",
+      "correction": null,
+      "final": null,
+      "grounding": {
+        "contexts": [
+          "workout"
+        ],
+        "inferred_sources": {
+          "acoustic sound": "listening_contexts#workout",
+          "mood tags": "listening_contexts#workout"
+        },
+        "limitations": [],
+        "plan": {
+          "advanced": true,
+          "candidates": 18,
+          "diverse": false,
+          "excluded_artists": [],
+          "excluded_genres": [],
+          "hard_genres": [],
+          "k": 5,
+          "mode": "energy-focused",
+          "mode_reason": "suggested by listening_contexts#workout",
+          "unique_artists": false
+        },
+        "request": "I need energetic music for a workout, preferably rock or hip-hop.",
+        "results": [
+          {
+            "active_max": 10.0,
+            "adjusted_score": null,
+            "artist": "Redline Arcade",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.07,
+              "energy": 0.87,
+              "instrumentalness": 0.12,
+              "mood_tags": [
+                "aggressive",
+                "energetic"
+              ],
+              "popularity": 48,
+              "release_decade": 2000,
+              "vocal_intensity": 0.88
+            },
+            "genre": "rock",
+            "inferred_used": [
+              "acoustic sound",
+              "mood tags"
+            ],
+            "match_label": "strong",
+            "mood": "intense",
+            "rank": 1,
+            "reasons": [
+              "Genre match: rock (+2.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.87 vs target 0.85 (+5.88)",
+              "Acousticness 0.07, you prefer less acoustic (+0.93)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "No instrumentalness preference given (+0.00)",
+              "No vocal intensity preference given (+0.00)",
+              "Mood tags 1/1 matched: energetic (+1.00)"
+            ],
+            "score": 9.81,
+            "song_id": 16,
+            "theoretical_max": 15.0,
+            "title": "Breakwater",
+            "unmet": []
+          },
+          {
+            "active_max": 10.0,
+            "adjusted_score": null,
+            "artist": "Verse Theory",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.09,
+              "energy": 0.8,
+              "instrumentalness": 0.02,
+              "mood_tags": [
+                "energetic",
+                "uplifting"
+              ],
+              "popularity": 81,
+              "release_decade": 2010,
+              "vocal_intensity": 0.9
+            },
+            "genre": "hip-hop",
+            "inferred_used": [
+              "acoustic sound",
+              "mood tags"
+            ],
+            "match_label": "strong",
+            "mood": "confident",
+            "rank": 2,
+            "reasons": [
+              "Genre match: hip-hop (+2.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.80 vs target 0.85 (+5.70)",
+              "Acousticness 0.09, you prefer less acoustic (+0.91)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "No instrumentalness preference given (+0.00)",
+              "No vocal intensity preference given (+0.00)",
+              "Mood tags 1/1 matched: energetic (+1.00)"
+            ],
+            "score": 9.61,
+            "song_id": 12,
+            "theoretical_max": 15.0,
+            "title": "Concrete Crown",
+            "unmet": []
+          },
+          {
+            "active_max": 10.0,
+            "adjusted_score": null,
+            "artist": "Voltline",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.1,
+              "energy": 0.91,
+              "instrumentalness": 0.1,
+              "mood_tags": [
+                "aggressive",
+                "energetic"
+              ],
+              "popularity": 71,
+              "release_decade": 2010,
+              "vocal_intensity": 0.85
+            },
+            "genre": "rock",
+            "inferred_used": [
+              "acoustic sound",
+              "mood tags"
+            ],
+            "match_label": "strong",
+            "mood": "intense",
+            "rank": 3,
+            "reasons": [
+              "Genre match: rock (+2.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.91 vs target 0.85 (+5.64)",
+              "Acousticness 0.10, you prefer less acoustic (+0.90)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "No instrumentalness preference given (+0.00)",
+              "No vocal intensity preference given (+0.00)",
+              "Mood tags 1/1 matched: energetic (+1.00)"
+            ],
+            "score": 9.54,
+            "song_id": 3,
+            "theoretical_max": 15.0,
+            "title": "Storm Runner",
+            "unmet": []
+          },
+          {
+            "active_max": 10.0,
+            "adjusted_score": null,
+            "artist": "Neon Echo",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.18,
+              "energy": 0.82,
+              "instrumentalness": 0.05,
+              "mood_tags": [
+                "uplifting",
+                "energetic"
+              ],
+              "popularity": 78,
+              "release_decade": 2020,
+              "vocal_intensity": 0.7
+            },
+            "genre": "pop",
+            "inferred_used": [
+              "acoustic sound",
+              "mood tags"
+            ],
+            "match_label": "partial",
+            "mood": "happy",
+            "rank": 4,
+            "reasons": [
+              "Genre pop is not rock or hip-hop (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.82 vs target 0.85 (+5.82)",
+              "Acousticness 0.18, you prefer less acoustic (+0.82)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "No instrumentalness preference given (+0.00)",
+              "No vocal intensity preference given (+0.00)",
+              "Mood tags 1/1 matched: energetic (+1.00)"
+            ],
+            "score": 7.640000000000001,
+            "song_id": 1,
+            "theoretical_max": 15.0,
+            "title": "Sunrise City",
+            "unmet": [
+              "genre"
+            ]
+          },
+          {
+            "active_max": 10.0,
+            "adjusted_score": null,
+            "artist": "Max Pulse",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.05,
+              "energy": 0.93,
+              "instrumentalness": 0.04,
+              "mood_tags": [
+                "energetic",
+                "euphoric"
+              ],
+              "popularity": 85,
+              "release_decade": 2010,
+              "vocal_intensity": 0.8
+            },
+            "genre": "pop",
+            "inferred_used": [
+              "acoustic sound",
+              "mood tags"
+            ],
+            "match_label": "partial",
+            "mood": "intense",
+            "rank": 5,
+            "reasons": [
+              "Genre pop is not rock or hip-hop (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.93 vs target 0.85 (+5.52)",
+              "Acousticness 0.05, you prefer less acoustic (+0.95)",
+              "No popularity preference given (+0.00)",
+              "No decade preference given (+0.00)",
+              "No instrumentalness preference given (+0.00)",
+              "No vocal intensity preference given (+0.00)",
+              "Mood tags 1/1 matched: energetic (+1.00)"
+            ],
+            "score": 7.47,
+            "song_id": 5,
+            "theoretical_max": 15.0,
+            "title": "Gym Hero",
+            "unmet": [
+              "genre"
+            ]
+          }
+        ],
+        "sources": [],
+        "stated": {
+          "energy": "0.85",
+          "genre": "rock or hip-hop"
+        },
+        "unknown": [
+          "mood",
+          "popularity",
+          "release decade",
+          "instrumentalness",
+          "vocal intensity"
+        ]
+      },
+      "http_attempts": 1,
+      "initial": {
+        "error": null,
+        "http_attempts": 1,
+        "metrics": {
+          "citation_validity": null,
+          "citations": 0,
+          "coverage": 1.0,
+          "errors": [],
+          "feature_mentioned (heuristic)": 1.0,
+          "inferred_distinguished (heuristic)": 0.6,
+          "limitations_present (heuristic)": null,
+          "mean_words_per_item": 24.4,
+          "schema_valid": true,
+          "song_reference_validity": 1.0,
+          "unmet_disclosed (heuristic)": 1.0,
+          "unsupported_claims": "pending human review",
+          "valid_json": true
+        },
+        "raw": "{\"summary\": \"You requested energetic rock or hip-hop music for a workout session. The guide suggested targets for acoustic sound and mood tags.\", \"items\": [{\"song_id\": 16, \"explanation\": \"An intense rock track with high energy (0.87) that matches your genre and energy preferences. Less acoustic sound (0.07) and energetic mood tags were suggested by the guide.\", \"citations\": [], \"features_referenced\": [\"genre\", \"energy\", \"acousticness\", \"mood_tags\"], \"unmet_preferences\": []}, {\"song_id\": 12, \"explanation\": \"A hip-hop song with an energy level of 0.80, fitting your genre and workout focus. Lower acousticness (0.09) and energetic mood tags were suggested by the guide.\", \"citations\": [], \"features_referenced\": [\"genre\", \"energy\", \"acousticness\", \"mood_tags\"], \"unmet_preferences\": []}, {\"song_id\": 3, \"explanation\": \"A rock song featuring high energy (0.91) and an energetic mood tag. Its low acousticness (0.10) aligns with the guide's suggestion for workouts.\", \"citations\": [], \"features_referenced\": [\"genre\", \"energy\", \"acousticness\", \"mood_tags\"], \"unmet_preferences\": []}, {\"song_id\": 1, \"explanation\": \"A pop track with 0.82 energy and energetic mood tags, but it misses your requested genre because it is pop rather than rock or hip-hop.\", \"citations\": [], \"features_referenced\": [\"genre\", \"energy\", \"acousticness\", \"mood_tags\"], \"unmet_preferences\": [\"genre\"]}, {\"song_id\": 5, \"explanation\": \"A pop song featuring very high energy (0.93) and low acousticness (0.05), but it misses your requested genre preference.\", \"citations\": [], \"features_referenced\": [\"genre\", \"energy\", \"acousticness\", \"mood_tags\"], \"unmet_preferences\": [\"genre\"]}], \"limitations\": []}",
+        "response_metadata": {
+          "finish_reason": "STOP",
+          "model": "gemini-3.5-flash-lite"
+        },
+        "stage": "initial"
+      },
+      "logical_requests": 1,
+      "outcome": "live_raw_validated",
+      "request": "I need energetic music for a workout, preferably rock or hip-hop.",
+      "style": "specialized"
+    },
+    {
+      "arm": "sources supplied",
+      "correction": null,
+      "final": null,
+      "grounding": {
+        "contexts": [],
+        "inferred_sources": {},
+        "limitations": [
+          "No catalog song meets all of your stated preferences at once (energy 0.95, acoustic sound yes) [catalog#energy-vs-acousticness]; the results are the closest available compromises.",
+          "None of the results meets your stated acoustic sound; the catalog has no closer match among the candidates."
+        ],
+        "plan": {
+          "advanced": false,
+          "candidates": 18,
+          "diverse": false,
+          "excluded_artists": [],
+          "excluded_genres": [],
+          "hard_genres": [],
+          "k": 5,
+          "mode": "energy-focused",
+          "mode_reason": "energy is the only genre, mood, or feature preference you stated",
+          "unique_artists": false
+        },
+        "request": "Recommend acoustic music with very high energy.",
+        "results": [
+          {
+            "active_max": 7.0,
+            "adjusted_score": null,
+            "artist": "Max Pulse",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.05,
+              "energy": 0.93,
+              "instrumentalness": 0.04,
+              "mood_tags": [
+                "energetic",
+                "euphoric"
+              ],
+              "popularity": 85,
+              "release_decade": 2010,
+              "vocal_intensity": 0.8
+            },
+            "genre": "pop",
+            "inferred_used": [],
+            "match_label": "partial",
+            "mood": "intense",
+            "rank": 1,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.93 vs target 0.95 (+5.88)",
+              "Acousticness 0.05, you like acoustic (+0.05)"
+            ],
+            "score": 5.930000000000001,
+            "song_id": 5,
+            "theoretical_max": 12.0,
+            "title": "Gym Hero",
+            "unmet": [
+              "acoustic sound"
+            ]
+          },
+          {
+            "active_max": 7.0,
+            "adjusted_score": null,
+            "artist": "Voltline",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.1,
+              "energy": 0.91,
+              "instrumentalness": 0.1,
+              "mood_tags": [
+                "aggressive",
+                "energetic"
+              ],
+              "popularity": 71,
+              "release_decade": 2010,
+              "vocal_intensity": 0.85
+            },
+            "genre": "rock",
+            "inferred_used": [],
+            "match_label": "partial",
+            "mood": "intense",
+            "rank": 2,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.91 vs target 0.95 (+5.76)",
+              "Acousticness 0.10, you like acoustic (+0.10)"
+            ],
+            "score": 5.86,
+            "song_id": 3,
+            "theoretical_max": 12.0,
+            "title": "Storm Runner",
+            "unmet": [
+              "acoustic sound"
+            ]
+          },
+          {
+            "active_max": 7.0,
+            "adjusted_score": null,
+            "artist": "Redline Arcade",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.07,
+              "energy": 0.87,
+              "instrumentalness": 0.12,
+              "mood_tags": [
+                "aggressive",
+                "energetic"
+              ],
+              "popularity": 48,
+              "release_decade": 2000,
+              "vocal_intensity": 0.88
+            },
+            "genre": "rock",
+            "inferred_used": [],
+            "match_label": "partial",
+            "mood": "intense",
+            "rank": 3,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.87 vs target 0.95 (+5.52)",
+              "Acousticness 0.07, you like acoustic (+0.07)"
+            ],
+            "score": 5.590000000000001,
+            "song_id": 16,
+            "theoretical_max": 12.0,
+            "title": "Breakwater",
+            "unmet": [
+              "acoustic sound"
+            ]
+          },
+          {
+            "active_max": 7.0,
+            "adjusted_score": null,
+            "artist": "Neon Echo",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.18,
+              "energy": 0.82,
+              "instrumentalness": 0.05,
+              "mood_tags": [
+                "uplifting",
+                "energetic"
+              ],
+              "popularity": 78,
+              "release_decade": 2020,
+              "vocal_intensity": 0.7
+            },
+            "genre": "pop",
+            "inferred_used": [],
+            "match_label": "partial",
+            "mood": "happy",
+            "rank": 4,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.82 vs target 0.95 (+5.22)",
+              "Acousticness 0.18, you like acoustic (+0.18)"
+            ],
+            "score": 5.3999999999999995,
+            "song_id": 1,
+            "theoretical_max": 12.0,
+            "title": "Sunrise City",
+            "unmet": [
+              "acoustic sound"
+            ]
+          },
+          {
+            "active_max": 7.0,
+            "adjusted_score": null,
+            "artist": "Indigo Parade",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.35,
+              "energy": 0.76,
+              "instrumentalness": 0.08,
+              "mood_tags": [
+                "uplifting",
+                "euphoric"
+              ],
+              "popularity": 67,
+              "release_decade": 2020,
+              "vocal_intensity": 0.6
+            },
+            "genre": "indie pop",
+            "inferred_used": [],
+            "match_label": "partial",
+            "mood": "happy",
+            "rank": 5,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.76 vs target 0.95 (+4.86)",
+              "Acousticness 0.35, you like acoustic (+0.35)"
+            ],
+            "score": 5.21,
+            "song_id": 10,
+            "theoretical_max": 12.0,
+            "title": "Rooftop Lights",
+            "unmet": [
+              "acoustic sound"
+            ]
+          }
+        ],
+        "sources": [
+          {
+            "id": "music_features#acousticness",
+            "text": "Acousticness is a 0 to 1 estimate of how acoustic (unplugged, unamplified) a song sounds. A listener who asks for acoustic music earns points from high acousticness; one who prefers produced or electronic sound earns points from low acousticness.",
+            "title": "Acousticness"
+          },
+          {
+            "id": "catalog#energy-vs-acousticness",
+            "text": "7 songs have acousticness of at least 0.5; the most energetic of them is Midnight Coding at energy 0.42. High-energy acoustic songs are not in this catalog.",
+            "title": "Energy versus acousticness"
+          },
+          {
+            "id": "music_features#instrumentalness",
+            "text": "Instrumentalness is a 0 to 1 estimate of how much of a song has no vocals. High values suit requests for instrumental music, music without lyrics, or music without distracting vocals. It is only scored when advanced scoring is on.",
+            "title": "Instrumentalness"
+          },
+          {
+            "id": "listening_contexts#workout",
+            "text": "For workouts, the gym, running, lifting, cardio, training, or exercise. High energy and a produced, non-acoustic sound usually suit movement, and closeness to a high energy target matters more than an exact genre label. Relevant features: energy, acousticness, the `energetic` mood tag, energy-focused ranking. May not apply: stretching, yoga, or cool-down sessions call for much lower energy.",
+            "title": "Workouts and movement"
+          }
+        ],
+        "stated": {
+          "acoustic sound": "yes",
+          "energy": "0.95"
+        },
+        "unknown": [
+          "genre",
+          "mood",
+          "popularity",
+          "release decade",
+          "instrumentalness",
+          "vocal intensity",
+          "mood tags"
+        ]
+      },
+      "http_attempts": 1,
+      "initial": {
+        "error": null,
+        "http_attempts": 1,
+        "metrics": {
+          "citation_validity": 1.0,
+          "citations": 5,
+          "coverage": 1.0,
+          "errors": [],
+          "feature_mentioned (heuristic)": 1.0,
+          "inferred_distinguished (heuristic)": null,
+          "limitations_present (heuristic)": true,
+          "mean_words_per_item": 20.2,
+          "schema_valid": true,
+          "song_reference_validity": 1.0,
+          "unmet_disclosed (heuristic)": 1.0,
+          "unsupported_claims": "pending human review",
+          "valid_json": true
+        },
+        "raw": "{\n  \"summary\": \"You are looking for acoustic music with very high energy. The catalog does not contain any high-energy acoustic songs, so these results represent the closest available compromises.\",\n  \"items\": [\n    {\n      \"song_id\": 5,\n      \"explanation\": \"This track features very high energy (0.93) that comes close to your target, but its low acousticness (0.05) misses your acoustic preference.\",\n      \"citations\": [\"music_features#acousticness\"],\n      \"features_referenced\": [\"energy\", \"acousticness\"],\n      \"unmet_preferences\": [\"acoustic sound\"]\n    },\n    {\n      \"song_id\": 3,\n      \"explanation\": \"It offers very high energy (0.91), but its low acousticness (0.1) means it does not meet your acoustic sound preference.\",\n      \"citations\": [\"music_features#acousticness\"],\n      \"features_referenced\": [\"energy\", \"acousticness\"],\n      \"unmet_preferences\": [\"acoustic sound\"]\n    },\n    {\n      \"song_id\": 16,\n      \"explanation\": \"With an energy level of 0.87, it approaches your requested energy, but its low acousticness (0.07) leaves your acoustic preference unmet.\",\n      \"citations\": [\"music_features#acousticness\"],\n      \"features_referenced\": [\"energy\", \"acousticness\"],\n      \"unmet_preferences\": [\"acoustic sound\"]\n    },\n    {\n      \"song_id\": 1,\n      \"explanation\": \"This song provides high energy (0.82), though its low acousticness (0.18) misses your request for an acoustic sound.\",\n      \"citations\": [\"music_features#acousticness\"],\n      \"features_referenced\": [\"energy\", \"acousticness\"],\n      \"unmet_preferences\": [\"acoustic sound\"]\n    },\n    {\n      \"song_id\": 10,\n      \"explanation\": \"It features an energy level of 0.76 and a slightly higher acousticness (0.35), but still misses your acoustic sound preference.\",\n      \"citations\": [\"music_features#acousticness\"],\n      \"features_referenced\": [\"energy\", \"acousticness\"],\n      \"unmet_preferences\": [\"acoustic sound\"]\n    }\n  ],\n  \"limitations\": [\n    \"No catalog song meets all of your stated preferences at once (energy 0.95, acoustic sound yes) [catalog#energy-vs-acousticness]; the results are the closest available compromises.\",\n    \"None of the results meets your stated acoustic sound; the catalog has no closer match among the candidates.\"\n  ]\n}",
+        "response_metadata": {
+          "finish_reason": "STOP",
+          "model": "gemini-3.5-flash-lite"
+        },
+        "stage": "initial"
+      },
+      "logical_requests": 1,
+      "outcome": "live_raw_validated",
+      "request": "Recommend acoustic music with very high energy.",
+      "style": "specialized"
+    },
+    {
+      "arm": "sources withheld",
+      "correction": null,
+      "final": null,
+      "grounding": {
+        "contexts": [],
+        "inferred_sources": {},
+        "limitations": [
+          "No catalog song meets all of your stated preferences at once (energy 0.95, acoustic sound yes) [catalog#energy-vs-acousticness]; the results are the closest available compromises.",
+          "None of the results meets your stated acoustic sound; the catalog has no closer match among the candidates."
+        ],
+        "plan": {
+          "advanced": false,
+          "candidates": 18,
+          "diverse": false,
+          "excluded_artists": [],
+          "excluded_genres": [],
+          "hard_genres": [],
+          "k": 5,
+          "mode": "energy-focused",
+          "mode_reason": "energy is the only genre, mood, or feature preference you stated",
+          "unique_artists": false
+        },
+        "request": "Recommend acoustic music with very high energy.",
+        "results": [
+          {
+            "active_max": 7.0,
+            "adjusted_score": null,
+            "artist": "Max Pulse",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.05,
+              "energy": 0.93,
+              "instrumentalness": 0.04,
+              "mood_tags": [
+                "energetic",
+                "euphoric"
+              ],
+              "popularity": 85,
+              "release_decade": 2010,
+              "vocal_intensity": 0.8
+            },
+            "genre": "pop",
+            "inferred_used": [],
+            "match_label": "partial",
+            "mood": "intense",
+            "rank": 1,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.93 vs target 0.95 (+5.88)",
+              "Acousticness 0.05, you like acoustic (+0.05)"
+            ],
+            "score": 5.930000000000001,
+            "song_id": 5,
+            "theoretical_max": 12.0,
+            "title": "Gym Hero",
+            "unmet": [
+              "acoustic sound"
+            ]
+          },
+          {
+            "active_max": 7.0,
+            "adjusted_score": null,
+            "artist": "Voltline",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.1,
+              "energy": 0.91,
+              "instrumentalness": 0.1,
+              "mood_tags": [
+                "aggressive",
+                "energetic"
+              ],
+              "popularity": 71,
+              "release_decade": 2010,
+              "vocal_intensity": 0.85
+            },
+            "genre": "rock",
+            "inferred_used": [],
+            "match_label": "partial",
+            "mood": "intense",
+            "rank": 2,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.91 vs target 0.95 (+5.76)",
+              "Acousticness 0.10, you like acoustic (+0.10)"
+            ],
+            "score": 5.86,
+            "song_id": 3,
+            "theoretical_max": 12.0,
+            "title": "Storm Runner",
+            "unmet": [
+              "acoustic sound"
+            ]
+          },
+          {
+            "active_max": 7.0,
+            "adjusted_score": null,
+            "artist": "Redline Arcade",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.07,
+              "energy": 0.87,
+              "instrumentalness": 0.12,
+              "mood_tags": [
+                "aggressive",
+                "energetic"
+              ],
+              "popularity": 48,
+              "release_decade": 2000,
+              "vocal_intensity": 0.88
+            },
+            "genre": "rock",
+            "inferred_used": [],
+            "match_label": "partial",
+            "mood": "intense",
+            "rank": 3,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.87 vs target 0.95 (+5.52)",
+              "Acousticness 0.07, you like acoustic (+0.07)"
+            ],
+            "score": 5.590000000000001,
+            "song_id": 16,
+            "theoretical_max": 12.0,
+            "title": "Breakwater",
+            "unmet": [
+              "acoustic sound"
+            ]
+          },
+          {
+            "active_max": 7.0,
+            "adjusted_score": null,
+            "artist": "Neon Echo",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.18,
+              "energy": 0.82,
+              "instrumentalness": 0.05,
+              "mood_tags": [
+                "uplifting",
+                "energetic"
+              ],
+              "popularity": 78,
+              "release_decade": 2020,
+              "vocal_intensity": 0.7
+            },
+            "genre": "pop",
+            "inferred_used": [],
+            "match_label": "partial",
+            "mood": "happy",
+            "rank": 4,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.82 vs target 0.95 (+5.22)",
+              "Acousticness 0.18, you like acoustic (+0.18)"
+            ],
+            "score": 5.3999999999999995,
+            "song_id": 1,
+            "theoretical_max": 12.0,
+            "title": "Sunrise City",
+            "unmet": [
+              "acoustic sound"
+            ]
+          },
+          {
+            "active_max": 7.0,
+            "adjusted_score": null,
+            "artist": "Indigo Parade",
+            "diversity_note": null,
+            "features": {
+              "acousticness": 0.35,
+              "energy": 0.76,
+              "instrumentalness": 0.08,
+              "mood_tags": [
+                "uplifting",
+                "euphoric"
+              ],
+              "popularity": 67,
+              "release_decade": 2020,
+              "vocal_intensity": 0.6
+            },
+            "genre": "indie pop",
+            "inferred_used": [],
+            "match_label": "partial",
+            "mood": "happy",
+            "rank": 5,
+            "reasons": [
+              "No genre preference given (+0.00)",
+              "No mood preference given (+0.00)",
+              "Energy 0.76 vs target 0.95 (+4.86)",
+              "Acousticness 0.35, you like acoustic (+0.35)"
+            ],
+            "score": 5.21,
+            "song_id": 10,
+            "theoretical_max": 12.0,
+            "title": "Rooftop Lights",
+            "unmet": [
+              "acoustic sound"
+            ]
+          }
+        ],
+        "sources": [],
+        "stated": {
+          "acoustic sound": "yes",
+          "energy": "0.95"
+        },
+        "unknown": [
+          "genre",
+          "mood",
+          "popularity",
+          "release decade",
+          "instrumentalness",
+          "vocal intensity",
+          "mood tags"
+        ]
+      },
+      "http_attempts": 1,
+      "initial": {
+        "error": null,
+        "http_attempts": 1,
+        "metrics": {
+          "citation_validity": null,
+          "citations": 0,
+          "coverage": 1.0,
+          "errors": [],
+          "feature_mentioned (heuristic)": 1.0,
+          "inferred_distinguished (heuristic)": null,
+          "limitations_present (heuristic)": true,
+          "mean_words_per_item": 21.0,
+          "schema_valid": true,
+          "song_reference_validity": 1.0,
+          "unmet_disclosed (heuristic)": 1.0,
+          "unsupported_claims": "pending human review",
+          "valid_json": true
+        },
+        "raw": "{\"summary\": \"You are looking for acoustic music with very high energy.\", \"items\": [{\"song_id\": 5, \"explanation\": \"Its high energy (0.93) aligns with your energy request, but it is not acoustic (acousticness 0.05), missing your acoustic sound preference.\", \"citations\": [], \"features_referenced\": [\"energy\", \"acousticness\"], \"unmet_preferences\": [\"acoustic sound\"]}, {\"song_id\": 3, \"explanation\": \"Its high energy (0.91) aligns with your energy request, but it is not acoustic (acousticness 0.10), missing your acoustic sound preference.\", \"citations\": [], \"features_referenced\": [\"energy\", \"acousticness\"], \"unmet_preferences\": [\"acoustic sound\"]}, {\"song_id\": 16, \"explanation\": \"Its high energy (0.87) aligns with your energy request, but it is not acoustic (acousticness 0.07), missing your acoustic sound preference.\", \"citations\": [], \"features_referenced\": [\"energy\", \"acousticness\"], \"unmet_preferences\": [\"acoustic sound\"]}, {\"song_id\": 1, \"explanation\": \"Its high energy (0.82) aligns with your energy request, but it is not acoustic (acousticness 0.18), missing your acoustic sound preference.\", \"citations\": [], \"features_referenced\": [\"energy\", \"acousticness\"], \"unmet_preferences\": [\"acoustic sound\"]}, {\"song_id\": 10, \"explanation\": \"Its high energy (0.76) aligns with your energy request, but it is not acoustic (acousticness 0.35), missing your acoustic sound preference.\", \"citations\": [], \"features_referenced\": [\"energy\", \"acousticness\"], \"unmet_preferences\": [\"acoustic sound\"]}], \"limitations\": [\"No catalog song meets all of your stated preferences at once (energy 0.95, acoustic sound yes) [catalog#energy-vs-acousticness]; the results are the closest available compromises.\", \"None of the results meets your stated acoustic sound; the catalog has no closer match among the candidates.\"]}",
+        "response_metadata": {
+          "finish_reason": "STOP",
+          "model": "gemini-3.5-flash-lite"
+        },
+        "stage": "initial"
+      },
+      "logical_requests": 1,
+      "outcome": "live_raw_validated",
+      "request": "Recommend acoustic music with very high energy.",
+      "style": "specialized"
+    }
+  ],
+  "simulated": false
+}

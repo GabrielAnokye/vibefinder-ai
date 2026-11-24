@@ -12,7 +12,7 @@ import re
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 from src.assistant.models import MAX_REQUEST_CHARS, Explanation, Plan, Recommendation
-from src.assistant.providers import EXAMPLE_NAMES, FEATURES
+from src.assistant.providers import EXAMPLE_NAMES, EXPLANATION_JSON_SCHEMA, FEATURES
 from src.recommender import normalize_label, score_song
 
 MAX_RAW_CHARS = 8000
@@ -22,8 +22,8 @@ MAX_LIMITATIONS = 10
 SCORE_TOLERANCE = 1e-9
 NUMBER_TOLERANCE = 0.006       # a stated decimal must match an authoritative value to 2 decimals
 
-TOP_LEVEL_KEYS = {"summary", "items", "limitations"}
-ITEM_KEYS = {"song_id", "explanation", "citations", "features_referenced", "unmet_preferences"}
+TOP_LEVEL_KEYS = set(EXPLANATION_JSON_SCHEMA["properties"])
+ITEM_KEYS = set(EXPLANATION_JSON_SCHEMA["properties"]["items"]["items"]["properties"])
 OVERCLAIMS = ("perfect match", "guaranteed", "you will love", "you'll love", "100% match")
 DECIMAL = re.compile(r"(?<![\w.])\d+\.\d+(?![\w.])")
 

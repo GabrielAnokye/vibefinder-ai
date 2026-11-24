@@ -8,7 +8,7 @@ NOT a measure of real-world recommendation accuracy.
 
     python -m evaluation.run_evaluation                      # offline (template + scripted mocks)
     python -m evaluation.run_evaluation --json evaluation/results/offline_evaluation.json
-    python -m evaluation.run_evaluation --live --yes         # optional, needs OPENROUTER_* and spends credits
+    python -m evaluation.run_evaluation --live --provider gemini --yes
 
 Exit status is 1 when a required case fails.
 """
@@ -21,7 +21,8 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from src.assistant import Assistant, MockProvider
-from src.assistant.providers import ProviderError, make_provider, template_explanation
+from src.assistant.providers import LIVE_PROVIDERS, MAX_HTTP_ATTEMPTS, ProviderError, make_provider, template_explanation
+from src.assistant.trace import redact, sanitized_json
 from src.recommender import normalize_label, score_song
 
 CASES_PATH = Path(__file__).parent / "cases.json"
@@ -198,13 +199,21 @@ def evaluate_case(assistant: Assistant, case: Dict[str, Any], provider=None) -> 
             except Exception as error:
                 passed, detail = False, f"check error: {type(error).__name__}: {error}"
             checks.append({"name": name, "passed": bool(passed), "detail": "" if passed else detail})
-    return {
+    result = {
         "id": case["id"], "name": case.get("name", case["id"]), "required": case.get("required", True),
         "simulated": simulated, "status": response.status if response else "crash",
         "song_ids": [x.song["id"] for x in response.recommendations] if response else [],
         "generator": response.generator if response else "",
         "passed": all(c["passed"] for c in checks), "checks": checks,
     }
+    if provider is not None and not simulated:
+        result["generation"] = {
+            "accepted": bool(response and response.explanation and response.generator == provider.label),
+            "template_fallback": bool(response and response.generator.startswith("template")),
+            "http_attempts": response.http_attempts if response else 0,
+            "status": response.generation_status if response else None,
+        }
+    return result
 
 
 def summarize(results: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -221,7 +230,7 @@ def summarize(results: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 
 def print_report(title: str, results: List[Dict[str, Any]], summary: Dict[str, Any]) -> None:
-    print(title)
+    print(redact(title))
     print("=" * len(title))
     for r in results:
         ok = sum(c["passed"] for c in r["checks"])
@@ -229,7 +238,7 @@ def print_report(title: str, results: List[Dict[str, Any]], summary: Dict[str, A
         print(f"{'PASS' if r['passed'] else 'FAIL'}  {r['id']:<34} {ok}/{len(r['checks'])} checks{tag}")
         for c in r["checks"]:
             if not c["passed"]:
-                print(f"        failed {c['name']}: {c['detail']}")
+                print(redact(f"        failed {c['name']}: {c['detail']}"))
     print(f"\nCases: {summary['cases_passed']}/{summary['cases']} passed ({summary['case_pass_rate']:.1%})")
     print(f"Checks: {summary['checks_passed']}/{summary['checks']} passed ({summary['check_pass_rate']:.1%})")
     if summary["required_failures"]:
@@ -248,7 +257,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser.add_argument("--cases", default=str(CASES_PATH), help="cases JSON file")
     parser.add_argument("--json", metavar="PATH", help="also write structured results to PATH")
     parser.add_argument("--live", action="store_true",
-                        help=f"also run {len(LIVE_CASES)} cases with --provider openrouter (spends credits)")
+                        help=f"also run {len(LIVE_CASES)} cases with the selected live provider")
+    parser.add_argument("--provider", choices=LIVE_PROVIDERS, help="required with --live for external requests")
     parser.add_argument("--yes", action="store_true", help="confirm live external requests")
     args = parser.parse_args(argv)
 
@@ -259,9 +269,11 @@ def main(argv: Optional[List[str]] = None) -> int:
     output: Dict[str, Any] = {"offline": {"summary": summary, "results": offline}}
 
     if args.live:
-        provider, note = make_provider("openrouter")
         live_cases = [c for c in cases if c["id"] in LIVE_CASES]
-        print(f"\nLive evaluation: {len(live_cases)} cases, at most {3 * len(live_cases)} external requests.")
+        print(f"\nLive evaluation: {len(live_cases)} cases, "
+              f"at most {MAX_HTTP_ATTEMPTS * len(live_cases)} external requests.")
+        provider, note = (make_provider(args.provider) if args.provider else
+                          (None, "select --provider gemini or --provider openrouter"))
         if note:
             print(f"Live evaluation pending: {note}.")
             output["live"] = {"status": "pending", "reason": note}
@@ -271,15 +283,22 @@ def main(argv: Optional[List[str]] = None) -> int:
         else:
             live = run(live_cases, provider=provider)
             live_summary = summarize(live)
+            generation = {
+                key: sum(case["generation"][key] for case in live if "generation" in case)
+                for key in ("accepted", "template_fallback", "http_attempts")
+            }
             print()
             print_report(f"Live evaluation ({provider.label})", live, live_summary)
-            output["live"] = {"provider": provider.label, "summary": live_summary, "results": live}
+            print(f"Validated provider explanations: {generation['accepted']}/{len(live_cases)}. "
+                  f"Template fallbacks: {generation['template_fallback']}. HTTP attempts: {generation['http_attempts']}.")
+            output["live"] = {"provider": provider.label, "summary": live_summary, "generation": generation,
+                              "results": live}
             summary["required_failures"] += [f"live:{i}" for i in live_summary["required_failures"]]
 
     if args.json:
         path = Path(args.json)
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(output, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        path.write_text(sanitized_json(output, ensure_ascii=True), encoding="utf-8")
         print(f"\nResults written to {path}")
     return 1 if summary["required_failures"] else 0
 

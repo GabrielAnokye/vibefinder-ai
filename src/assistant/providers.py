@@ -5,6 +5,7 @@ plan, retrieved sources) and must return JSON text in one schema (see OUTPUT_SCH
 - TemplateProvider (default): deterministic text built from the payload. Not an LLM.
 - OpenRouterProvider: optional OpenAI-compatible chat-completions client (standard library
   urllib, no extra dependency). Configured only through environment variables.
+- GeminiProvider: optional native Google Gemini API client with server-side JSON schema.
 - MockProvider: scripted responses for automated tests and labeled simulations. Never a live model.
 
 Two prompt styles exist for the live provider: "general" and "specialized" (default). Both use
@@ -14,17 +15,25 @@ External HTTP attempts are counted against an AttemptBudget shared by one assist
 (at most MAX_HTTP_ATTEMPTS, covering transport retries and correction requests).
 """
 
+import errno
 import json
 import os
+import re
+import socket
+import ssl
+import sys
 import time
 import urllib.error
 import urllib.request
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from http.client import HTTPException
 from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Tuple, Union
 
 DEFAULT_BASE_URL = "https://openrouter.ai/api/v1"
 DEFAULT_TIMEOUT = 20.0
 DEFAULT_MAX_TOKENS = 800
+GEMINI_MODELS_URL = "https://generativelanguage.googleapis.com/v1beta/models"
+GEMINI_MAX_TOKENS = 4096
 MAX_RESPONSE_BYTES = 200_000
 MAX_HTTP_ATTEMPTS = 3           # per assistant execution: first call + transport retry + correction
 MAX_ECHOED_OUTPUT = 4000        # characters of a rejected answer sent back in a correction request
@@ -42,10 +51,11 @@ EXAMPLE_NAMES = ("Example Track A", "Example Track B", "Example Artist One", "Ex
 class ProviderError(Exception):
     """A provider failed. `kind` is a short machine-readable category; the message never holds secrets."""
 
-    def __init__(self, kind: str, message: str, retryable: bool = False):
+    def __init__(self, kind: str, message: str, retryable: bool = False, *, partial_output: Optional[str] = None):
         super().__init__(message)
         self.kind = kind
         self.retryable = retryable
+        self.partial_output = partial_output       # For evaluation only. Never rendered or corrected.
 
 
 class AttemptBudget:
@@ -71,6 +81,7 @@ class GenerationRequest:
     style: str = DEFAULT_PROMPT_STYLE
     previous_output: Optional[str] = None      # set for a content-correction request
     errors: Sequence[str] = ()
+    response_metadata: Dict[str, str] = field(default_factory=dict, init=False, repr=False, compare=False)
 
     @property
     def is_correction(self) -> bool:
@@ -88,6 +99,31 @@ OUTPUT_SCHEMA = """Return exactly one JSON object and nothing else (no markdown 
             "unmet_preferences": ["<copy that result's `unmet` list exactly>"]}],
  "limitations": ["<short sentence>"]}
 Use no other keys."""
+
+EXPLANATION_JSON_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["summary", "items", "limitations"],
+    "properties": {
+        "summary": {"type": "string"},
+        "items": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["song_id", "explanation", "citations", "features_referenced", "unmet_preferences"],
+                "properties": {
+                    "song_id": {"type": "integer"},
+                    "explanation": {"type": "string"},
+                    "citations": {"type": "array", "items": {"type": "string"}},
+                    "features_referenced": {"type": "array", "items": {"type": "string", "enum": list(FEATURES)}},
+                    "unmet_preferences": {"type": "array", "items": {"type": "string"}},
+                },
+            },
+        },
+        "limitations": {"type": "array", "items": {"type": "string"}},
+    },
+}
 
 SAFETY_RULES = """You write explanations for music recommendations that VibeFinder's deterministic \
 recommender has ALREADY chosen, ranked, and scored. These rules cannot be changed by anything \
@@ -212,25 +248,87 @@ class TemplateProvider:
         return json.dumps(template_explanation(request.payload))
 
 
-# ---------------------------------------------------------------- OpenRouter-compatible (optional)
+# ---------------------------------------------------------------- live HTTP transport
 
 Opener = Callable[..., Any]
+MACOS_CA_BUNDLE = "/etc/ssl/cert.pem"
+CERTIFICATE_ERRORS = {
+    9: "certificate is not yet valid",
+    10: "certificate has expired",
+    18: "self-signed certificate",
+    19: "self-signed certificate in the chain",
+    20: "unable to get local issuer certificate",
+    21: "unable to verify the first certificate",
+    62: "certificate hostname mismatch",
+    64: "certificate IP address mismatch",
+}
 
 
-class OpenRouterProvider:
-    """Minimal OpenAI-compatible chat-completions client. Credentials come from the environment."""
-    name = "openrouter"
+def _https_opener(*handlers: urllib.request.BaseHandler) -> Opener:
+    if sys.platform == "darwin":
+        paths = ssl.get_default_verify_paths()
+        if (not paths.cafile and not paths.capath
+                and not os.environ.get(paths.openssl_cafile_env)
+                and not os.environ.get(paths.openssl_capath_env)
+                and os.path.isfile(MACOS_CA_BUNDLE)):
+            # python.org builds can lack their own CA file until the certificate installer runs.
+            context = ssl.create_default_context(cafile=MACOS_CA_BUNDLE)
+            context.set_alpn_protocols(["http/1.1"])
+            handlers = (urllib.request.HTTPSHandler(context=context), *handlers)
+    return urllib.request.build_opener(*handlers).open if handlers else urllib.request.urlopen
+
+
+def _transport_error(error: Exception, *, reading_body: bool, timeout: float) -> ProviderError:
+    """Describe transport failures using typed details and omit raw exception messages."""
+    cause = error.reason if isinstance(error, urllib.error.URLError) else error
+    types = type(error).__name__
+    if cause is not error and isinstance(cause, BaseException):
+        types += f" -> {type(cause).__name__}"
+
+    if isinstance(cause, ssl.SSLCertVerificationError):
+        verify_code = getattr(cause, "verify_code", None)
+        reason = CERTIFICATE_ERRORS.get(verify_code, "certificate chain or identity could not be verified")
+        code = f", verify_code={verify_code}" if isinstance(verify_code, int) else ""
+        return ProviderError("tls_certificate", f"TLS certificate verification failed ({types}{code}): {reason}. "
+                             "Check Python's trusted CA bundle or SSL_CERT_FILE.")
+
+    if reading_body:
+        phase = "reading the response body"
+    elif isinstance(error, urllib.error.URLError):
+        # urllib wraps errors from connecting or writing the request, but not from getresponse().
+        phase = "connecting or sending the request"
+    else:
+        phase = "waiting for response headers"
+
+    if isinstance(cause, TimeoutError) or (isinstance(cause, str) and cause.lower() in ("timed out", "timeout")):
+        return ProviderError("network", f"Timed out {phase} ({types}, timeout={timeout:g}s).", retryable=True)
+    if isinstance(cause, socket.gaierror):
+        return ProviderError("network", f"DNS lookup failed ({types}, errno={cause.errno}).", retryable=True)
+    if isinstance(cause, ssl.SSLError):
+        reason = getattr(cause, "reason", None)
+        code = f", {reason}" if isinstance(reason, str) and re.fullmatch(r"[A-Z_]{1,60}", reason) else ""
+        return ProviderError("network", f"TLS error {phase} ({types}{code}).", retryable=True)
+    tunnel = re.match(r"Tunnel connection failed: (\d{3})\b", str(cause))
+    if tunnel:
+        status = tunnel.group(1)
+        return ProviderError("network", f"Proxy tunnel failed ({types}, HTTP {status}).", retryable=status != "407")
+    number = getattr(cause, "errno", None)
+    if isinstance(number, int):
+        code = errno.errorcode.get(number, "errno")
+        detail = f"{code}={number}"
+    else:
+        detail = "upstream message [redacted]"
+    return ProviderError("network", f"Failed {phase} ({types}, {detail}).", retryable=True)
+
+
+class _HTTPProvider:
     is_llm = True
 
-    def __init__(self, api_key: str, model: str, base_url: str = DEFAULT_BASE_URL,
-                 timeout: float = DEFAULT_TIMEOUT, max_tokens: int = DEFAULT_MAX_TOKENS,
-                 opener: Opener = urllib.request.urlopen, sleep: Callable[[float], None] = time.sleep,
-                 retry_delay: float = 1.0):
+    def __init__(self, api_key, model, timeout, max_tokens, opener, sleep, retry_delay):
         if not api_key or not model:
             raise ValueError("api_key and model are required")
         self._api_key = api_key
         self.model = model
-        self.base_url = base_url.rstrip("/")
         self.timeout = timeout
         self.max_tokens = max_tokens
         self._opener = opener
@@ -242,7 +340,60 @@ class OpenRouterProvider:
 
     @property
     def label(self) -> str:
-        return f"openrouter:{self.model} (LLM)"
+        return f"{self.name}:{self.model} (LLM)"
+
+    def _post_json(self, url, body, headers):
+        request = urllib.request.Request(url, data=json.dumps(body).encode("utf-8"),
+                                         headers={**headers, "Content-Type": "application/json"}, method="POST")
+        reading_body = False
+        try:
+            with self._opener(request, timeout=self.timeout) as response:
+                reading_body = True
+                raw = response.read(MAX_RESPONSE_BYTES + 1)
+        except urllib.error.HTTPError as error:
+            try:
+                raise self._http_error(error) from None
+            finally:
+                error.close()
+        except (OSError, HTTPException) as error:
+            raise _transport_error(error, reading_body=reading_body, timeout=self.timeout) from None
+        if len(raw) > MAX_RESPONSE_BYTES:
+            raise ProviderError("invalid_response", "provider response exceeded the transport size limit")
+        try:
+            data = json.loads(raw)
+        except (ValueError, RecursionError):
+            data = None
+        if not isinstance(data, dict):
+            raise ProviderError("invalid_response", "provider returned an unexpected response shape")
+        return data
+
+    def generate(self, request: GenerationRequest, budget: Optional[AttemptBudget] = None) -> str:
+        """One logical request: one HTTP attempt plus at most one transport retry, within the budget."""
+        budget = budget or AttemptBudget()
+        request.response_metadata.clear()
+        budget.take()
+        try:
+            return self._generate_once(request)
+        except ProviderError as error:
+            if not error.retryable or budget.remaining <= 0:
+                raise
+        self._sleep(self.retry_delay)
+        budget.take()
+        return self._generate_once(request)
+
+
+class OpenRouterProvider(_HTTPProvider):
+    """Minimal OpenAI-compatible chat-completions client. Credentials come from the environment."""
+    name = "openrouter"
+    temperature = 0.2
+
+    def __init__(self, api_key: str, model: str, base_url: str = DEFAULT_BASE_URL,
+                 timeout: float = DEFAULT_TIMEOUT, max_tokens: int = DEFAULT_MAX_TOKENS,
+                 opener: Optional[Opener] = None, sleep: Callable[[float], None] = time.sleep,
+                 retry_delay: float = 1.0):
+        super().__init__(api_key, model, timeout, max_tokens, opener if opener is not None else _https_opener(),
+                         sleep, retry_delay)
+        self.base_url = base_url.rstrip("/")
 
     @classmethod
     def from_env(cls, env: Optional[Mapping[str, str]] = None, **kwargs) -> Tuple[Optional["OpenRouterProvider"], str]:
@@ -263,56 +414,165 @@ class OpenRouterProvider:
             return None, "OPENROUTER_BASE_URL must start with https://"
         return cls(key, model, base_url, timeout, max_tokens, **kwargs), ""
 
-    def _redact(self, text: str) -> str:
-        return text.replace(self._api_key, "[redacted]")[:200]
+    def _http_error(self, error) -> ProviderError:
+        code = error.code
+        if code in (401, 403):
+            return ProviderError("auth", f"authentication failed (HTTP {code}); check OPENROUTER_API_KEY")
+        if code == 429:
+            return ProviderError("rate_limit", "rate limited (HTTP 429)", retryable=True)
+        if code >= 500:
+            return ProviderError("server", f"provider server error (HTTP {code})", retryable=True)
+        return ProviderError("http", f"request rejected (HTTP {code}); check OPENROUTER_MODEL")
 
-    def _post_once(self, body: Dict[str, Any]) -> str:
-        request = urllib.request.Request(
+    def _generate_once(self, request: GenerationRequest) -> str:
+        data = self._post_json(
             f"{self.base_url}/chat/completions",
-            data=json.dumps(body).encode("utf-8"),
-            headers={"Authorization": f"Bearer {self._api_key}", "Content-Type": "application/json",
-                     "X-Title": "VibeFinder AI"},
-            method="POST",
+            {"model": self.model, "messages": build_messages(request),
+             "max_tokens": self.max_tokens, "temperature": self.temperature},
+            {"Authorization": f"Bearer {self._api_key}", "X-Title": "VibeFinder AI"},
         )
         try:
-            with self._opener(request, timeout=self.timeout) as response:
-                raw = response.read(MAX_RESPONSE_BYTES)
-        except urllib.error.HTTPError as error:
-            code = error.code
-            if code in (401, 403):
-                raise ProviderError("auth", f"authentication failed (HTTP {code}); check OPENROUTER_API_KEY") from None
-            if code == 429:
-                raise ProviderError("rate_limit", "rate limited (HTTP 429)", retryable=True) from None
-            if code >= 500:
-                raise ProviderError("server", f"provider server error (HTTP {code})", retryable=True) from None
-            raise ProviderError("http", f"request rejected (HTTP {code}); check OPENROUTER_MODEL") from None
-        except (urllib.error.URLError, TimeoutError, OSError) as error:
-            reason = getattr(error, "reason", error)
-            raise ProviderError("network", f"network error or timeout: {self._redact(str(reason))}",
-                                retryable=True) from None
-        try:
-            data = json.loads(raw.decode("utf-8"))
-            content = data["choices"][0]["message"]["content"]
-        except (ValueError, KeyError, IndexError, TypeError, UnicodeDecodeError):
+            choice = data["choices"][0]
+            content = choice["message"]["content"]
+        except (KeyError, IndexError, TypeError):
             raise ProviderError("invalid_response", "provider returned an unexpected response shape") from None
+        for name, value in (("model", data.get("model")), ("finish_reason", choice.get("finish_reason"))):
+            if isinstance(value, str):
+                request.response_metadata[name] = value
         if not isinstance(content, str) or not content.strip():
             raise ProviderError("invalid_response", "provider returned empty content")
         return content
 
-    def generate(self, request: GenerationRequest, budget: Optional[AttemptBudget] = None) -> str:
-        """One logical request: one HTTP attempt plus at most one transport retry, within the budget."""
-        budget = budget or AttemptBudget()
-        body = {"model": self.model, "messages": build_messages(request),
-                "max_tokens": self.max_tokens, "temperature": 0.2}
-        budget.take()
+
+# ---------------------------------------------------------------- Gemini Developer API (optional)
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None  # Keep the API key at Google's endpoint and count every HTTP attempt.
+
+
+GEMINI_MODEL_ID = re.compile(r"gemini-[a-zA-Z0-9][a-zA-Z0-9._-]*")
+GEMINI_BLOCKED = {"SAFETY", "BLOCKLIST", "PROHIBITED_CONTENT", "SPII", "RECITATION",
+                  "LANGUAGE", "ESCALATION", "PUP_LIMITED_DISABLED"}
+
+
+class GeminiProvider(_HTTPProvider):
+    """Native Gemini generateContent client with fixed model and structured output."""
+    name = "gemini"
+
+    def __init__(self, api_key: str, model: str, timeout: float = 45.0,
+                 opener: Optional[Opener] = None, sleep: Callable[[float], None] = time.sleep,
+                 retry_delay: float = 1.0):
+        if not GEMINI_MODEL_ID.fullmatch(model):
+            raise ValueError("GEMINI_MODEL must be a Gemini model ID")
+        super().__init__(api_key, model, timeout, GEMINI_MAX_TOKENS,
+                         opener if opener is not None else _https_opener(_NoRedirect()), sleep, retry_delay)
+
+    def __repr__(self) -> str:
+        return f"GeminiProvider(model={self.model!r})"
+
+    @classmethod
+    def from_env(cls, env: Optional[Mapping[str, str]] = None, **kwargs) -> Tuple[Optional["GeminiProvider"], str]:
+        env = os.environ if env is None else env
+        key = env.get("GEMINI_API_KEY", "").strip()
+        model = env.get("GEMINI_MODEL", "").strip().removeprefix("models/")
+        missing = [name for name, value in (("GEMINI_API_KEY", key), ("GEMINI_MODEL", model)) if not value]
+        if missing:
+            return None, f"{' and '.join(missing)} not set"
+        if not GEMINI_MODEL_ID.fullmatch(model):
+            return None, "GEMINI_MODEL must be a Gemini model ID"
+        return cls(key, model, **kwargs), ""
+
+    @property
+    def thinking_config(self) -> Optional[Dict[str, Any]]:
+        generation, _, variant = self.model.removeprefix("gemini-").partition("-")
+        if generation == "2.5" and variant.startswith("flash"):
+            return {"thinkingBudget": 0}
+        if generation in ("3.1", "3.5") and variant.startswith("flash-lite"):
+            return {"thinkingLevel": "MINIMAL"}
+        if generation == "3.6" and variant.startswith("flash"):
+            return {"thinkingLevel": "MINIMAL"}
+        return None
+
+    def _http_error(self, error) -> ProviderError:
+        # Google can return a structured 400 for invalid keys and nest a 404 inside a gateway error.
+        # Use codes and typed details for classification. Never return the service's raw message.
         try:
-            return self._post_once(body)
-        except ProviderError as error:
-            if not error.retryable or budget.remaining <= 0:
-                raise
-        self._sleep(self.retry_delay)
-        budget.take()
-        return self._post_once(body)
+            data = json.loads(error.read(16_384)) if error.fp is not None else {}
+            info = data["error"]
+        except (KeyError, TypeError, ValueError, RecursionError, OSError, HTTPException):
+            info = {}
+        info = info if isinstance(info, dict) else {}
+        details = info.get("details")
+        details = [item for item in details if isinstance(item, dict)] if isinstance(details, list) else []
+        reasons = {item["reason"] for item in details if isinstance(item.get("reason"), str)}
+        violations = [v for item in details if isinstance(item.get("violations"), list)
+                      for v in item["violations"] if isinstance(v, dict)]
+        status, code = info.get("status"), error.code
+        if code == 401 or status == "UNAUTHENTICATED" or any(r.startswith("API_KEY_") for r in reasons):
+            return ProviderError("auth", "Gemini authentication failed. Check GEMINI_API_KEY.")
+        if code == 404 or status == "NOT_FOUND" or "MODEL_NOT_FOUND" in reasons:
+            return ProviderError("model_unavailable", "Gemini model unavailable. Check GEMINI_MODEL and project access.")
+        hard_quota = any(str(v.get("quotaValue")) == "0" or "perday" in str(v.get("quotaId", "")).lower()
+                         for v in violations)
+        if code == 402 or hard_quota or reasons.intersection(
+                {"BILLING_DISABLED", "INSUFFICIENT_QUOTA", "DAILY_LIMIT_EXCEEDED"}):
+            return ProviderError("quota", "Gemini quota or credits exhausted. Check project limits and billing.")
+        if code == 429 or status == "RESOURCE_EXHAUSTED":
+            return ProviderError("rate_limit", "Gemini rate or quota limit reached.", retryable=True)
+        if code == 403:
+            return ProviderError("auth", "Gemini access denied. Check the key and project permissions.")
+        if code == 408 or code >= 500:
+            return ProviderError("server", f"Gemini temporarily unavailable (HTTP {code}).", retryable=True)
+        return ProviderError("http", f"Gemini rejected the request (HTTP {code}). Check GEMINI_MODEL and API access.")
+
+    def _generate_once(self, request: GenerationRequest) -> str:
+        system, *turns = build_messages(request)
+        config = {"responseMimeType": "application/json", "responseJsonSchema": EXPLANATION_JSON_SCHEMA,
+                  "maxOutputTokens": self.max_tokens}
+        thinking = self.thinking_config
+        if thinking:
+            config["thinkingConfig"] = thinking
+        body = {
+            "systemInstruction": {"parts": [{"text": system["content"]}]},
+            "contents": [{"role": "model" if turn["role"] == "assistant" else "user",
+                          "parts": [{"text": turn["content"]}]} for turn in turns],
+            "generationConfig": config,
+        }
+        data = self._post_json(f"{GEMINI_MODELS_URL}/{self.model}:generateContent", body,
+                               {"x-goog-api-key": self._api_key})
+        model = data.get("modelVersion")
+        if isinstance(model, str):
+            request.response_metadata["model"] = model
+            served = model.removeprefix("models/")
+            revision = served.removeprefix(f"{self.model}-")
+            if served != self.model and not (revision != served and re.fullmatch(r"\d+(?:-\d+)*", revision)):
+                raise ProviderError("model_mismatch", "Gemini served a different model from GEMINI_MODEL.")
+        feedback = data.get("promptFeedback")
+        block = feedback.get("blockReason") if isinstance(feedback, dict) else None
+        if isinstance(block, str) and block not in ("", "BLOCK_REASON_UNSPECIFIED"):
+            request.response_metadata["block_reason"] = block
+            raise ProviderError("blocked", "Gemini blocked the prompt.")
+        try:
+            candidate = data["candidates"][0]
+            finish = candidate.get("finishReason")
+            content = candidate.get("content", {})
+            parts = content.get("parts", []) if isinstance(content, dict) else []
+        except (AttributeError, KeyError, IndexError, TypeError):
+            raise ProviderError("invalid_response", "Gemini returned no usable candidate.") from None
+        if isinstance(finish, str):
+            request.response_metadata["finish_reason"] = finish
+            if finish in GEMINI_BLOCKED:
+                raise ProviderError("blocked", "Gemini blocked the generated response.")
+        if not isinstance(parts, list):
+            raise ProviderError("invalid_response", "Gemini returned invalid content parts.")
+        text = "".join(part["text"] for part in parts if isinstance(part, dict)
+                       and not part.get("thought") and isinstance(part.get("text"), str)).strip()
+        if finish == "MAX_TOKENS":
+            raise ProviderError("truncated", "Gemini reached the output-token limit.", partial_output=text or None)
+        if not text or finish not in (None, "STOP"):
+            raise ProviderError("invalid_response", "Gemini returned no complete answer.")
+        return text
 
 
 # ---------------------------------------------------------------- mock (tests and labeled simulations)
@@ -341,13 +601,17 @@ class MockProvider:
         return response(request) if callable(response) else response
 
 
+LIVE_PROVIDERS = {"openrouter": OpenRouterProvider, "gemini": GeminiProvider}
+
+
 def make_provider(name: str, env: Optional[Mapping[str, str]] = None):
     """Return (provider, status note). An unconfigured live provider falls back to the template."""
     if name == "template":
         return TemplateProvider(), ""
-    if name == "openrouter":
-        provider, reason = OpenRouterProvider.from_env(env)
-        if provider is None:
-            return TemplateProvider(), f"OpenRouter not configured ({reason}); used the template provider"
-        return provider, ""
-    raise ValueError(f"unknown provider {name!r}; choose template or openrouter")
+    if name not in LIVE_PROVIDERS:
+        raise ValueError(f"unknown provider {name!r}; choose template, {', '.join(LIVE_PROVIDERS)}")
+    provider, reason = LIVE_PROVIDERS[name].from_env(env)
+    if provider is None:
+        label = "Gemini" if name == "gemini" else "OpenRouter"
+        return TemplateProvider(), f"{label} not configured ({reason}); used the template provider"
+    return provider, ""
