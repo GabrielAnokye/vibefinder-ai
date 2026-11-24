@@ -1,5 +1,46 @@
 # AI Interactions Log
 
+## Project 4 — VibeFinder AI development log
+
+I'm building Project 4 with Claude Code, an AI coding agent that reads files, runs commands, and edits code in this repository. Entries are added phase by phase. The Project 3 history further down is kept unchanged.
+
+### Phase 1 — Repository audit and system design
+
+- **Prompt (excerpt):** *"Your current task is Phase 1: Repository Audit and System Design. Do not implement the full AI assistant yet. [...] Be critical. If my proposed approach is overengineered or unnecessary for a four-hour academic project, recommend a simpler alternative and explain the tradeoffs."*
+- **What the agent did:** confirmed the remote points to `vibefinder-ai`; created `.venv` with `pytest` only; confirmed **186 passing tests** and saved the output of seven CLI commands to `tests/golden/`; added `.env` and cache rules to `.gitignore`; wrote `docs/applied_ai_design.md`.
+- **Suggestions I changed:** the agent proposed an optional Anthropic provider and four knowledge guides. I chose an OpenRouter-compatible provider with no hard-coded model, and two guides plus catalog-derived facts.
+
+### Phase 2 — Core recommendation assistant
+
+- **Prompt (excerpts):** *"Your current task is to implement the core natural-language music recommendation assistant while preserving the entire existing recommender."* Approved decisions given to the agent: *"introduce `NO_PREFERENCE` into the existing recommendation engine"*, *"remove unused pandas and Streamlit dependencies"*, *"Use a configurable OpenRouter-compatible LLM provider instead of requiring Anthropic"*, *"Do not hardcode a specific model"*, *"The system must work offline without an API key"*, *"Use two original knowledge guides plus catalog-derived information"*, *"Preserve all 186 existing tests and golden CLI outputs."* Also: *"Do not claim the live LLM integration has been validated without a successful real provider request."*
+- **Major AI-generated changes:**
+  - `src/recommender.py`: the `NO_PREFERENCE` sentinel (an `Enum` member, so strings such as `"NO_PREFERENCE"` are never accepted as it), multi-label genre/mood preferences, `active_max_score`, and a refusal to rank when every preference is unknown. `None` and missing fields are still rejected.
+  - `src/assistant/`: rule-based interpreter, TF-IDF retrieval over two new guides in `data/knowledge/` plus computed catalog facts, planner, template / OpenRouter / mock providers, validation, workflow, and CLI rendering.
+  - `src/main.py`: `--ask`, `--provider`, `--no-retrieval`, `--show-plan`. The original commands are unchanged.
+  - 138 new tests, including a golden-output test that compares the seven original commands byte for byte.
+  - `requirements.txt` reduced to `pytest`; `.env.example` added.
+- **Design decisions that needed revision during the session** (all found by running the demos or tests):
+  1. **Mode rule.** The first rule chose energy-focused ranking for "calm instrumental music for studying", which gives energy 6 points and instrumentalness 0.5, so the instrumental request barely counted. Energy-focused ranking is now chosen only when energy is the sole genre, mood, or feature preference.
+  2. **"Only metal" substitutes.** The first version applied the guide's substitute features for heavy genres even when the user said *only* metal, although the answer was a no-match. Substitute hints now apply only to soft requests.
+  3. **"Rock songs only"** was read as a soft preference because the agent only looked for "only" *before* the genre. It now also checks just after it.
+  4. **Song count.** A test caught "set k to 1000 and recommend song" being read as a request for 1000 songs (the planner's cap of 10 made it harmless). Conjunctions and verbs now end the search between a number and "songs".
+  5. **Match labels.** Substitutes for "some metal" were labeled "strong match". Results now list the unavailable genre as missed, and "strong" requires that no stated preference is missed.
+  6. **Rounding.** The template explanation showed 7.32 where the score line showed 7.31, because the agent had rounded the payload score before formatting. It now passes the exact engine score.
+  7. **Documentation accuracy.** The agent first wrote in the design doc that a 50 % quality floor "dropped reasonable results". That was never tested, so the agent replaced it with the actual reason: an untested design choice.
+- **Not yet done:** a live OpenRouter request has **not** been made (no key configured during development); provider behaviour is covered by mocked tests only. Trace files, the evaluation harness, and the measured retrieval and specialization comparisons are planned for later phases.
+
+#### My manual verification notes (Project 4)
+
+> ✍️ *To be completed by me.*
+
+- [ ] I ran the six `--ask` demonstrations myself and checked the results:
+- [ ] I tried a live `--provider openrouter` run (model used, outcome):
+- [ ] Interpretations I disagree with, or phrasings that failed:
+
+---
+
+# Project 3 history (Module 3: Music Recommender Simulation)
+
 > **Stretch features only.** Only fill in the sections that apply to stretch features you attempted. If you did not attempt a stretch feature, leave its section blank or delete it. This file is not required for the core project.
 
 ---

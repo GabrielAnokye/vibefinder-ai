@@ -1,5 +1,75 @@
 # 🎵 Music Recommender Simulation
 
+## VibeFinder AI — Applied AI Assistant (Project 4, in progress)
+
+**Original project.** This repository extends **VibeFinder 1.0 (Music Recommender Simulation)**, my Module 3 project: a deterministic, content-based recommender that scores an 18-song synthetic catalog against a structured listener profile (genre, mood, target energy, acoustic preference, plus five optional advanced features), with three ranking modes, diversity reranking, explainable scores, and table output. Everything from that project still works exactly as before and is documented in the sections below.
+
+**What the assistant adds.** Listeners can describe a situation in plain language instead of filling in a profile. The assistant:
+
+1. **Interprets** the request with a deterministic, rule-based interpreter. Each preference is marked *explicit* (you said it), *inferred* (taken from a knowledge guide, with its source id), or *unknown*. Unknown preferences are sent to the engine as `NO_PREFERENCE`, which gives every song 0 points for that feature, so nothing is invented.
+2. **Retrieves** relevant passages from two original knowledge guides in `data/knowledge/` and from facts computed from `songs.csv`, using a small standard-library TF-IDF index.
+3. **Plans** a call to the existing engine. It chooses the ranking mode, advanced scoring, diversity, hard genre filters, exclusions, unique artists, and the result count. Retrieved hints only fill preferences you didn't state.
+4. **Recommends** with the original `recommend_songs` / `recommend_diverse_songs`. No second scoring formula exists.
+5. **Explains and validates.** It checks that every song is in the catalog with the engine's exact score, discloses which stated preferences a song misses, returns fewer songs or a no-match instead of padding, and asks for clarification when nothing usable was said.
+
+**Run it** (offline, no API key needed):
+
+```bash
+python -m src.main --ask "I'm studying for finals. Recommend calm instrumental music with some variety."
+python -m src.main --ask "I need energetic music for a workout, preferably rock or hip-hop."
+python -m src.main --ask "Only recommend metal songs."
+python -m src.main --ask "..." --show-plan       # structured plan, hints, retrieval scores, steps
+python -m src.main --ask "..." --no-retrieval    # same request without the knowledge guides
+python -m src.main --ask "..." --table           # existing --table, --diverse and --mode also work with --ask
+```
+
+**Template vs. LLM explanations.** By default the explanation prose comes from a **deterministic template** built only from engine results and retrieved source ids. It is labeled `template (deterministic, not an LLM)` and is not model-generated. An optional **OpenRouter-compatible LLM provider** (`--provider openrouter`) receives the same grounded payload and must return structured JSON. Its output is used only if it cites only songs in the results and only retrieved source ids; otherwise the template is used and the output says why. Song titles, artists, scores, and order always come from the engine, never from the model. Configure it with `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` (see `.env.example`). **The live provider has not yet been validated against a real API; its tests use a mock transport.**
+
+**Sample interaction** (actual offline output; the explanation lines are shortened with `...`):
+
+```text
+$ python -m src.main --ask "Recommend three nostalgic acoustic songs for a quiet evening."
+VibeFinder AI assistant
+Request: "Recommend three nostalgic acoustic songs for a quiet evening."
+
+Interpreted request:
+  Listening context: nostalgia ("nostalgic"), relaxing ("quiet evening")
+  Mood: chill or relaxed (inferred from listening_contexts#relaxing)
+  Energy: 0.35 (inferred from listening_contexts#relaxing)
+  Acoustic sound: yes (you said "acoustic")
+  Mood tags: nostalgic (you said "nostalgic")
+  Songs requested: 3 (you said "three nostalgic acoustic songs")
+  Not specified (no points either way): genre, popularity, release decade, instrumentalness, vocal intensity
+Retrieved sources: listening_contexts#relaxing (0.37), listening_contexts#nostalgia (0.21), catalog#mood-relaxed (0.13), catalog#song-7 (0.12), music_features#acousticness (0.11), catalog#energy-vs-acousticness (0.10)
+Strategy: baseline ranking (default genre-first ranking); advanced features on; diversity reranking off
+
+Recommendations (3 of 3 requested). Scores are out of 8 points available from your preferences (14 if every preference were set):
+
+1. Coffee Shop Stories by Slow Stereo  [jazz, relaxed]
+   Relevance: 7.83 / 8 (98%, strong match)
+   Scoring (engine): Mood match: relaxed (+3.00); Energy 0.37 vs target 0.35 (+2.94); Acousticness 0.89, you like acoustic (+0.89); Mood tags 1/1 matched: nostalgic (+1.00)
+
+2. Midnight Coding by LoRoom  [lofi, chill]
+   Relevance: 7.50 / 8 (94%, strong match)
+   Scoring (engine): Mood match: chill (+3.00); Energy 0.42 vs target 0.35 (+2.79); Acousticness 0.71, you like acoustic (+0.71); Mood tags 1/1 matched: nostalgic (+1.00)
+
+3. Library Rain by Paper Lanterns  [lofi, chill]
+   Relevance: 6.86 / 8 (86%, partial match; misses: mood tags)
+   Scoring (engine): Mood match: chill (+3.00); Energy 0.35 vs target 0.35 (+3.00); Acousticness 0.86, you like acoustic (+0.86); Mood tags 0/1 matched (+0.00)
+
+Explanation: Interpreted as a nostalgia and relaxing request and ranked 18 catalog songs with baseline ranking plus advanced features.
+  1. Coffee Shop Stories by Slow Stereo (jazz, relaxed) scored 7.83 of the 8.00 points available from your preferences. ... [listening_contexts#relaxing]
+  ...
+Explanation generated by: template (deterministic, not an LLM)
+Generation status: validated
+```
+
+Scores are reported against the points available from the preferences you gave (8 here), not only the theoretical maximum (14), so a partial request isn't made to look like a poor match. The "strong / partial / weak" label is a heuristic, not a probability.
+
+The design and decisions are in [docs/applied_ai_design.md](docs/applied_ai_design.md). The full README, model card, architecture diagram, and evaluation will be completed in later phases.
+
+---
+
 ## Project Summary
 
 **VibeFinder 1.0** is a small, content-based music recommender written in Python. You give it a listener profile (favorite genre, favorite mood, target energy, and whether they like acoustic music), and it scores every song in an 18-song fictional catalog, ranks them, and prints the top five with an explanation of where each point came from.
@@ -210,7 +280,7 @@ More detail on the Phase 1 research is in [docs/phase1_notes.md](docs/phase1_not
 pip install -r requirements.txt
 ```
 
-The recommender itself only uses the Python standard library (tested with Python 3.12), and `pytest` is the only package the tests need. `requirements.txt` also lists `pandas` and `streamlit` from the starter template. This version doesn't use them, so `pip install pytest` is enough if you'd rather skip them.
+The recommender and the assistant only use the Python standard library (Module 3 was tested with Python 3.12; Project 4 has been tested with Python 3.14), and `pytest` is the only package the tests need. The unused `pandas` and `streamlit` entries from the starter template were removed from `requirements.txt` in Project 4. The optional OpenRouter provider also uses only the standard library (`urllib`).
 
 3. Run the app from the project root:
 

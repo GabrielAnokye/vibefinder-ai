@@ -9,6 +9,12 @@ Run from the project root with:
     python -m src.main --diverse                     # diversity-aware reranking
     python -m src.main --table                       # ASCII table output
     python -m src.main --advanced                    # add the five advanced song features
+
+VibeFinder AI assistant (natural-language requests):
+    python -m src.main --ask "Recommend calm music for studying"
+    python -m src.main --ask "..." --show-plan       # show the structured plan and steps
+    python -m src.main --ask "..." --no-retrieval    # disable the knowledge guides
+    python -m src.main --ask "..." --provider openrouter   # optional LLM explanations
 """
 
 import argparse
@@ -155,8 +161,8 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     parser.add_argument(
         "--mode",
         choices=list(STRATEGIES),
-        default=DEFAULT_MODE,
-        help=f"ranking mode (default: {DEFAULT_MODE})",
+        default=None,  # resolved to DEFAULT_MODE later, so --ask can tell whether it was given
+        help=f"ranking mode (default: {DEFAULT_MODE}; with --ask, overrides the assistant's choice)",
     )
     parser.add_argument(
         "--diverse",
@@ -173,7 +179,41 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         action="store_true",
         help="also score popularity, release decade, instrumentalness, vocal intensity, and mood tags",
     )
-    return parser.parse_args(argv)
+    assistant = parser.add_argument_group("VibeFinder AI assistant")
+    assistant.add_argument("--ask", metavar="REQUEST", help="describe what you want to hear in plain language")
+    assistant.add_argument(
+        "--provider", choices=["template", "openrouter"], default=None,
+        help="who writes the explanation prose (default: template, offline)",
+    )
+    assistant.add_argument("--no-retrieval", action="store_true", help="do not use the knowledge guides")
+    assistant.add_argument("--show-plan", action="store_true", help="show the structured plan and steps")
+    args = parser.parse_args(argv)
+    if args.ask is None:
+        used = [flag for flag, value in (("--provider", args.provider), ("--no-retrieval", args.no_retrieval),
+                                         ("--show-plan", args.show_plan)) if value]
+        if used:
+            parser.error(f"{', '.join(used)} can only be used with --ask")
+        args.mode = args.mode or DEFAULT_MODE
+    else:
+        if args.all_profiles:
+            parser.error("--all-profiles cannot be combined with --ask")
+        if args.advanced:
+            parser.error("--advanced cannot be combined with --ask; the assistant enables advanced "
+                         "scoring when your request mentions an advanced feature (use --show-plan to see it)")
+    return args
+
+
+def run_assistant_cli(args: argparse.Namespace) -> int:
+    """--ask: run the natural-language assistant. --mode and --diverse override its choices."""
+    from src.assistant import Assistant, make_provider, render
+
+    provider, note = make_provider(args.provider or "template")
+    response = Assistant().ask(
+        args.ask, provider=provider, retrieval=not args.no_retrieval,
+        mode=args.mode, diverse=args.diverse, provider_note=note,
+    )
+    print(render(response, show_plan=args.show_plan, table=args.table))
+    return 1 if response.status == "error" else 0
 
 
 def describe_mode(mode: str) -> str:
@@ -200,6 +240,11 @@ def describe_advanced(mode: str) -> str:
 def main(argv: Optional[List[str]] = None) -> None:
     """Load the catalog and print the top 5 for the default profile, or for every profile."""
     args = parse_args(argv)
+    if args.ask is not None:
+        status = run_assistant_cli(args)
+        if status:
+            raise SystemExit(status)
+        return
     songs = load_songs(str(DATA_PATH))
     print(f"Loaded songs: {len(songs)}")
     # The default (baseline) output is kept exactly as it was before ranking modes existed.

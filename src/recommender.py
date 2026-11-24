@@ -1,7 +1,34 @@
 import csv
 import math
 from dataclasses import asdict, dataclass
-from typing import Callable, Dict, List, Optional, Tuple
+from enum import Enum
+from typing import Callable, Dict, List, Optional, Sequence, Tuple, Union
+
+
+# ---------------------------------------------------------------- unknown preferences
+
+class Preference(Enum):
+    """
+    Marker values for user preferences.
+
+    NO_PREFERENCE means "the listener did not say". It is an Enum member, so only this exact
+    object counts: strings such as "NO_PREFERENCE", "any" or "none" are never treated as the
+    sentinel and keep being validated as ordinary values. None and missing fields are still
+    rejected exactly as before.
+    """
+    NO_PREFERENCE = "no preference"
+
+    def __repr__(self) -> str:
+        return "NO_PREFERENCE"
+
+
+NO_PREFERENCE = Preference.NO_PREFERENCE
+
+
+def is_no_preference(value: object) -> bool:
+    """True only for the NO_PREFERENCE sentinel itself."""
+    return value is NO_PREFERENCE
+
 
 # Scoring weights (finalized in Phase 2). Maximum possible score is 11.0.
 GENRE_WEIGHT = 4.0
@@ -125,22 +152,29 @@ class Song:
     vocal_intensity: Optional[float] = None
     mood_tags: Optional[Tuple[str, ...]] = None
 
+LabelPreference = Union[str, Sequence[str], Preference]
+
+
 @dataclass
 class UserProfile:
     """
     Represents a user's taste preferences.
     Required by tests/test_recommender.py
+
+    Any field may be NO_PREFERENCE (contributes 0 points to every song). favorite_genre and
+    favorite_mood may also be a list of labels; a song matching any of them earns the usual
+    single match contribution once.
     """
-    favorite_genre: str
-    favorite_mood: str
-    target_energy: float
-    likes_acoustic: bool
+    favorite_genre: LabelPreference
+    favorite_mood: LabelPreference
+    target_energy: Union[float, Preference]
+    likes_acoustic: Union[bool, Preference]
     # Optional advanced preferences; only read when advanced scoring is requested.
-    target_popularity: Optional[float] = None
-    preferred_decade: Optional[int] = None
-    target_instrumentalness: Optional[float] = None
-    target_vocal_intensity: Optional[float] = None
-    preferred_tags: Optional[Tuple[str, ...]] = None
+    target_popularity: Optional[Union[float, Preference]] = None
+    preferred_decade: Optional[Union[int, Preference]] = None
+    target_instrumentalness: Optional[Union[float, Preference]] = None
+    target_vocal_intensity: Optional[Union[float, Preference]] = None
+    preferred_tags: Optional[Union[Tuple[str, ...], Preference]] = None
 
 class Recommender:
     """
@@ -299,6 +333,22 @@ def _is_number(value: object) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
 
 
+def _check_label_preference(key: str, value: object) -> None:
+    """A label preference is NO_PREFERENCE, a non-empty string, or a non-empty list of them."""
+    if value is NO_PREFERENCE:
+        return
+    if isinstance(value, str):
+        if not value.strip():
+            raise ValueError(f"{key} must be a non-empty string, got {value!r}")
+        return
+    if (isinstance(value, (list, tuple)) and value
+            and all(isinstance(label, str) and label.strip() for label in value)):
+        return
+    raise ValueError(
+        f"{key} must be a non-empty string, a non-empty list of strings, or NO_PREFERENCE, got {value!r}"
+    )
+
+
 def _validate_user_prefs(user_prefs: Dict) -> None:
     """Raise ValueError unless the profile has all four valid preference fields."""
     if not isinstance(user_prefs, dict):
@@ -307,13 +357,13 @@ def _validate_user_prefs(user_prefs: Dict) -> None:
     if missing:
         raise ValueError(f"user_prefs is missing required field(s): {', '.join(missing)}")
     for key in ["favorite_genre", "favorite_mood"]:
-        if not isinstance(user_prefs[key], str) or not user_prefs[key].strip():
-            raise ValueError(f"{key} must be a non-empty string, got {user_prefs[key]!r}")
+        _check_label_preference(key, user_prefs[key])
     target = user_prefs["target_energy"]
-    if not _is_number(target) or not 0.0 <= target <= 1.0:
+    if target is not NO_PREFERENCE and (not _is_number(target) or not 0.0 <= target <= 1.0):
         raise ValueError(f"target_energy must be a number between 0 and 1, got {target!r}")
-    if not isinstance(user_prefs["likes_acoustic"], bool):
-        raise ValueError(f"likes_acoustic must be True or False, got {user_prefs['likes_acoustic']!r}")
+    likes_acoustic = user_prefs["likes_acoustic"]
+    if likes_acoustic is not NO_PREFERENCE and not isinstance(likes_acoustic, bool):
+        raise ValueError(f"likes_acoustic must be True or False, got {likes_acoustic!r}")
 
 
 def _validate_song(song: Dict) -> None:
@@ -334,23 +384,29 @@ def _check_advanced_flag(advanced: bool) -> None:
         raise TypeError(f"advanced must be True or False, got {advanced!r}")
 
 
-def _validate_advanced_prefs(user_prefs: Dict) -> Tuple[str, ...]:
-    """Check the five advanced preferences; return the unique, normalized preferred tags."""
+def _validate_advanced_prefs(user_prefs: Dict) -> Union[Tuple[str, ...], Preference]:
+    """
+    Check the five advanced preferences; return the unique, normalized preferred tags
+    (or NO_PREFERENCE). None still counts as missing; only the sentinel means "no preference".
+    """
     missing = [key for key in ADVANCED_PREFERENCE_FIELDS if user_prefs.get(key) is None]
     if missing:
         raise ValueError(f"advanced scoring needs these preferences, missing: {', '.join(missing)}")
     popularity = user_prefs["target_popularity"]
-    if not _is_number(popularity) or not 0 <= popularity <= 100:
+    if popularity is not NO_PREFERENCE and (not _is_number(popularity) or not 0 <= popularity <= 100):
         raise ValueError(f"target_popularity must be a number between 0 and 100, got {popularity!r}")
     decade = user_prefs["preferred_decade"]
-    if not isinstance(decade, int) or isinstance(decade, bool):
-        raise ValueError(f"preferred_decade must be a whole number, got {decade!r}")
-    _check_decade(decade, "preferred_decade")
+    if decade is not NO_PREFERENCE:
+        if not isinstance(decade, int) or isinstance(decade, bool):
+            raise ValueError(f"preferred_decade must be a whole number, got {decade!r}")
+        _check_decade(decade, "preferred_decade")
     for key in ["target_instrumentalness", "target_vocal_intensity"]:
         value = user_prefs[key]
-        if not _is_number(value) or not 0.0 <= value <= 1.0:
+        if value is not NO_PREFERENCE and (not _is_number(value) or not 0.0 <= value <= 1.0):
             raise ValueError(f"{key} must be a number between 0 and 1, got {value!r}")
     tags = user_prefs["preferred_tags"]
+    if tags is NO_PREFERENCE:
+        return NO_PREFERENCE
     if not isinstance(tags, (list, tuple, set, frozenset)) or not tags:
         raise ValueError(f"preferred_tags must be a non-empty list of mood tags, got {tags!r}")
     if isinstance(tags, (set, frozenset)):
@@ -382,16 +438,30 @@ def _validate_advanced_song(song: Dict) -> None:
     _normalize_tags(list(song["mood_tags"]), "song mood_tags")
 
 
-def _advanced_points(user_prefs: Dict, song: Dict, preferred_tags: Tuple[str, ...]) -> Tuple[float, List[str]]:
+def _no_preference_reason(feature: str) -> str:
+    """Reason for a feature the listener left unspecified: no match or mismatch is claimed."""
+    return f"No {feature} preference given (+0.00)"
+
+
+def _advanced_points(
+    user_prefs: Dict, song: Dict, preferred_tags: Union[Tuple[str, ...], Preference]
+) -> Tuple[float, List[str]]:
     """The five advanced contributions (max ADVANCED_MAX_SCORE) and their reasons."""
     reasons: List[str] = []
 
     target = user_prefs["target_popularity"]
-    popularity_points = POPULARITY_WEIGHT * (1.0 - abs(song["popularity"] - target) / 100.0)
-    reasons.append(f"Popularity {song['popularity']} vs target {target:g} (+{popularity_points:.2f})")
+    if target is NO_PREFERENCE:
+        popularity_points = 0.0
+        reasons.append(_no_preference_reason("popularity"))
+    else:
+        popularity_points = POPULARITY_WEIGHT * (1.0 - abs(song["popularity"] - target) / 100.0)
+        reasons.append(f"Popularity {song['popularity']} vs target {target:g} (+{popularity_points:.2f})")
 
     wanted_decade = user_prefs["preferred_decade"]
-    if song["release_decade"] == wanted_decade:
+    if wanted_decade is NO_PREFERENCE:
+        decade_points = 0.0
+        reasons.append(_no_preference_reason("decade"))
+    elif song["release_decade"] == wanted_decade:
         decade_points = DECADE_WEIGHT
         reasons.append(f"Decade match: {song['release_decade']}s (+{decade_points:.2f})")
     else:
@@ -399,20 +469,34 @@ def _advanced_points(user_prefs: Dict, song: Dict, preferred_tags: Tuple[str, ..
         reasons.append(f"Decade {song['release_decade']}s is not {wanted_decade}s (+{decade_points:.2f})")
 
     target = user_prefs["target_instrumentalness"]
-    instrumental_points = INSTRUMENTALNESS_WEIGHT * (1.0 - abs(song["instrumentalness"] - target))
-    reasons.append(
-        f"Instrumentalness {song['instrumentalness']:.2f} vs target {target:.2f} (+{instrumental_points:.2f})"
-    )
+    if target is NO_PREFERENCE:
+        instrumental_points = 0.0
+        reasons.append(_no_preference_reason("instrumentalness"))
+    else:
+        instrumental_points = INSTRUMENTALNESS_WEIGHT * (1.0 - abs(song["instrumentalness"] - target))
+        reasons.append(
+            f"Instrumentalness {song['instrumentalness']:.2f} vs target {target:.2f} (+{instrumental_points:.2f})"
+        )
 
     target = user_prefs["target_vocal_intensity"]
-    vocal_points = VOCAL_INTENSITY_WEIGHT * (1.0 - abs(song["vocal_intensity"] - target))
-    reasons.append(f"Vocal intensity {song['vocal_intensity']:.2f} vs target {target:.2f} (+{vocal_points:.2f})")
+    if target is NO_PREFERENCE:
+        vocal_points = 0.0
+        reasons.append(_no_preference_reason("vocal intensity"))
+    else:
+        vocal_points = VOCAL_INTENSITY_WEIGHT * (1.0 - abs(song["vocal_intensity"] - target))
+        reasons.append(
+            f"Vocal intensity {song['vocal_intensity']:.2f} vs target {target:.2f} (+{vocal_points:.2f})"
+        )
 
-    song_tags = {normalize_label(tag) for tag in song["mood_tags"]}
-    matched = [tag for tag in preferred_tags if tag in song_tags]
-    tag_points = MOOD_TAG_WEIGHT * len(matched) / len(preferred_tags)
-    listed = f": {', '.join(matched)}" if matched else ""
-    reasons.append(f"Mood tags {len(matched)}/{len(preferred_tags)} matched{listed} (+{tag_points:.2f})")
+    if preferred_tags is NO_PREFERENCE:
+        tag_points = 0.0
+        reasons.append(_no_preference_reason("mood-tag"))
+    else:
+        song_tags = {normalize_label(tag) for tag in song["mood_tags"]}
+        matched = [tag for tag in preferred_tags if tag in song_tags]
+        tag_points = MOOD_TAG_WEIGHT * len(matched) / len(preferred_tags)
+        listed = f": {', '.join(matched)}" if matched else ""
+        reasons.append(f"Mood tags {len(matched)}/{len(preferred_tags)} matched{listed} (+{tag_points:.2f})")
 
     total = popularity_points + decade_points + instrumental_points + vocal_points + tag_points
     return total, reasons
@@ -424,6 +508,68 @@ def max_possible_score(mode: str = DEFAULT_MODE, advanced: bool = False) -> floa
     return get_strategy(mode).weights().max_score + (ADVANCED_MAX_SCORE if advanced else 0.0)
 
 
+def _component_weights(mode: str, advanced: bool) -> Dict[str, float]:
+    """Maximum contribution of each preference field (read at call time, like the scorer)."""
+    w = get_strategy(mode).weights()
+    weights = {
+        "favorite_genre": w.genre, "favorite_mood": w.mood,
+        "target_energy": w.energy, "likes_acoustic": w.acoustic,
+    }
+    if advanced:
+        weights.update({
+            "target_popularity": POPULARITY_WEIGHT, "preferred_decade": DECADE_WEIGHT,
+            "target_instrumentalness": INSTRUMENTALNESS_WEIGHT,
+            "target_vocal_intensity": VOCAL_INTENSITY_WEIGHT, "preferred_tags": MOOD_TAG_WEIGHT,
+        })
+    return weights
+
+
+def active_preference_fields(user_prefs: Dict, advanced: bool = False) -> List[str]:
+    """The preference fields that will be scored: every field except NO_PREFERENCE ones."""
+    fields = REQUIRED_PREFERENCES + (ADVANCED_PREFERENCE_FIELDS if advanced else [])
+    return [field for field in fields if user_prefs.get(field) is not NO_PREFERENCE]
+
+
+def active_max_score(user_prefs: Dict, mode: str = DEFAULT_MODE, advanced: bool = False) -> float:
+    """
+    Highest score available from the preferences actually given.
+
+    max_possible_score is the ceiling for a fully specified profile; NO_PREFERENCE fields add
+    nothing to any song, so a partial profile is judged against this smaller ceiling instead.
+    """
+    _validate_request(user_prefs, 0, mode, advanced)
+    weights = _component_weights(mode, advanced)
+    return sum(weights[field] for field in active_preference_fields(user_prefs, advanced))
+
+
+def _check_some_preference(user_prefs: Dict, advanced: bool) -> None:
+    """Refuse to rank when every scored preference is NO_PREFERENCE (order would be by id only)."""
+    if not active_preference_fields(user_prefs, advanced):
+        raise ValueError("every preference is NO_PREFERENCE; at least one preference is needed to rank songs")
+
+
+def _label_points(feature: str, song_label: str, wanted: object, weight: float) -> Tuple[float, str]:
+    """
+    Points and reason for a genre or mood preference.
+
+    A single string behaves exactly as before. A list of labels earns the same single match
+    contribution once if the song matches any of them (no double counting).
+    """
+    if wanted is NO_PREFERENCE:
+        return 0.0, _no_preference_reason(feature)
+    if isinstance(wanted, str):
+        labels = [" ".join(wanted.split())]
+    else:
+        unique = {}
+        for label in wanted:
+            unique.setdefault(normalize_label(label), " ".join(label.split()))
+        labels = list(unique.values())
+    name = feature.capitalize()
+    if normalize_label(song_label) in {normalize_label(label) for label in labels}:
+        return weight, f"{name} match: {song_label} (+{weight:.2f})"
+    return 0.0, f"{name} {song_label} is not {' or '.join(labels)} (+{0.0:.2f})"
+
+
 def score_song(
     user_prefs: Dict, song: Dict, mode: str = DEFAULT_MODE, advanced: bool = False
 ) -> Tuple[float, List[str]]:
@@ -431,6 +577,7 @@ def score_song(
     Score one song against a user profile with the given mode's weights; return (score, reasons).
 
     With advanced=True, the five advanced contributions are added on top of the same score.
+    A NO_PREFERENCE field contributes 0 points to every song and says so in its reason.
     """
     weights = get_strategy(mode).weights()
     _check_advanced_flag(advanced)
@@ -439,30 +586,28 @@ def score_song(
     if advanced:
         preferred_tags = _validate_advanced_prefs(user_prefs)
         _validate_advanced_song(song)
+    _check_some_preference(user_prefs, advanced)
     reasons: List[str] = []
 
-    wanted_genre = " ".join(user_prefs["favorite_genre"].split())
-    if normalize_label(song["genre"]) == normalize_label(wanted_genre):
-        genre_points = weights.genre
-        reasons.append(f"Genre match: {song['genre']} (+{genre_points:.2f})")
-    else:
-        genre_points = 0.0
-        reasons.append(f"Genre {song['genre']} is not {wanted_genre} (+{genre_points:.2f})")
+    genre_points, reason = _label_points("genre", song["genre"], user_prefs["favorite_genre"], weights.genre)
+    reasons.append(reason)
 
-    wanted_mood = " ".join(user_prefs["favorite_mood"].split())
-    if normalize_label(song["mood"]) == normalize_label(wanted_mood):
-        mood_points = weights.mood
-        reasons.append(f"Mood match: {song['mood']} (+{mood_points:.2f})")
-    else:
-        mood_points = 0.0
-        reasons.append(f"Mood {song['mood']} is not {wanted_mood} (+{mood_points:.2f})")
+    mood_points, reason = _label_points("mood", song["mood"], user_prefs["favorite_mood"], weights.mood)
+    reasons.append(reason)
 
     target = user_prefs["target_energy"]
-    energy_similarity = max(0.0, 1.0 - abs(song["energy"] - target))
-    energy_points = weights.energy * energy_similarity
-    reasons.append(f"Energy {song['energy']:.2f} vs target {target:.2f} (+{energy_points:.2f})")
+    if target is NO_PREFERENCE:
+        energy_points = 0.0
+        reasons.append(_no_preference_reason("energy"))
+    else:
+        energy_similarity = max(0.0, 1.0 - abs(song["energy"] - target))
+        energy_points = weights.energy * energy_similarity
+        reasons.append(f"Energy {song['energy']:.2f} vs target {target:.2f} (+{energy_points:.2f})")
 
-    if user_prefs["likes_acoustic"]:
+    if user_prefs["likes_acoustic"] is NO_PREFERENCE:
+        acoustic_points = 0.0
+        reasons.append(_no_preference_reason("acoustic"))
+    elif user_prefs["likes_acoustic"]:
         acoustic_points = weights.acoustic * song["acousticness"]
         reasons.append(
             f"Acousticness {song['acousticness']:.2f}, you like acoustic (+{acoustic_points:.2f})"
@@ -516,6 +661,7 @@ def _validate_request(user_prefs: Dict, k: int, mode: str, advanced: bool) -> No
     _validate_user_prefs(user_prefs)
     if advanced:
         _validate_advanced_prefs(user_prefs)
+    _check_some_preference(user_prefs, advanced)
 
 
 def _score_all(

@@ -1,8 +1,75 @@
-# VibeFinder AI — Applied AI System Design (Phase 1)
+# VibeFinder AI — Applied AI System Design
 
-> **Status: proposed design.** Nothing in this document is implemented yet. The architecture
-> diagram below is preliminary; the final `diagrams/architecture.mmd` and the image in `assets/`
-> will be produced after implementation so they match the real system.
+> **Status (Phase 2, 2026-11-23): core assistant implemented.** §0 records what was built and
+> how it differs from the Phase 1 proposal. §1–§14 below are the original Phase 1 design and are
+> kept for history; where they conflict with §0, §0 is current. The architecture diagram at the
+> end is still the *proposed* one; the final `diagrams/architecture.mmd` comes in a later phase.
+
+---
+
+## 0. Phase 2 implementation notes (current)
+
+### What was built
+
+```
+src/recommender.py        + NO_PREFERENCE sentinel, multi-label genre/mood, active_max_score
+src/main.py               + --ask, --provider, --no-retrieval, --show-plan (original flags unchanged)
+src/assistant/
+    models.py             dataclasses: Pref (value + provenance + source), Interpretation, Plan, ...
+    catalog.py            vocabulary and retrievable facts computed from songs.csv
+    interpreter.py        deterministic rule-based interpreter (documented vocabulary tables)
+    retrieval.py          Markdown sectioning, whitelisted hints, stdlib TF-IDF
+    planner.py            hints -> preferences, mode/advanced/diversity, filters, coverage checks
+    providers.py          TemplateProvider (default), OpenRouterProvider (optional), MockProvider (tests)
+    validation.py         request, result, and explanation checks
+    workflow.py           Assistant.ask(): the end-to-end pipeline
+    render.py             CLI text output
+data/knowledge/           listening_contexts.md, music_features.md (labeled application documents)
+tests/                    + test_no_preference, test_interpreter, test_retrieval, test_assistant,
+                            test_providers, test_golden (138 new tests; 186 original unchanged)
+```
+
+### Changes from the Phase 1 proposal
+
+| Phase 1 proposal | Implemented | Why |
+|---|---|---|
+| Optional Anthropic provider | **OpenRouter-compatible provider** via standard-library `urllib`; model from `OPENROUTER_MODEL` (no default) | Decision in the Phase 2 brief; avoids a vendor SDK dependency |
+| Four knowledge guides | **Two guides** + catalog-derived facts | Phase 2 scope decision |
+| One engine run per genre, merged | **Multi-label `favorite_genre` / `favorite_mood`**: a list of labels earns the single match contribution once | Smaller and keeps one ranking call; no double counting; a single string behaves exactly as before |
+| `NO_PREFERENCE` for unknown fields | As proposed, plus: the engine **refuses to rank** when every active field is `NO_PREFERENCE` (the assistant asks for clarification instead) | Prevents ranking by song id |
+| Quality floor of 50 % | **40 %** of the score available from the active preferences | A looser default chosen while implementing; 50 % was not tested and 40 % was not tuned. It is a design choice to revisit in Phase 3 |
+| Match label from score share | **Strong** needs ≥ 75 % *and* no missed stated preference; otherwise partial (≥ 50 %) or weak | Score share alone called non-acoustic songs "strong" for an acoustic request |
+| Hints apply when a section is retrieved | Hints apply only when the section is retrieved **and** its `Applies when:` condition matches the interpretation (context or unavailable genre) | Retrieval of a loosely related section must not inject preferences |
+| Validation retry for LLM output | **No retry yet**: invalid output goes straight to the template; transport errors get at most one retry | Conditional correction is Phase 3 |
+| Traces written to `logs/traces/` | In-memory step log shown with `--show-plan`; no files yet | Trace files are Phase 3 |
+
+### Key decisions
+
+- **Unknown vs. inferred vs. explicit.** Explicit values always win. A retrieved hint only fills
+  an unknown field and is labeled with its source id. Everything else is `NO_PREFERENCE`.
+- **Mode rule.** `--mode` flag, then a strategy the user named, then mood-first (mood stated
+  without a genre), then energy-focused (energy is the only stated genre/mood/feature
+  preference), then a retrieved `mode=` hint, then baseline.
+- **Hard vs. soft.** "only X" / "X only" is a candidate filter. "no X" is an exclusion filter.
+  "no repeated artists" is enforced while selecting from the full engine ranking. A diversity
+  penalty alone is never treated as enforcement. "only metal" (not in catalog) is a no-match
+  with no substitutes; "some metal" gets labeled substitutes ranked on the features the
+  music-features guide associates with heavy genres.
+- **Disclosure.** For each explicit preference, a documented tolerance (energy ±0.20,
+  acousticness ≥ 0.5, instrumentalness/vocals ±0.25, popularity ±20) decides whether a song
+  "meets" it. This only affects the disclosure ("misses: acoustic sound"), never the scores.
+- **Scores.** Reported against `active_max_score` (points available from the given preferences),
+  with the theoretical maximum shown alongside.
+
+### Retrieval on vs. off (observed, offline)
+
+| Request | Retrieval on | Retrieval off |
+|---|---|---|
+| Studying, calm instrumental, variety | infers vocal intensity 0.15 and tag `focused` from `listening_contexts#studying`; Focus Flow ranks #1 | neither inferred; Focus Flow drops out of the top 5 (Library Rain enters) |
+| Energetic workout, preferably rock or hip-hop | `energy-focused` mode, non-acoustic and `energetic` inferred from `listening_contexts#workout`; Gym Hero replaces Static Postcards (moody, energy 0.62) | baseline mode; Static Postcards is #4 |
+
+Whether these changes are *improvements* has only been checked by inspection; the measured
+comparison is planned for the Phase 3 evaluation harness.
 
 ---
 
